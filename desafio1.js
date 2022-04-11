@@ -46,4 +46,4 @@ console.log('La cantidad de mascotas que tiene el usuario es: ' + unUsu.countMas
 unUsu.addBook('Inteligencia Emocional', 'Goleman')
 console.log(unUsu.libros)
 
-console.log('Los nombres de los libros del usuario son: ' + '\t' + unUsu.getBookNames())
+console.log('Los nombres de los libros del usuario son: ', unUsu.getBookNames())
