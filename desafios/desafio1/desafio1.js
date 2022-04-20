@@ -41,9 +41,11 @@ const unUsu = new Usuario('Matias','Garcia', libross, ['uhma', 'oli','peni'])
 
 console.log(unUsu.getFullName())
 unUsu.addMascota('pepito')
+unUsu.addMascota('michi')
 console.log('La cantidad de mascotas que tiene el usuario es: ' + unUsu.countMascotas())
 
 unUsu.addBook('Inteligencia Emocional', 'Goleman')
+unUsu.addBook('Los ojos del perro siberiano', 'Cortazar')
 console.log(unUsu.libros)
 
 console.log('Los nombres de los libros del usuario son: ', unUsu.getBookNames())
