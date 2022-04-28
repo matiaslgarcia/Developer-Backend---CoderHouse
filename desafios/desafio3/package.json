@@ -1,0 +1,14 @@
+{
+  "name": "desafio3",
+  "version": "1.0.0",
+  "description": "desafio3 de coderhouse",
+  "main": "desafio3.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "matias-garcia",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.0"
+  }
+}
