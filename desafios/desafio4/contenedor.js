@@ -57,7 +57,7 @@ class Contenedor {
             const contenido =  JSON.parse(await fs.promises.readFile(this.archivo, 'utf-8'))
             let prodSearched;
             for (let prod of contenido) {
-                if(prod.id === id) prodSearched = prod
+                if(prod.id === parseInt(id)) prodSearched = prod
             }
             const newProduct = {
                 "title":producto.title,
