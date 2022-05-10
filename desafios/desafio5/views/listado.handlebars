@@ -1,0 +1,45 @@
+<section class="container contact">
+    {{#if prodExists}}
+        <table class="table align-middle mb-0 bg-white">
+            <thead class="bg-light" id="navbarr">
+                <tr>
+                    <th class="left-navbar">Imagen</th>
+                    <th>Nombre</th>
+                    <th class="right-navbar">Precio</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each productos}}
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <img
+                                        src="{{this.thumbnail}}"
+                                        alt="image"
+                                        style="width: 45px; height: 45px"
+                                />
+                            </div>
+
+                        </td>
+                        <td>
+                            <p class=" mb-1 control-label">{{this.title}}</p>
+                        </td>
+                        <td>{{this.price}}</td>
+                    </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    {{else}}
+        <div class="align-middle mb-0 bg-warning h1-style">
+            <h1 class="text-center">
+                No se encontraron productos
+            </h1>
+        </div>
+    {{/if}}
+
+    <div class="col-sm-offset-2 col-sm-12 container-button">
+        <form action="/">
+            <button type="submit" class="btn btn-default volver">Volver</button>
+        </form>
+    </div>
+</section>

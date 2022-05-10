@@ -1,0 +1,34 @@
+extends main
+
+block listado
+    section(class="container contact")
+        if prodExists
+            table(class="table align-middle mb-0 bg-white")
+                thead(class="bg-light" id="navbarr")
+                    tr
+                        th(class="left-navbar") Imagen
+                        th Nombre
+                        th(class="right-navbar") Precio
+                tbody
+                each prod in productos
+                    tr
+                        td
+                            div(class="d-flex align-items-center")
+                                img(
+                                    src=prod.thumbnail
+                                    alt="image"
+                                    style="width:45px; height:45px"
+                                )
+                        td
+                            p(class="mb-1 control-label") #{prod.title}
+
+                        td
+                            p #{prod.price}
+        else
+            div(class="align-middle mb-0 bg-warning h1-style")
+                h1(class="text-center") No se encontraron productos
+
+
+        div(class="col-sm-offset-2 col-sm-12 container-button")
+            form(action="/")
+                button(type="submit" class="btn btn-default volver") Volver

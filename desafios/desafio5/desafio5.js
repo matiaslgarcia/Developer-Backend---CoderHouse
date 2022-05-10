@@ -3,32 +3,51 @@ const handlebars = require('express-handlebars')
 const Contenedor = require('./contenedor')
 
 const app = express()
-
-app.engine('handlebars', handlebars.engine())
-
 app.set('views', './views')
-app.set('view engine', 'handlebars')
 
+//HANDLEBARS
+// app.engine('handlebars', handlebars.engine())
+// app.set('view engine', 'handlebars')
+
+//PUG
+// app.set('view engine', 'pug')
+
+//EJS
+app.set('view engine', 'ejs')
+
+//MIDDLEWARE
 app.use(express.static('public'))
+app.use(express.json())
+app.use(express.urlencoded({extended:true}))
 
+//Instancia Contenedor
 const contenedor = new Contenedor('./productos.txt')
 
+//ENDPOINTS
+// Para usar la vista de Handlebars es:   '/listado'
+// Para usar la vista de Pug es:     './pug/listado'
+// Para usar la vista de EJS es:       './ejs/main'
+
 app.get('/productos', async (req, res) => {
-  const form = {
-    hola: 'hola'
-  }
-  res.render('form',form)
+    try{
+      contenedor.getAll().then(resp =>
+        res.render('./ejs/main',{productos: resp, prodExists: resp.length !==0})
+      )
+    }catch (e) {
+      res.next(e)
+    }
 })
 
 app.post('/productos', async (req, res) => {
-  const producto = req.body
-  contenedor.save(producto)
-    .then(p =>  res.json(p))
-    .catch(e => res.error('Error al agregar un producto ' + e))
-  res.redirect('/')
+  try{
+    const producto = req.body
+    contenedor.save(producto)
+      .then(p =>  res.json(p))
+    res.redirect('/productos')
+  }catch (e) {
+    res.next(e)
+  }
 })
-
-
 
 //SERVER
 const PORT = 8080

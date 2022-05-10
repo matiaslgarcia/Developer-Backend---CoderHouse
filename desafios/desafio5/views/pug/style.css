@@ -1,0 +1,41 @@
+body{
+    background-color: #25274d;
+}
+.contact{
+    padding: 4%;
+    height: 400px;
+}
+.table{
+    border-bottom:none;
+    border-radius: 20px;
+}
+#navbarr tr{
+    background: #ff9b00;
+}
+#navbarr  th{
+    border-top:none;
+    color: white;
+}
+.left-navbar{
+    border-top-left-radius: 20px ;
+}
+.right-navbar{
+    border-top-right-radius: 20px;
+}
+.container-button{
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+.volver{
+    background: #ff9b00;
+}
+.volver{
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+.h1-style{
+    padding: 10px;
+    border-radius:10px;
+}
