@@ -34,18 +34,17 @@ app.get('/productos', async (req, res) => {
         res.render('./ejs/main',{productos: resp, prodExists: resp.length !==0})
       )
     }catch (e) {
-      res.next(e)
+      res.send(e)
     }
 })
 
 app.post('/productos', async (req, res) => {
   try{
     const producto = req.body
-    contenedor.save(producto)
-      .then(p =>  res.json(p))
+    await contenedor.save(producto)
     res.redirect('/productos')
   }catch (e) {
-    res.next(e)
+    res.send(e)
   }
 })
 
