@@ -1,18 +1,16 @@
 const socket = io.connect()
 
-const addProduct = (e) => {
-  console.log('entra?')
+function addProduct(e) {
   const product = {
     title: document.getElementById('title').value,
     price: document.getElementById('price').value,
     thumbnail: document.getElementById('thumbnail').value
   }
-
   socket.emit('new-product', product)
   return false
 }
 
-const render = (data) => {
+function render(data){
   document.getElementById("products").innerHTML = data.map(prod => {
     return (
       `
@@ -20,9 +18,9 @@ const render = (data) => {
             <td>
                 <div class="d-flex align-items-center">
                     <img
-                            src="${prod.thumbnail}"
-                            alt="image"
-                            style="width: 45px; height: 45px"
+                      src="${prod.thumbnail}"
+                      alt="image"
+                      style="width: 45px; height: 45px"
                     />
                 </div>
             </td>
@@ -36,7 +34,7 @@ const render = (data) => {
   })
 }
 
-socket.on('products', function (data){
+socket.on('products', function(data){
   render(data)
 })
 

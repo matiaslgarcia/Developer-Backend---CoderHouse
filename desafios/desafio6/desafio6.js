@@ -9,7 +9,6 @@ const app = express()
 const httpServer = new HttpServer(app)
 const io = new IOServer(httpServer)
 
-app.set('views', './views')
 app.set('view engine', 'ejs')
 
 //MIDDLEWARE
@@ -23,22 +22,25 @@ const mensajes = new Mensajes('./mensajes.txt')
 
 //EndPoint
 app.get('/', (req, res) => {
-    res.render('main.ejs', {root: __dirname})
+    res.render('principal.ejs', {root: __dirname})
 })
 
 //SOCKET
-io.on('connection', async(socket) => {
-  console.log('Un cliente se ha conectado!')
-
-  const product = await contenedor.getAll()
+io.on('connection', async (socket) => {
+  console.log(socket.data)
+  const product = [
+    {"title":"Ketchup",
+    "price":"24",
+    "thumbnail":"https://cdn0.iconfinder.com/data/icons/vectr-examples/640/food-ketchup-v1-512.png"}
+  ]
+  // const product = await contenedor.getAll()
   socket.emit('products', product)
-
+  console.log(product)
 
   socket.on('new-product', async data => {
-   console.log(data)
+    console.log(data)
     await contenedor.save(data)
       io.sockets.emit('products', product)
-
   })
 })
 
