@@ -13,49 +13,37 @@ app.set('view engine', 'ejs')
 
 //MIDDLEWARE
 app.use(express.static('./public'))
-// app.use(express.json())
-// app.use(express.urlencoded({extended:true}))
 
 //Instancias
 const contenedor = new Contenedor('./productos.txt')
 const mensajes = new Mensajes('./mensajes.txt')
 
 //EndPoint
-app.get('/', (req, res) => {
+app.get('/', async (req, res) => {
     res.render('principal.ejs', {root: __dirname})
 })
 
 //SOCKET
-io.on('connection', async (socket) => {
-  console.log(socket.data)
-  const product = [
-    {"title":"Ketchup",
-    "price":"24",
-    "thumbnail":"https://cdn0.iconfinder.com/data/icons/vectr-examples/640/food-ketchup-v1-512.png"}
-  ]
-  // const product = await contenedor.getAll()
-  socket.emit('products', product)
-  console.log(product)
+io.on('connection', async (sockets) => {
+  console.log(`Cliente con ID: ${sockets.id} se hace conectado`)
 
-  socket.on('new-product', async data => {
-    console.log(data)
+  const product = await contenedor.getAll()
+  sockets.emit('products', product)
+
+  sockets.on('new-product', async data => {
     await contenedor.save(data)
       io.sockets.emit('products', product)
   })
+
+  const messages = await mensajes.getAllMessages()
+  sockets.emit('messages', messages)
+
+  sockets.on('new-message', async data => {
+    await mensajes.saveMessage(data)
+    io.sockets.emit('messages', messages)
+  })
 })
 
-// io.on('connection', (socket) => {
-//   console.log('Un cliente se ha conectado!')
-//   const allMensajes = mensajes.getAllMessages()
-//
-//   socket.emit('messages', allMensajes)
-//
-//   socket.on('new-message', async data => {
-//     await mensajes.saveMessage(data)
-//
-//     io.sockets.emit('messages', allMensajes)
-//   })
-// })
 
 //SERVER
 const PORT = 8080

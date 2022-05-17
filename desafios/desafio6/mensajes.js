@@ -10,8 +10,10 @@ class Mensajes {
       const contenido =  JSON.parse(await fs.promises.readFile(this.archivo, 'utf-8'))
 
       const newMensaje = {
-        "author": mensaje.author,
-        "message": mensaje.mensaje
+        "email": mensaje.email,
+        "message": mensaje.message,
+        "date": mensaje.date,
+        "hour": mensaje.hour,
       }
       let newMensajeFormat;
       if(contenido.length === 0) {
