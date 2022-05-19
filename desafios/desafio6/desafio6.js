@@ -32,7 +32,7 @@ io.on('connection', async (sockets) => {
 
   sockets.on('new-product', async data => {
     await contenedor.save(data)
-      io.sockets.emit('products', product)
+      io.sockets.emit('products',  await contenedor.getAll())
   })
 
   const messages = await mensajes.getAllMessages()
@@ -40,7 +40,7 @@ io.on('connection', async (sockets) => {
 
   sockets.on('new-message', async data => {
     await mensajes.saveMessage(data)
-    io.sockets.emit('messages', messages)
+    io.sockets.emit('messages', await mensajes.getAllMessages())
   })
 })
 

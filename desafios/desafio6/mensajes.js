@@ -29,14 +29,12 @@ class Mensajes {
   }
 
   async getAllMessages(){
-
     try{
       return JSON.parse(await fs.promises.readFile(this.archivo, 'utf-8'))
     }catch (e) {
       console.log('Error' + e)
     }
   }
-
 }
 
 module.exports = Mensajes
