@@ -1,0 +1,1 @@
+[{"id":1,"timestamp":1653426199942,"product":[{"id":1,"timestamp":1653426211741,"name":"Tomate","description":"Lechuga Verduleria La Sin Rival","code":"AB542D23122","thumbnail":"https://cdn4.iconfinder.com/data/icons/vegetables-18/100/vegetable_food_colour-02-256.png","price":10,"stock":20}]}]
