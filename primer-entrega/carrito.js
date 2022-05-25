@@ -23,8 +23,8 @@ class Carrito {
         newCarritoFormat = JSON.stringify(newCarrito)+']'
         newContenido = JSON.stringify(contenido).replace(']', newCarritoFormat);
       }else{
-        newCarritoFormat = '},'+JSON.stringify(newCarrito)+']'
-        newContenido = JSON.stringify(contenido).replace('}]', newCarritoFormat);
+        newCarritoFormat = ']},'+JSON.stringify(newCarrito)+']'
+        newContenido = JSON.stringify(contenido).replace(']}]', newCarritoFormat);
       }
       await fs.promises.writeFile(this.archivo, newContenido)
       return `ID del Carrito creado es: ${newCarrito.id}`
