@@ -170,7 +170,7 @@ routerCarrito.post('/:id/productos', async (req,res) =>{
 routerCarrito.delete('/:id/productos/:id_prod', async (req,res) =>{
   const idCarrito = parseInt(req.params.id)
   const idProducto = parseInt(req.params.id_prod)
-  await contenedorCarrito.deleteCarritoById(idCarrito,idProducto)
+  await contenedorCarrito.deleteProductoTheCarritoById(idCarrito,idProducto)
     res.send({
       result: 'ok',
       idCarrito: idCarrito,
@@ -181,6 +181,6 @@ routerCarrito.delete('/:id/productos/:id_prod', async (req,res) =>{
 //SERVER
 const PORT = process.env.PORT || 8080
 
-const server = app.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log('Servidor HTTP escuchando en el puerto ' + PORT)
 })

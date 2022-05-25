@@ -51,6 +51,6 @@ app.post('/productos', async (req, res) => {
 //SERVER
 const PORT = 8080
 app.listen(PORT, () => {
-  console.log('Servidor HTTP escuchando en el puerto ' + PORT)
+  console.log('Servidor Inciando en el puerto ' + PORT)
 })
 

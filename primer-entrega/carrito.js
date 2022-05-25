@@ -61,9 +61,7 @@ class Carrito {
       for (let carr of contenido) {
         if(carr.id === parseInt(id)) {
             productos = carr.product
-            for (let prod of productos){
-              return prod
-            }
+            return productos
         }
       }
     }catch (e) {
@@ -150,7 +148,7 @@ class Carrito {
                     const carritoConProductoNuevos = {
                       "id": carr.id,
                       "timestamp": carr.timestamp,
-                      "product":  carr.product.push(prodNuevo),
+                      "product":  [...carr.product, prodNuevo]
                     }
                     carritoSearchedFormat = JSON.stringify(carrito)
                     newCarritoFormat = JSON.stringify(carritoConProductoNuevos)
@@ -171,22 +169,35 @@ class Carrito {
       let band = false;
       let prodSearched;
       let products = []
+      let carrito;
+      let newCarritoFormat;
+      let carritoSearchedFormat;
+      let newContenido;
+
       contenido.forEach( carr => {
         if(carr.id === parseInt(idCarrito)){
+            carrito = carr
             products = carr.product
             products.forEach(prod => {
-                if (prod.id === parseInt(idProducto)){
+                if (prod.id === idProducto){
                   band = true;
                   prodSearched = prod;
                 }
             })
-
         }
       } )
       if(band){
         const indice = products.indexOf(prodSearched)
         products.splice(indice,1)
-        await fs.promises.writeFile(this.archivo, JSON.stringify(products))
+        const carritoConProductoEliminado = {
+          "id": carrito.id,
+          "timestamp": carrito.timestamp,
+          "product":  carrito.product
+        }
+        carritoSearchedFormat = JSON.stringify(carrito)
+        newCarritoFormat = JSON.stringify(carritoConProductoEliminado)
+        newContenido = JSON.stringify(contenido).replace(carritoSearchedFormat, newCarritoFormat);
+        await fs.promises.writeFile(this.archivo, newContenido)
       }
     }catch (e) {
       console.log('Error' + e)
