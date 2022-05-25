@@ -119,8 +119,18 @@ routerProducto.delete('/:id', async (req,res) =>{
     )
   }
 })
+routerProducto.all('*', (req, res) =>{
+  res.send(
+    {
+      error: -2,
+      description: `Ruta No valida`,
+      method: `Method No soportado`,
+    }
+  );
+})
 
 //CARRITO
+
 routerCarrito.post('/', async (req,res) =>{
   contenedorCarrito.saveCarrito().then(r => res.json(r))
 })
@@ -176,6 +186,16 @@ routerCarrito.delete('/:id/productos/:id_prod', async (req,res) =>{
       idCarrito: idCarrito,
       idProducto: idProducto
     })
+})
+
+routerCarrito.all('*', (req, res) =>{
+  res.send(
+    {
+      error: -2,
+      description: `Ruta No valida`,
+      method: `Method No soportado`,
+    }
+  );
 })
 
 //SERVER
