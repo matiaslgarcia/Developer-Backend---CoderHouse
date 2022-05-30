@@ -3,7 +3,7 @@ const optionsMariaDB = {
     connection: {
         host: 'localhost',
         user: 'root',
-        password: '37469039',
+        password: '',
         database: 'productosdb'
     }
 }

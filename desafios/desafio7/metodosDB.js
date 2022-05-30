@@ -1,30 +1,38 @@
-const configuracionMariaDB = require('./mysqlconn')
-const configuracionSQLite = require('./sqliteconn')
-
-const knex1 = require('knex')(configuracionMariaDB.optionsMariaDB);
-const knex2 = require('knex')(configuracionSQLite.optionSQLite); 
-
-class MetodosDB { 
-
-    crearTablaProductos() {
-                return knex1.schema.createTable('productos', table => {
-                    table.increments('id').primary()
-                    table.string('title', 50).notNullable()
-                    table.float('price', 10).notNullable()
-                    table.string('thumbnail', 255).notNullable()
-                    console.log("Tabla creada con exito")
-                })
-                
+class MetodosDB {
+    constructor(knex, tableName) {
+        this.knex= knex
+        this.tableName = tableName
     }
-
-    crearTablaMensajes() {
-        return knex2.schema.createTable('mensajes', table => {
-            table.increments('id').primary()
-            table.string('email', 50).notNullable()
-            table.string('messages', 255).notNullable()
-            table.string('date',20).notNullable()
-            table.string('hour', 10).notNullable()
-        })
+    async crearTablaProductos() {
+            return this.knex.schema.dropTableIfExists(this.tableName)
+              .finally(() => {
+                  try {
+                    return this.knex.schema.createTable(this.tableName, table => {
+                        table.increments('id').primary()
+                        table.string('title', 50).notNullable()
+                        table.float('price', 10).notNullable()
+                        table.string('thumbnail', 255).notNullable()
+                    })
+                  }catch (e) {
+                      console.log('Error' + e)
+                  }
+              })
+    }
+    async crearTablaMensajes() {
+            return this.knex.schema.dropTableIfExists(this.tableName)
+              .finally(() => {
+                  try {
+                      return this.knex.schema.createTable(this.tableName, table => {
+                          table.increments('id').primary()
+                          table.string('email', 50).notNullable()
+                          table.string('messages', 255).notNullable()
+                          table.string('date', 20).notNullable()
+                          table.string('hour', 10).notNullable()
+                      })
+                  }catch (e) {
+                      console.log('Error' + e)
+                  }
+              })
     }
 }
 

@@ -1,14 +1,15 @@
 const express = require('express')
 const { Server: HttpServer } = require('http')
 const { Server: IOServer } = require('socket.io')
-
 const configuracionMariaDB = require('./mysqlconn')
 const configuracionSQLite = require('./sqliteconn')
 const knex1 = require('knex')(configuracionMariaDB.optionsMariaDB);
-const knex2 = require('knex')(configuracionSQLite.optionSQLite); 
+const knex2 = require('knex')(configuracionSQLite.optionSQLite);
 const Contenedor = require('./contenedor')
 const Mensajes = require('./mensajes')
 const MetodosDB = require('./metodosDB')
+
+
 
 const app = express()
 const httpServer = new HttpServer(app)
@@ -20,11 +21,16 @@ app.set('view engine', 'ejs')
 app.use(express.static('./public'))
 
 //Instancias
-const dbProduct = new MetodosDB()
-const dbMessage = new MetodosDB()
+const dbProduct = new MetodosDB(knex1, 'productos')
 dbProduct.crearTablaProductos()
-const contenedor = new Contenedor(knex1, 'productos')
+  .then(r => r)
+  .catch(e => console.log('Error:' + e))
+const dbMessage = new MetodosDB(knex2,'mensajes')
 dbMessage.crearTablaMensajes()
+  .then(r => r)
+  .catch(e => console.log('Error:' + e))
+
+const contenedor = new Contenedor(knex1, 'productos')
 const mensajes = new Mensajes(knex2, 'mensajes')
 
 //EndPoint
@@ -41,7 +47,7 @@ io.on('connection', async (sockets) => {
 
   sockets.on('new-product', async data => {
     await contenedor.insertProduct(data)
-      io.sockets.emit('products', product)
+      io.sockets.emit('products', await contenedor.getAllProducts())
   })
 
   const messages = await mensajes.getAllMessages()
@@ -49,7 +55,7 @@ io.on('connection', async (sockets) => {
 
   sockets.on('new-message', async data => {
     await mensajes.saveMessage(data)
-    io.sockets.emit('messages', messages)
+    io.sockets.emit('messages', await mensajes.getAllMessages())
   })
 })
 

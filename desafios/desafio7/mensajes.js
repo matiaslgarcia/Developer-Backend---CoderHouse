@@ -1,9 +1,7 @@
-const { default: knex } = require("knex");
-
 class Mensajes {
-  constructor(configuracion, mensajes) {
+  constructor(configuracion, tableName) {
     this.knex = configuracion;
-    this.mensajes = mensajes;
+    this.tableName = tableName;
   }
 
   async saveMessage(mensaje) {
@@ -16,7 +14,7 @@ class Mensajes {
         "hour": mensaje.hour,
       }
 
-      this.knex(this.mensajes).insert(newMensaje)
+      this.knex(this.tableName).insert(newMensaje)
       .then(() => console.log('Se inserto el nuevo mensaje'))
       .catch((err) => { console.log(err); throw err})
       .finally(() => {
@@ -30,7 +28,7 @@ class Mensajes {
   async getAllMessages(){
 
     try{
-      return this.knex(this.mensajes).select('*')
+      return this.knex(this.tableName).select('*')
     }catch (e) {
       console.log('Error' + e)
     }
