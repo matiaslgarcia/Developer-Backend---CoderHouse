@@ -9,8 +9,6 @@ const Contenedor = require('./contenedor')
 const Mensajes = require('./mensajes')
 const MetodosDB = require('./metodosDB')
 
-
-
 const app = express()
 const httpServer = new HttpServer(app)
 const io = new IOServer(httpServer)
@@ -39,28 +37,32 @@ app.get('/', async (req, res) => {
 })
 
 //SOCKET
-io.on('connection', async (sockets) => {
-  console.log(`Cliente con ID: ${sockets.id} se hace conectado`)
+setTimeout(() =>{
+    io.on('connection', async (sockets) => {
+      console.log(`Cliente con ID: ${sockets.id} se hace conectado`)
+      try {
+        const product = await contenedor.getAllProducts()
+        sockets.emit('products', product)
 
-  const product = await contenedor.getAllProducts()
-  sockets.emit('products', product)
+        sockets.on('new-product', async data => {
+          await contenedor.insertProduct(data)
+          io.sockets.emit('products', await contenedor.getAllProducts())
+        })
 
-  sockets.on('new-product', async data => {
-    await contenedor.insertProduct(data)
-      io.sockets.emit('products', await contenedor.getAllProducts())
-  })
+        const messages = await mensajes.getAllMessages()
+        sockets.emit('messages', messages)
 
-  const messages = await mensajes.getAllMessages()
-  sockets.emit('messages', messages)
-
-  sockets.on('new-message', async data => {
-    await mensajes.saveMessage(data)
-    io.sockets.emit('messages', await mensajes.getAllMessages())
-  })
-})
+        sockets.on('new-message', async data => {
+          await mensajes.saveMessage(data)
+          io.sockets.emit('messages', await mensajes.getAllMessages())
+        })
+      }catch (e){
+        console.log('Error en el socket es: ' + e)
+      }
+    })
+  },1000)
 
 
 //SERVER
 const PORT = 8080
 httpServer.listen(PORT, () =>   console.log('Servidor escuchando en el puerto ' + PORT))
-

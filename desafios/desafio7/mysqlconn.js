@@ -7,7 +7,6 @@ const optionsMariaDB = {
         database: 'productosdb'
     }
 }
-
 module.exports = {
     optionsMariaDB
 }

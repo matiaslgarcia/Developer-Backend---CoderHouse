@@ -5,7 +5,6 @@ const optionSQLite = {
     },
     useNullAsDefault: true
 }
-
 module.exports = {
     optionSQLite
 }

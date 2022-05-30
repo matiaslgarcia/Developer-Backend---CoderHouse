@@ -1,8 +1,10 @@
 class Contenedor {
+
     constructor(configuracion, tableName) {
         this.knex = configuracion;
         this.tableName = tableName;
     }
+
     async insertProduct(producto) {
         try {
             const newProduct = {
@@ -12,10 +14,7 @@ class Contenedor {
                 }
             this.knex(this.tableName).insert(newProduct)
                 .then(() => console.log('Se inserto el nuevo producto'))
-                .catch((err) => { console.log(err); throw err})
-                .finally(() => {
-                    this.knex.destroy()
-                })
+                .catch((err) => { throw err})
         } catch(error) {
             console.log('Error: ' + error)
         }
@@ -30,7 +29,7 @@ class Contenedor {
         try{
             return this.knex(this.tableName).select('*')
         }catch (e) {
-            console.log('Error' + e)
+            throw e
         }
     }
 
@@ -43,26 +42,27 @@ class Contenedor {
                 .then(() => console.log('Se actualizo el nuevo producto'))
                 .catch((err) => { console.log(err); throw err})
         }catch (e){
-            console.log('Error' + e)
+            throw e
         }
     }
 
     async deleteById(id){
         try{
             return this.knex.from(this.tableName)
-                            .where('id',id)
-                            .del()
+                    .where('id',id)
+                    .del()
         }catch (e) {
-            console.log('Error' + e)
+            throw e
         }
     }
 
     async deleteAll(){
         try{
-            return this.knex.from(this.tableName)
-                            .del()
+            return this.knex
+              .from(this.tableName)
+              .del()
         }catch (e) {
-            console.log('Error' + e)
+            throw e
         }
     }
 }
