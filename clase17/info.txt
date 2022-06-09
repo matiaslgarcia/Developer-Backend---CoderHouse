@@ -1,0 +1,144 @@
+show dbs - mostrar bases de datos no vacias
+use <database_name> - crea y selecciona la base de datos
+db - muestra la bd actual
+show collections - listado de colecciones
+load(myScripts.js) - carga script de comandos
+
+Detalle de comandos
+
+db.coll.drop() - borra coleccionescon sus indices respectivos
+db.dropDatabase()
+db.createCollection("contacts") - crea coleccion de forma explicita
+db.coll.renameCollection("new_col",true) - renombra coleccion, el segundo parametro 
+                                           para borrar la coleccion destino si existe
+db.coll.insertOne({key:value}) - inserta documento a la coleccion
+db.coll.insertMany([{key:value}, {key:value}, {key:value}]) - inserta un array de documentos a 
+                                                              la coleccion
+db.coll.findOne() - busca un documento dentro de la coleccion
+db.coll.find() - busca todos los documentos dentro de una coleccion
+db.coll.find({key: value}) - busca los documentos dentr de una coleccion que satisfacen
+                             el filtro de la busqueda                                                              
+db.coll.find().pretty() - devuelve todos los documentos conservando el formato de objeto de salida
+
+Formato de documento
+
+Cuando inseertamos un documento MongoDB crea un campo ObjetID identificado con la clave
+formato UUID (https://www.mongodb.com/docs/manual/reference/method/ObjectId/)
+
+Comandos Count
+
+db.coll.estimatedDocumentCount() devuelve cantidad de documentos
+db.coll.countDocuments({key: value}) devuelve cantidad de documentos con ese filtro
+
+Comandos de actividad
+
+1ro
+use empresa
+
+2do
+db.createCollection('Clientes')
+
+3ro
+db.clientes.insertOne({nombre: 'Toby', edad: 18})
+
+4to
+db.clientes.insertMany({nombre: 'Toby', edad: 18},{nombre: 'Alberto', edad: 34},{nombre: 'Lucas', edad: 17})
+
+5to
+db.articulos.insertMany({nombre: 'Camisa', precio: 18, stock: 5},{nombre: 'Pantalon', precio: 34, stock: 7})
+
+6to
+show collections
+
+7mo
+db.clientes.find()
+db.articulos.find()
+
+8vo
+db.articulos.estimatedDocumentCount()
+db.articulos.find().count()
+
+Comandos Read con filtros de busqueda
+
+db.col.find({key:{$operator:val}})
+
+$and - operador and sintaxis _ {$and:[{},{}]}
+$or - operador or sintaxis _ {$or:[{},{}]}
+$lt valores menores a uno dado
+$lte valores menores o iguales a uno dado
+$gt valores mayor a uno dado
+$gte valores mayor o igual a uno dado
+
+$exists - selecciona documentos segun la existencia de un campo
+
+Consultas 
+
+1- db.clientes.insertMany([{},{},{}])
+
+2- db.clientes.find().sort({edad: -1})
+
+3- db.clientes.find().sort({edad:1}).limit(1)
+
+4- db.clientes.find().sort({edad:1}).limit(1).skip(1)
+
+5- db.clientes.find().sort({name: 'Juan'})
+
+6- db.clientes.find().sort({name: 'Juan' , edad: 29})
+
+7- db.clientes.find($or: [{name: 'Juan'},{name: 'Lucia'}])
+
+8- db.clientes.find({edad:{$gt: 25}})
+
+9- db.clientes.find({edad:{$lte: 25}})
+
+10- db.clientes.find({edad:{$ne: 25}})
+
+11- db.clientes.find({edad: {$in: [26, 35]}})
+
+12- db.clientes.updateOne({nombre: 'Fede'}, {$set: {edad:36}})
+
+13- db.clientes.updateOne({edad: 25}, {$set: {edad:26}})
+
+14- db.clientes.deleteMany({nombre: 'Juan'})
+
+Usuarios y permisos
+Pasos para crear Usuarios
+
+1ro
+- use admin
+
+2do
+db.createUser({user:'lector', 
+               pwd: 12345, 
+               roles:[
+                   {role:"read", 
+                   db:"blog"}
+                   ]
+            }
+)
+
+3ro
+Para loguearse
+mongo -u lector -p 123456 
+
+Ejercicio
+
+use admin
+
+db.createUser({user:'encargado', 
+               pwd: qwerty123, 
+               roles:[
+                   {role:"readWrite", 
+                   db:"empresa"}
+                   ]
+            }
+)
+
+db.createUser({user:'CLIENTE', 
+               pwd: qwerty123, 
+               roles:[
+                   {role:"read", 
+                   db:"empresa"}
+                   ]
+            }
+)

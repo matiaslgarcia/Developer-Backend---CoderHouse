@@ -31,7 +31,7 @@ router.get('/productos/:id', async (req,res) =>{
         }
 
         if (id < 1 || id > p.length) {
-            return res.send({ error: 'producto no encontrado' })
+            return res.send({ error: 'productos no encontrado' })
         }
 
         contenedor.getById(id).then( prod =>{
@@ -44,7 +44,7 @@ router.post('/productos', async (req,res) =>{
     const producto = req.body
     contenedor.save(producto)
         .then(p =>  res.json(p))
-        .catch(e => res.error('Error al agregar un producto ' + e))
+        .catch(e => res.error('Error al agregar un productos ' + e))
 })
 
 

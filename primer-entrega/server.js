@@ -158,7 +158,7 @@ routerCarrito.get('/:id/productos', async (req,res) =>{
     }
 
     if (id < 1) {
-      return res.send({ error: 'producto no encontrado' })
+      return res.send({ error: 'productos no encontrado' })
     }
    res.send(p)
   })

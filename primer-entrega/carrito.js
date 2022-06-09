@@ -99,11 +99,9 @@ class Carrito {
                 "timestamp": carr.timestamp,
                 "product": [prodNuevo],
               }
-              console.log('primero aca')
             newCarritoFormat = JSON.stringify(carritoConProductos)
             carritoSearchedFormat = JSON.stringify(carrito)
             newContenido = JSON.stringify(contenido).replace(carritoSearchedFormat, newCarritoFormat);
-
           }else{
               productos.forEach( prod => {
                 if(prod.id > idMayor) idMayor = prod.id
@@ -113,7 +111,6 @@ class Carrito {
                 }
               })
                 if(iguales){
-                  console.log('2do aca')
                   const prodActualizado = {
                     "id": prodSearched.id,
                     "timestamp": prodSearched.timestamp,
@@ -134,7 +131,6 @@ class Carrito {
                   newContenido = JSON.stringify(contenido).replace(carritoSearchedFormat, newCarritoFormat);
                 }
                 else{
-                    console.log('3ro aca')
                     const prodNuevo = {
                       "id":idMayor+1,
                       "timestamp": Date.now(),

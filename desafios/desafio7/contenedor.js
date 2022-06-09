@@ -13,7 +13,7 @@ class Contenedor {
                     thumbnail: producto.thumbnail
                 }
             this.knex(this.tableName).insert(newProduct)
-                .then(() => console.log('Se inserto el nuevo producto'))
+                .then(() => console.log('Se inserto el nuevo productos'))
                 .catch((err) => { throw err})
         } catch(error) {
             console.log('Error: ' + error)
@@ -39,7 +39,7 @@ class Contenedor {
             this.knex.from(this.tableName)
                 .where('condicion',cond)
                 .update(newProduct)
-                .then(() => console.log('Se actualizo el nuevo producto'))
+                .then(() => console.log('Se actualizo el nuevo productos'))
                 .catch((err) => { console.log(err); throw err})
         }catch (e){
             throw e

@@ -1,0 +1,663 @@
+1) y 2)
+use ecommerce;
+switched to db ecommerce
+
+db.productos.insertMany([
+	{'title': 'Papa', 'price': 120, 'thumbnail': 'https://cdn3.iconfinder.com/data/icons/fresh-icons-1/100/fruit-vegetable-03-256.png'},
+	{'title': 'Banana', 'price': 580, 'thumbnail': 'https://cdn0.iconfinder.com/data/icons/fruity-3/512/Banana-256.png'},
+	{'title': 'Manzana', 'price': 900, 'thumbnail': 'https://cdn2.iconfinder.com/data/icons/education-flat-42/48/Education-34-256.png'},
+	{'title': 'Zanahora', 'price': 1280, 'thumbnail': 'https://cdn2.iconfinder.com/data/icons/fruit-and-vegetable-64/340/vegetable_food_healthy_carrot_organic_vegetarian-256.png'},
+	{'title': 'Lechuga', 'price': 1700, 'thumbnail': 'https://cdn0.iconfinder.com/data/icons/vegetables-ii-color/290/06-256.png'},
+	{'title': 'Huevo', 'price': 2300, 'thumbnail': 'https://cdn2.iconfinder.com/data/icons/bakery-kitchen-3/512/egg-kitchen-food-256.png'},
+	{'title': 'Palta', 'price': 2860, 'thumbnail': 'https://cdn4.iconfinder.com/data/icons/fruits-79/48/20-avocado-256.png'},
+	{'title': 'Pepino', 'price': 3350, 'thumbnail': 'https://cdn4.iconfinder.com/data/icons/food-4-9/128/food_Okra-Ladies-Finger-Vegetable-512.png'},
+	{'title': 'Ajo', 'price': 4320, 'thumbnail': 'https://cdn4.iconfinder.com/data/icons/food-4-9/128/food_Garlic-Vegetable-Bulb-Ingredient-512.png'},
+	{'title': 'Zapallo', 'price': 4990, 'thumbnail': 'https://cdn2.iconfinder.com/data/icons/fruit-and-vegetable-64/340/halloween_autumn_pumpkin_fall_vegetable_food-512.png'}
+]);
+
+{
+        "acknowledged" : true,
+        "insertedIds" : [
+                ObjectId("629eabbfb493db0fc9169e8d"),
+                ObjectId("629eabbfb493db0fc9169e8e"),
+                ObjectId("629eabbfb493db0fc9169e8f"),
+                ObjectId("629eabbfb493db0fc9169e90"),
+                ObjectId("629eabbfb493db0fc9169e91"),
+                ObjectId("629eabbfb493db0fc9169e92"),
+                ObjectId("629eabbfb493db0fc9169e93"),
+                ObjectId("629eabbfb493db0fc9169e94"),
+                ObjectId("629eabbfb493db0fc9169e95"),
+                ObjectId("629eabbfb493db0fc9169e96")
+        ]
+}
+
+db.mensajes.insertMany([
+	{'email':'masin@gmail.com' , 'message': 'Hola, como estas?', 'date': '23/07/2022', 'hour': '18:54:32'},
+	{'email':'garcia@gmail.com' , 'message': 'Buenas tardes para todos', 'date': '23/07/2022', 'hour': '18:55:32'},
+	{'email':'roberto@gmail.com' , 'message': 'Holaaa', 'date': '23/07/2022', 'hour': '18:54:52'},
+	{'email':'alina@gmail.com' , 'message': 'Como se encuentran el día de hoy?', 'date': '23/07/2022', 'hour': '18:44:32'},
+	{'email':'teresa@gmail.com' , 'message': 'Que hay que hacer mañana', 'date': '23/07/2022', 'hour': '18:34:32'},
+	{'email':'alicia@gmail.com', 'message': 'Buenas noches para todos', 'date': '23/07/2022', 'hour': '18:55:32'},
+	{'email':'susana@gmail.com' , 'message': 'Estudien', 'date': '23/07/2022', 'hour': '18:54:00'},
+	{'email':'veronica@gmail.com' , 'message': 'Alguien pudo instalar MongoDB?', 'date': '23/07/2022', 'hour': '18:54:12'},
+	{'email':'marianela@gmail.com' , 'message': 'Esto es Bocaaa', 'date': '23/07/2022', 'hour': '18:43:32'},
+	{'email':'natalia@gmail.com' , 'message': 'Esto es Riveeeer', 'date': '23/07/2022', 'hour': '18:22:52'}
+]);
+
+{
+        "acknowledged" : true,
+        "insertedIds" : [
+                ObjectId("629eabfdb493db0fc9169e97"),
+                ObjectId("629eabfdb493db0fc9169e98"),
+                ObjectId("629eabfdb493db0fc9169e99"),
+                ObjectId("629eabfdb493db0fc9169e9a"),
+                ObjectId("629eabfdb493db0fc9169e9b"),
+                ObjectId("629eabfdb493db0fc9169e9c"),
+                ObjectId("629eabfdb493db0fc9169e9d"),
+                ObjectId("629eabfdb493db0fc9169e9e"),
+                ObjectId("629eabfdb493db0fc9169e9f"),
+                ObjectId("629eabfdb493db0fc9169ea0")
+        ]
+}
+
+3)
+db.productos.find().pretty();
+
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e8d"),
+        "title" : "Papa",
+        "price" : 120,
+        "thumbnail" : "https://cdn3.iconfinder.com/data/icons/fresh-icons-1/100/fruit-vegetable-03-256.png"
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e8e"),
+        "title" : "Banana",
+        "price" : 580,
+        "thumbnail" : "https://cdn0.iconfinder.com/data/icons/fruity-3/512/Banana-256.png"
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e8f"),
+        "title" : "Manzana",
+        "price" : 900,
+        "thumbnail" : "https://cdn2.iconfinder.com/data/icons/education-flat-42/48/Education-34-256.png"   
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e90"),
+        "title" : "Zanahora",
+        "price" : 1280,
+        "thumbnail" : "https://cdn2.iconfinder.com/data/icons/fruit-and-vegetable-64/340/vegetable_food_healthy_carrot_organic_vegetarian-256.png"
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e91"),
+        "title" : "Lechuga",
+        "price" : 1700,
+        "thumbnail" : "https://cdn0.iconfinder.com/data/icons/vegetables-ii-color/290/06-256.png"
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e92"),
+        "title" : "Huevo",
+        "price" : 2300,
+        "thumbnail" : "https://cdn2.iconfinder.com/data/icons/bakery-kitchen-3/512/egg-kitchen-food-256.png"
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e93"),
+        "title" : "Palta",
+        "price" : 2860,
+        "thumbnail" : "https://cdn4.iconfinder.com/data/icons/fruits-79/48/20-avocado-256.png"
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e94"),
+        "title" : "Pepino",
+        "price" : 3350,
+        "thumbnail" : "https://cdn4.iconfinder.com/data/icons/food-4-9/128/food_Okra-Ladies-Finger-Vegetable-512.png"
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e95"),
+        "title" : "Ajo",
+        "price" : 4320,
+        "thumbnail" : "https://cdn4.iconfinder.com/data/icons/food-4-9/128/food_Garlic-Vegetable-Bulb-Ingredient-512.png"
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e96"),
+        "title" : "Zapallo",
+        "price" : 4990,
+        "thumbnail" : "https://cdn2.iconfinder.com/data/icons/fruit-and-vegetable-64/340/halloween_autumn_pumpkin_fall_vegetable_food-512.png"
+}
+
+db.mensajes.find().pretty();
+
+{
+        "_id" : ObjectId("629eabfdb493db0fc9169e97"),
+        "email" : "masin@gmail.com",
+        "message" : "Hola, como estas?",
+        "date" : "23/07/2022",
+        "hour" : "18:54:32"
+}
+{
+        "_id" : ObjectId("629eabfdb493db0fc9169e98"),
+        "email" : "garcia@gmail.com",
+        "message" : "Buenas tardes para todos",      
+        "date" : "23/07/2022",
+        "hour" : "18:55:32"
+}
+{
+        "_id" : ObjectId("629eabfdb493db0fc9169e99"),
+        "email" : "roberto@gmail.com",
+        "message" : "Holaaa",
+        "date" : "23/07/2022",
+        "hour" : "18:54:52"
+}
+{
+        "_id" : ObjectId("629eabfdb493db0fc9169e9a"),
+        "email" : "alina@gmail.com",
+        "message" : "Como se encuentran el día de hoy?",
+        "date" : "23/07/2022",
+        "hour" : "18:44:32"
+}
+{
+        "_id" : ObjectId("629eabfdb493db0fc9169e9b"),
+        "email" : "teresa@gmail.com",
+        "message" : "Que hay que hacer mañana",
+        "date" : "23/07/2022",
+        "hour" : "18:34:32"
+}
+{
+        "_id" : ObjectId("629eabfdb493db0fc9169e9c"),
+        "email" : "alicia@gmail.com",
+        "message" : "Buenas noches para todos",
+        "date" : "23/07/2022",
+        "hour" : "18:55:32"
+}
+{
+        "_id" : ObjectId("629eabfdb493db0fc9169e9d"),
+        "email" : "susana@gmail.com",
+        "message" : "Estudien",
+        "date" : "23/07/2022",
+        "hour" : "18:54:00"
+}
+{
+        "_id" : ObjectId("629eabfdb493db0fc9169e9e"),
+        "email" : "veronica@gmail.com",
+        "message" : "Alguien pudo instalar MongoDB?",
+        "date" : "23/07/2022",
+        "hour" : "18:54:12"
+}
+{
+        "_id" : ObjectId("629eabfdb493db0fc9169e9f"),
+        "email" : "marianela@gmail.com",
+        "message" : "Esto es Bocaaa",
+        "date" : "23/07/2022",
+        "hour" : "18:43:32"
+}
+{
+        "_id" : ObjectId("629eabfdb493db0fc9169ea0"),
+        "email" : "natalia@gmail.com",
+        "message" : "Esto es Riveeeer",
+        "date" : "23/07/2022",
+        "hour" : "18:22:52"
+}
+
+4)
+
+db.productos.find().count();
+10
+db.mensajes.find().count(); 
+10
+
+5)
+
+a)
+
+db.productos.insertOne(
+	{'title': 'Morron', 
+	 'price': 1000, 
+	 'thumbnail': 'https://cdn0.iconfinder.com/data/icons/vegetables-ii-color/290/13-256.png'}
+);
+
+{
+        "acknowledged" : true,
+        "insertedId" : ObjectId("629ead61b493db0fc9169ea1")
+}
+
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e8d"),
+        "title" : "Papa",
+        "price" : 120,
+        "thumbnail" : "https://cdn3.iconfinder.com/data/icons/fresh-icons-1/100/fruit-vegetable-03-256.png"
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e8e"),
+        "title" : "Banana",
+        "price" : 580,
+        "thumbnail" : "https://cdn0.iconfinder.com/data/icons/fruity-3/512/Banana-256.png"
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e8f"),
+        "title" : "Manzana",
+        "price" : 900,
+        "thumbnail" : "https://cdn2.iconfinder.com/data/icons/education-flat-42/48/Education-34-256.png"
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e90"),
+        "title" : "Zanahora",
+        "price" : 1280,
+        "thumbnail" : "https://cdn2.iconfinder.com/data/icons/fruit-and-vegetable-64/340/vegetable_food_healthy_carrot_organic_vegetarian-256.png"
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e91"),
+        "title" : "Lechuga",
+        "price" : 1700,
+        "thumbnail" : "https://cdn0.iconfinder.com/data/icons/vegetables-ii-color/290/06-256.png"
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e92"),
+        "title" : "Huevo",
+        "price" : 2300,
+        "thumbnail" : "https://cdn2.iconfinder.com/data/icons/bakery-kitchen-3/512/egg-kitchen-food-256.png"
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e93"),
+        "title" : "Palta",
+        "price" : 2860,
+        "thumbnail" : "https://cdn4.iconfinder.com/data/icons/fruits-79/48/20-avocado-256.png"
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e94"),
+        "title" : "Pepino",
+        "price" : 3350,
+        "thumbnail" : "https://cdn4.iconfinder.com/data/icons/food-4-9/128/food_Okra-Ladies-Finger-Vegetable-512.png"
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e95"),
+        "title" : "Ajo",
+        "price" : 4320,
+        "thumbnail" : "https://cdn4.iconfinder.com/data/icons/food-4-9/128/food_Garlic-Vegetable-Bulb-Ingredient-512.png"
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e96"),
+        "title" : "Zapallo",
+        "price" : 4990,
+        "thumbnail" : "https://cdn2.iconfinder.com/data/icons/fruit-and-vegetable-64/340/halloween_autumn_pumpkin_fall_vegetable_food-512.png"
+}
+{
+        "_id" : ObjectId("629ead61b493db0fc9169ea1"),
+        "title" : "Morron",
+        "price" : 1000,
+        "thumbnail" : "https://cdn0.iconfinder.com/data/icons/vegetables-ii-color/290/13-256.png"
+}
+
+b)
+i)
+db.productos.find({price:{$lt: 1000}}).pretty();
+
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e8d"),
+        "title" : "Papa",
+        "price" : 120,
+        "thumbnail" : "https://cdn3.iconfinder.com/data/icons/fresh-icons-1/100/fruit-vegetable-03-256.png"
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e8e"),
+        "title" : "Banana",
+        "price" : 580,
+        "thumbnail" : "https://cdn0.iconfinder.com/data/icons/fruity-3/512/Banana-256.png"
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e8f"),
+        "title" : "Manzana",
+        "price" : 900,
+        "thumbnail" : "https://cdn2.iconfinder.com/data/icons/education-flat-42/48/Education-34-256.png"   
+}
+
+ii)
+
+db.productos.find({$and: [{price:{$gt: 1000}},{price:{$lt: 3000}}]}).pretty()
+
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e90"),
+        "title" : "Zanahora",
+        "price" : 1280,
+        "thumbnail" : "https://cdn2.iconfinder.com/data/icons/fruit-and-vegetable-64/340/vegetable_food_healthy_carrot_organic_vegetarian-256.png"
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e91"),
+        "title" : "Lechuga",
+        "price" : 1700,
+        "thumbnail" : "https://cdn0.iconfinder.com/data/icons/vegetables-ii-color/290/06-256.png"
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e92"),
+        "title" : "Huevo",
+        "price" : 2300,
+        "thumbnail" : "https://cdn2.iconfinder.com/data/icons/bakery-kitchen-3/512/egg-kitchen-food-256.png"
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e93"),
+        "title" : "Palta",
+        "price" : 2860,
+        "thumbnail" : "https://cdn4.iconfinder.com/data/icons/fruits-79/48/20-avocado-256.png"
+}
+
+iii)
+
+db.productos.find(price:{$gt: 3000}).pretty()
+
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e94"),
+        "title" : "Pepino",
+        "price" : 3350,
+        "thumbnail" : "https://cdn4.iconfinder.com/data/icons/food-4-9/128/food_Okra-Ladies-Finger-Vegetable-512.png"
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e95"),
+        "title" : "Ajo",
+        "price" : 4320,
+        "thumbnail" : "https://cdn4.iconfinder.com/data/icons/food-4-9/128/food_Garlic-Vegetable-Bulb-Ingredient-512.png"
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e96"),
+        "title" : "Zapallo",
+        "price" : 4990,
+        "thumbnail" : "https://cdn2.iconfinder.com/data/icons/fruit-and-vegetable-64/340/halloween_autumn_pumpkin_fall_vegetable_food-512.png"
+}
+
+iv)
+
+db.productos.find({},{_id:0,title:1}).sort({price:1}).limit(1).skip(2).pretty()
+
+{ "title" : "Manzana" }
+
+c)
+
+db.productos.updateMany({},{$set:{"stock": 100}},{upsert: true}) 
+
+{ "acknowledged" : true, "matchedCount" : 11, "modifiedCount" : 11 }
+
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e8d"),
+        "title" : "Papa",
+        "price" : 120,
+        "thumbnail" : "https://cdn3.iconfinder.com/data/icons/fresh-icons-1/100/fruit-vegetable-03-256.png",
+        "stock" : 100
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e8e"),
+        "title" : "Banana",
+        "price" : 580,
+        "thumbnail" : "https://cdn0.iconfinder.com/data/icons/fruity-3/512/Banana-256.png",
+        "stock" : 100
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e8f"),
+        "title" : "Manzana",
+        "price" : 900,
+        "thumbnail" : "https://cdn2.iconfinder.com/data/icons/education-flat-42/48/Education-34-256.png",
+        "stock" : 100
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e90"),
+        "title" : "Zanahora",
+        "price" : 1280,
+        "thumbnail" : "https://cdn2.iconfinder.com/data/icons/fruit-and-vegetable-64/340/vegetable_food_healthy_carrot_organic_vegetarian-256.png",
+        "stock" : 100
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e91"),
+        "title" : "Lechuga",
+        "price" : 1700,
+        "thumbnail" : "https://cdn0.iconfinder.com/data/icons/vegetables-ii-color/290/06-256.png",
+        "stock" : 100
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e92"),
+        "title" : "Huevo",
+        "price" : 2300,
+        "thumbnail" : "https://cdn2.iconfinder.com/data/icons/bakery-kitchen-3/512/egg-kitchen-food-256.png",
+        "stock" : 100
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e93"),
+        "title" : "Palta",
+        "price" : 2860,
+        "thumbnail" : "https://cdn4.iconfinder.com/data/icons/fruits-79/48/20-avocado-256.png",
+        "stock" : 100
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e94"),
+        "title" : "Pepino",
+        "price" : 3350,
+        "thumbnail" : "https://cdn4.iconfinder.com/data/icons/food-4-9/128/food_Okra-Ladies-Finger-Vegetable-512.png",
+        "stock" : 100
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e95"),
+        "title" : "Ajo",
+        "price" : 4320,
+        "thumbnail" : "https://cdn4.iconfinder.com/data/icons/food-4-9/128/food_Garlic-Vegetable-Bulb-Ingredient-512.png",
+        "stock" : 100
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e96"),
+        "title" : "Zapallo",
+        "price" : 4990,
+        "thumbnail" : "https://cdn2.iconfinder.com/data/icons/fruit-and-vegetable-64/340/halloween_autumn_pumpkin_fall_vegetable_food-512.png",
+        "stock" : 100
+}
+{
+        "_id" : ObjectId("629ead61b493db0fc9169ea1"),
+        "title" : "Morron",
+        "price" : 1000,
+        "thumbnail" : "https://cdn0.iconfinder.com/data/icons/vegetables-ii-color/290/13-256.png",
+        "stock" : 100
+}
+
+d)
+
+db.productos.updateMany({price:{$gt: 4000}},{$set:{"stock": 0}},{upsert: false})
+
+{ "acknowledged" : true, "matchedCount" : 2, "modifiedCount" : 2 }
+
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e8d"),
+        "title" : "Papa",
+        "price" : 120,
+        "thumbnail" : "https://cdn3.iconfinder.com/data/icons/fresh-icons-1/100/fruit-vegetable-03-256.png",
+        "stock" : 100
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e8e"),
+        "title" : "Banana",
+        "price" : 580,
+        "thumbnail" : "https://cdn0.iconfinder.com/data/icons/fruity-3/512/Banana-256.png",
+        "stock" : 100
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e8f"),
+        "title" : "Manzana",
+        "price" : 900,
+        "thumbnail" : "https://cdn2.iconfinder.com/data/icons/education-flat-42/48/Education-34-256.png",
+        "stock" : 100
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e90"),
+        "title" : "Zanahora",
+        "price" : 1280,
+        "thumbnail" : "https://cdn2.iconfinder.com/data/icons/fruit-and-vegetable-64/340/vegetable_food_healthy_carrot_organic_vegetarian-256.png",
+        "stock" : 100
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e91"),
+        "title" : "Lechuga",
+        "price" : 1700,
+        "thumbnail" : "https://cdn0.iconfinder.com/data/icons/vegetables-ii-color/290/06-256.png",
+        "stock" : 100
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e92"),
+        "title" : "Huevo",
+        "price" : 2300,
+        "thumbnail" : "https://cdn2.iconfinder.com/data/icons/bakery-kitchen-3/512/egg-kitchen-food-256.png",
+        "stock" : 100
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e93"),
+        "title" : "Palta",
+        "price" : 2860,
+        "thumbnail" : "https://cdn4.iconfinder.com/data/icons/fruits-79/48/20-avocado-256.png",
+        "stock" : 100
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e94"),
+        "title" : "Pepino",
+        "price" : 3350,
+        "thumbnail" : "https://cdn4.iconfinder.com/data/icons/food-4-9/128/food_Okra-Ladies-Finger-Vegetable-512.png",
+        "stock" : 100
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e95"),
+        "title" : "Ajo",
+        "price" : 4320,
+        "thumbnail" : "https://cdn4.iconfinder.com/data/icons/food-4-9/128/food_Garlic-Vegetable-Bulb-Ingredient-512.png",
+        "stock" : 0
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e96"),
+        "title" : "Zapallo",
+        "price" : 4990,
+        "thumbnail" : "https://cdn2.iconfinder.com/data/icons/fruit-and-vegetable-64/340/halloween_autumn_pumpkin_fall_vegetable_food-512.png",
+        "stock" : 0
+}
+{
+        "_id" : ObjectId("629ead61b493db0fc9169ea1"),
+        "title" : "Morron",
+        "price" : 1000,
+        "thumbnail" : "https://cdn0.iconfinder.com/data/icons/vegetables-ii-color/290/13-256.png",
+        "stock" : 100
+}
+
+e)
+
+db.productos.deleteMany({price:{$lt: 1000}})
+
+{ "acknowledged" : true, "deletedCount" : 3 }
+
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e90"),
+        "title" : "Zanahora",
+        "price" : 1280,
+        "thumbnail" : "https://cdn2.iconfinder.com/data/icons/fruit-and-vegetable-64/340/vegetable_food_healthy_carrot_organic_vegetarian-256.png",
+        "stock" : 100
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e91"),
+        "title" : "Lechuga",
+        "price" : 1700,
+        "thumbnail" : "https://cdn0.iconfinder.com/data/icons/vegetables-ii-color/290/06-256.png",
+        "stock" : 100
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e92"),
+        "title" : "Huevo",
+        "price" : 2300,
+        "thumbnail" : "https://cdn2.iconfinder.com/data/icons/bakery-kitchen-3/512/egg-kitchen-food-256.png",
+        "stock" : 100
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e93"),
+        "title" : "Palta",
+        "price" : 2860,
+        "thumbnail" : "https://cdn4.iconfinder.com/data/icons/fruits-79/48/20-avocado-256.png",
+        "stock" : 100
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e94"),
+        "title" : "Pepino",
+        "price" : 3350,
+        "thumbnail" : "https://cdn4.iconfinder.com/data/icons/food-4-9/128/food_Okra-Ladies-Finger-Vegetable-512.png",
+        "stock" : 100
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e95"),
+        "title" : "Ajo",
+        "price" : 4320,
+        "thumbnail" : "https://cdn4.iconfinder.com/data/icons/food-4-9/128/food_Garlic-Vegetable-Bulb-Ingredient-512.png",
+        "stock" : 0
+}
+{
+        "_id" : ObjectId("629eabbfb493db0fc9169e96"),
+        "title" : "Zapallo",
+        "price" : 4990,
+        "thumbnail" : "https://cdn2.iconfinder.com/data/icons/fruit-and-vegetable-64/340/halloween_autumn_pumpkin_fall_vegetable_food-512.png",
+        "stock" : 0
+}
+{
+        "_id" : ObjectId("629ead61b493db0fc9169ea1"),
+        "title" : "Morron",
+        "price" : 1000,
+        "thumbnail" : "https://cdn0.iconfinder.com/data/icons/vegetables-ii-color/290/13-256.png",
+        "stock" : 100
+}
+
+6)
+use admin
+
+db.createUser({user:'pepe', 
+               pwd: asd456, 
+               roles:[
+                   {role:"read", 
+                    db:"ecommerce"}]})
+
+Successfully added user: {
+        "user" : "pepe",
+        "roles" : [
+                {
+                        "role" : "read",  
+                        "db" : "ecommerce"
+                }
+        ]
+}
+
+db.productos.insertOne({'title': 'Papa', 'price': 120, 'thumbnail': 'asd.com'})
+
+Error: error: {
+“operationTime” : Timestamp(1563498318, 1),
+“ok” : 0,
+“errmsg” : “not authorized on ecommerce to execute command
+{ insertOne: 'title': 'Papa', 'price': 120, 'thumbnail': 'asd.com', lsid: { id: UUID(“8c88e963-baea-44f1-8ff2-736db742f4d2”) }, $clusterTime: { clusterTime: Timestamp(1563498318, 1), signature: { hash: BinData(0, 16845D1D7DF636C21BEDE423C57940932ADABD28), keyId: 6661714504839069697 } }, $db: “ecommerce” }”,
+“code” : 13,
+“codeName” : “Unauthorized”,
+“$clusterTime” : {
+“clusterTime” : Timestamp(1563498318, 1),
+“signature” : {
+“hash” : BinData(0,“FoRdHX32NsIb7eQjxXlAkyravSg=”),
+“keyId” : NumberLong(“6661714504839069697”)
+}
+}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
