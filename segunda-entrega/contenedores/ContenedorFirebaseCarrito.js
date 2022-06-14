@@ -103,3 +103,5 @@ class ContenedorFirebaseCarrito{
     }
   }
 }
+
+module.exports = ContenedorFirebaseCarrito

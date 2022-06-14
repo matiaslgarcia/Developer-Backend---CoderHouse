@@ -8,6 +8,7 @@ class ContenedorMongoDBProducto {
   async createProduct(prod){
     try {
       const product = {
+        timestamp: prod.timestamp,
         name: prod.name,
         description: prod.description,
         code: prod.code,
@@ -40,6 +41,7 @@ class ContenedorMongoDBProducto {
   async updateProductById(id, prod){
     try {
       await producto.productos.findByIdAndUpdate({id},{
+        timestamp: prod.timestamp,
         name: prod.name,
         description: prod.description,
         code: prod.code,

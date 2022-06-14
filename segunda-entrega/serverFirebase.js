@@ -1,8 +1,8 @@
 //LIBRERIAS
 const express = require('express')
 const { Router } = express
-const Producto = require('./contenedores/ContenedorFileSystemProducto.js')
-const Carrito = require('./contenedores/ContenedorFileSystemCarrito.js')
+const Producto = require('./contenedores/ContenedorFirebaseProducto.js')
+const Carrito = require('./contenedores/ContenedorFirebaseCarrito.js')
 
 //DEPENDENCIAS
 const app = express()
@@ -18,8 +18,9 @@ routerCarrito.use(express.urlencoded({extended:true}))
 
 app.use('/api/productos', routerProducto)
 app.use('/api/carrito', routerCarrito)
-const contenedorProducto = new Producto('./productos.txt')
-const contenedorCarrito = new Carrito('./carrito.txt')
+
+const contenedorProducto = new Producto()
+const contenedorCarrito = new Carrito()
 
 //ENDPOINTS
 let admin = false
@@ -28,11 +29,11 @@ let admin = false
 routerProducto.get('/:id?', async (req,res) =>{
   const id = parseInt(req.params.id)
   if(!id){
-    contenedorProducto.getAll().then(p => {
+    contenedorProducto.findProducts().then(p => {
         res.send({productos: p})
     })
   }else{
-      contenedorProducto.getAll().then(p => {
+      contenedorProducto.findProducts().then(p => {
         if (isNaN(id)) {
           return res.send(
             { error: 'El id ingresado no es un número' }
@@ -41,7 +42,7 @@ routerProducto.get('/:id?', async (req,res) =>{
         if (id < 1 || id > p.length) {
           return res.send({ error: `Producto con ID: ${id} No Encontrado` })
         }
-        contenedorProducto.getById(id).then( prod =>{
+        contenedorProducto.findProductById(id).then( prod =>{
           res.send({producto: prod})
         })
       })
@@ -51,7 +52,7 @@ routerProducto.get('/:id?', async (req,res) =>{
 routerProducto.post('/', async (req,res) =>{
   const producto = req.body
   if(!admin){
-    await contenedorProducto.save(producto)
+    await contenedorProducto.createProduct(producto)
     res.send(
       {
         mensaje: 'Producto agregado Correctamente',
@@ -83,7 +84,7 @@ routerProducto.put('/:id', async (req,res) =>{
     "stock": stock
   }
   if(!admin){
-    await contenedorProducto.putById(id, producto)
+    await contenedorProducto.updateProductById(id, producto)
     res.send({
       result: 'ok',
       id: parseInt(id),
@@ -104,7 +105,7 @@ routerProducto.put('/:id', async (req,res) =>{
 routerProducto.delete('/:id', async (req,res) =>{
   const id = parseInt(req.params.id)
   if(!admin){
-    await contenedorProducto.deleteById(id)
+    await contenedorProducto.deleteProductById(id)
     res.send({
       result: 'Delete ok',
       id: id,
@@ -115,7 +116,6 @@ routerProducto.delete('/:id', async (req,res) =>{
         error : -1,
         descripcion: `Ruta /${id}`,
         método: 'Delete no authorized' }
-
     )
   }
 })
@@ -132,12 +132,12 @@ routerProducto.all('*', (req, res) =>{
 //CARRITO
 
 routerCarrito.post('/', async (req,res) =>{
-  contenedorCarrito.saveCarrito().then(r => res.json(r))
+  contenedorCarrito.createCart().then(r => res.json(r))
 })
 
 routerCarrito.delete('/:id', async (req,res) => {
   const id = parseInt(req.params.id)
-  contenedorCarrito.deleteCarritoById(id).then(p => {
+  contenedorCarrito.deleteCartById(id).then(p => {
     if (isNaN(id)) {
       return res.send(
         {error: 'El id ingresado no es un número'}
@@ -152,7 +152,7 @@ routerCarrito.delete('/:id', async (req,res) => {
 
 routerCarrito.get('/:id/productos', async (req,res) =>{
   const id = parseInt(req.params.id)
-  contenedorCarrito.getCarritoById(id).then(p => {
+  contenedorCarrito.findCartById(id).then(p => {
     if (isNaN(id)) {
       return res.send({ error: 'El id ingresado no es un número' })
     }
@@ -167,7 +167,7 @@ routerCarrito.get('/:id/productos', async (req,res) =>{
 routerCarrito.post('/:id/productos', async (req,res) =>{
   const id = parseInt(req.params.id)
   const producto = req.body
-  await contenedorCarrito.saveProductToCarrito(id, producto)
+  await contenedorCarrito.insertProductToCart(id, producto)
   res.send(
     {
       mensaje: 'Producto agregado Correctamente al carrito',
@@ -180,13 +180,14 @@ routerCarrito.post('/:id/productos', async (req,res) =>{
 routerCarrito.delete('/:id/productos/:id_prod', async (req,res) =>{
   const idCarrito = parseInt(req.params.id)
   const idProducto = parseInt(req.params.id_prod)
-  await contenedorCarrito.deleteProductoTheCarritoById(idCarrito,idProducto)
+  await contenedorCarrito.deleteProductInCartById(idCarrito,idProducto)
     res.send({
       result: 'ok',
       idCarrito: idCarrito,
       idProducto: idProducto
     })
 })
+
 
 routerCarrito.all('*', (req, res) =>{
   res.send(
