@@ -1,8 +1,16 @@
 //LIBRERIAS
 const express = require('express')
 const { Router } = express
+const admin = require("firebase-admin");
 const Producto = require('./contenedores/ContenedorFirebaseProducto.js')
 const Carrito = require('./contenedores/ContenedorFirebaseCarrito.js')
+const serviceAccount = require('./db/coderhouse-backend-82fda-firebase-adminsdk-g7713-1f77e164fd.json');
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+console.log('Firebase Conectado correctamente')
 
 //DEPENDENCIAS
 const app = express()

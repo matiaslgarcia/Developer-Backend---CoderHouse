@@ -1,11 +1,11 @@
 import mongoose from "mongoose";
-const ProductosSchema = require('./producto.js');
+import * as producto from './producto.js'
 
 const cartCollection = "carritos"
 
 const CarritosSChema = new mongoose.Schema({
-  timestamp: Date.now(),
-  product: {type: [ProductosSchema], required:true}
+  timestamps: Date,
+  product: {type: [], required:true}
 })
 
 export const carritos = mongoose.model(cartCollection,CarritosSChema)

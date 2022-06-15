@@ -1,6 +1,7 @@
 import * as carrito from "../models/carrito.js";
+import mongoose from "mongoose"
 
-class ContenedorMongoDBCarrito {
+export default class ContenedorMongoDBCarrito {
   constructor(connection) {
     this.connection = connection;
   }
@@ -8,7 +9,7 @@ class ContenedorMongoDBCarrito {
   async createCart(){
     try {
       const cart = {
-        product: [],
+        product: []
       }
       await carrito.carritos.create(cart)
     }catch (e){
@@ -18,7 +19,7 @@ class ContenedorMongoDBCarrito {
 
   async deleteCartById(id){
     try {
-      await carrito.carritos.findByIdAndDelete({id})
+      await carrito.carritos.findByIdAndDelete({_id: id})
     }catch (e){
       console.log('Error al Eliminar un Carrito: ' + e)
     }
@@ -26,7 +27,7 @@ class ContenedorMongoDBCarrito {
 
   async findCartById(id){
     try {
-      await carrito.carritos.findOne({_id: id})
+      return await carrito.carritos.findOne({_id: id})
     }catch (e) {
       console.log('Error al Buscar un Carrito: ' + e)
     }
@@ -34,8 +35,11 @@ class ContenedorMongoDBCarrito {
 
   async insertProductToCart(idCart, prod){
     try {
+      const id = mongoose.Types.ObjectId();
       const getProducts = await carrito.carritos.find({_id: idCart},{_id:0, product:1})
+      console.log('getProducts ' + getProducts)
       const createProduct = {
+        _id: id,
         name: prod.name,
         description: prod.description,
         code: prod.code,
@@ -44,7 +48,8 @@ class ContenedorMongoDBCarrito {
         stock: prod.stock,
       }
       const addProduct = [...getProducts,createProduct]
-      await carrito.carritos.findByIdAndUpdate({idCart},{product: addProduct})
+      console.log('addProduct ' + addProduct)
+      await carrito.carritos.findByIdAndUpdate({_id: idCart},{product: addProduct})
     }catch (e) {
       console.log('Error al insertar un producto en el carrito: ', e)
     }
@@ -54,6 +59,7 @@ class ContenedorMongoDBCarrito {
     try{
       let getProducts = []
       getProducts = await carrito.carritos.find({_id: idCart},{_id:0, product:1})
+      console.log(getProducts)
       let band = false;
       let prodSearch = {}
       for (const prod of getProducts) {
@@ -65,12 +71,10 @@ class ContenedorMongoDBCarrito {
       if (band){
         const indice = getProducts.indexOf(prodSearch)
         getProducts.splice(indice)
-        await carrito.carritos.findByIdAndUpdate({idCart},{product: getProducts})
+        await carrito.carritos.findByIdAndUpdate({_id: idCart},{product: getProducts})
       }
     }catch(e){
       console.log('Error al eliminar un producto del carrito: ', e)
     }
   }
 }
-
-module.exports = ContenedorMongoDBCarrito

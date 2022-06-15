@@ -1,16 +1,16 @@
 //LIBRERIAS
-const express = require('express')
-const { Router } = express
-const ContenedorMongoDBProducto = require('./contenedores/ContenedorMongoDBProducto.js')
-const ContenedorMongoDBCarrito = require('./contenedores/ContenedorMongoDBCarrito.js')
+import express from 'express'
+import mongoose from "mongoose"
+import ContenedorMongoDBProducto from './contenedores/ContenedorMongoDBProducto.js'
+import ContenedorMongoDBCarrito from './contenedores/ContenedorMongoDBCarrito.js'
 
 const URL = "mongodb+srv://coderhouse:coderhouse@cluster0.utluy.mongodb.net/?retryWrites=true&w=majority"
 let conexion = await mongoose.connect(URL);
 
 //DEPENDENCIAS
 const app = express()
-const routerProducto = new Router()
-const routerCarrito = new Router()
+const routerProducto = express.Router()
+const routerCarrito = express.Router()
 
 app.use(express.static('public'))
 routerProducto.use(express.json())
@@ -31,25 +31,15 @@ let admin = false
 
 //PRODUCTOS
 routerProducto.get('/:id?', async (req,res) =>{
-  const id = parseInt(req.params.id)
+  const id = req.params.id
   if(!id){
     contenedorProducto.findProducts().then(p => {
         res.send({productos: p})
     })
   }else{
-      contenedorProducto.findProducts().then(p => {
-        if (isNaN(id)) {
-          return res.send(
-            { error: 'El id ingresado no es un número' }
-          )
-        }
-        if (id < 1 || id > p.length) {
-          return res.send({ error: `Producto con ID: ${id} No Encontrado` })
-        }
         contenedorProducto.findProductById(id).then( prod =>{
           res.send({producto: prod})
         })
-      })
     }
 })
 
@@ -75,10 +65,9 @@ routerProducto.post('/', async (req,res) =>{
 })
 
 routerProducto.put('/:id', async (req,res) =>{
-  const {id} = req.params
+  const id = req.params.id
   const {name, description,code, thumbnail, price, stock} = req.body
   const producto = {
-    "id": parseInt(id),
     "timestamp": Date.now(),
     "name": name,
     "description": description,
@@ -91,7 +80,6 @@ routerProducto.put('/:id', async (req,res) =>{
     await contenedorProducto.updateProductById(id, producto)
     res.send({
       result: 'ok',
-      id: parseInt(id),
       productoActualizado: producto
     })
   }else{
@@ -107,7 +95,7 @@ routerProducto.put('/:id', async (req,res) =>{
 })
 
 routerProducto.delete('/:id', async (req,res) =>{
-  const id = parseInt(req.params.id)
+  const id = req.params.id
   if(!admin){
     await contenedorProducto.deleteProductById(id)
     res.send({
@@ -137,40 +125,37 @@ routerProducto.all('*', (req, res) =>{
 //CARRITO
 
 routerCarrito.post('/', async (req,res) =>{
-  contenedorCarrito.createCart().then(r => res.json(r))
+  await contenedorCarrito.createCart()
+  res.send({mensaje: 'Carrito creado correctamente'})
 })
 
 routerCarrito.delete('/:id', async (req,res) => {
-  const id = parseInt(req.params.id)
-  contenedorCarrito.deleteCartById(id).then(p => {
-    if (isNaN(id)) {
-      return res.send(
-        {error: 'El id ingresado no es un número'}
-      )
+  const id = req.params.id
+  const carrito = await contenedorCarrito.findCartById(id)
+    console.log(carrito)
+    if(!carrito){
+      res.send({error: `Producto con ID: ${id} No Encontrado`})
+    } else {
+      await contenedorCarrito.deleteCartById(id)
+      res.send({mensaje: `Carrito con ID: ${id} borrado `})
     }
-    if (id < 1) {
-      return res.send({error: `Producto con ID: ${id} No Encontrado`})
-    }
-    res.send({mensaje: `Carrito con ID: ${id} borrado `})
-  })
 })
 
 routerCarrito.get('/:id/productos', async (req,res) =>{
-  const id = parseInt(req.params.id)
+  const id = req.params.id
+  const carrito = await contenedorCarrito.findCartById(id)
   contenedorCarrito.findCartById(id).then(p => {
-    if (isNaN(id)) {
-      return res.send({ error: 'El id ingresado no es un número' })
+    if(!carrito){
+      res.send({error: `Carrito con ID: ${id} No Encontrado`})
+    } else {
+      console.log(p)
+      res.send(p)
     }
-
-    if (id < 1) {
-      return res.send({ error: 'productos no encontrado' })
-    }
-   res.send(p)
   })
 })
 
 routerCarrito.post('/:id/productos', async (req,res) =>{
-  const id = parseInt(req.params.id)
+  const id = req.params.id
   const producto = req.body
   await contenedorCarrito.insertProductToCart(id, producto)
   res.send(
@@ -183,8 +168,8 @@ routerCarrito.post('/:id/productos', async (req,res) =>{
 })
 
 routerCarrito.delete('/:id/productos/:id_prod', async (req,res) =>{
-  const idCarrito = parseInt(req.params.id)
-  const idProducto = parseInt(req.params.id_prod)
+  const idCarrito = req.params.id
+  const idProducto = req.params.id_prod
   await contenedorCarrito.deleteProductInCartById(idCarrito,idProducto)
     res.send({
       result: 'ok',

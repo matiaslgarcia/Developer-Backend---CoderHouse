@@ -1,6 +1,6 @@
 import * as producto from '../models/producto.js'
 
-class ContenedorMongoDBProducto {
+export default class ContenedorMongoDBProducto {
   constructor( connection) {
     this.connection = connection
   }
@@ -24,7 +24,7 @@ class ContenedorMongoDBProducto {
 
   async findProductById(id){
     try {
-      await producto.productos.findOne({_id: id})
+      return await producto.productos.findOne({_id: id})
     }catch (e) {
       console.log('Error al Buscar un Producto: ' + e)
     }
@@ -32,7 +32,7 @@ class ContenedorMongoDBProducto {
 
   async findProducts(){
     try {
-      await producto.productos.find({})
+      return await producto.productos.find()
     }catch (e) {
       console.log('Error al Buscar un Producto: ' + e)
     }
@@ -40,7 +40,7 @@ class ContenedorMongoDBProducto {
 
   async updateProductById(id, prod){
     try {
-      await producto.productos.findByIdAndUpdate({id},{
+      await producto.productos.findByIdAndUpdate({_id: id},{
         timestamp: prod.timestamp,
         name: prod.name,
         description: prod.description,
@@ -56,11 +56,9 @@ class ContenedorMongoDBProducto {
 
   async deleteProductById(id){
     try {
-      await producto.productos.findByIdAndDelete({id})
+      await producto.productos.findByIdAndDelete({_id: id})
     }catch (e){
       console.log('Error al Eliminar un Producto: ' + e)
     }
   }
 }
-
-module.exports = ContenedorMongoDBProducto
