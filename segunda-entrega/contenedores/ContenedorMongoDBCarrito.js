@@ -37,7 +37,9 @@ export default class ContenedorMongoDBCarrito {
     try {
       const id = mongoose.Types.ObjectId();
       const getProducts = await carrito.carritos.find({_id: idCart},{_id:0, product:1})
+      const listaProductos = Object.entries(getProducts)
       console.log('getProducts ' + getProducts)
+      console.log('Array de productos: ' + listaProductos)
       const createProduct = {
         _id: id,
         name: prod.name,
@@ -47,9 +49,9 @@ export default class ContenedorMongoDBCarrito {
         price: prod.price,
         stock: prod.stock,
       }
-      const addProduct = [...getProducts,createProduct]
+      getProducts.push(createProduct)
       console.log('addProduct ' + addProduct)
-      await carrito.carritos.findByIdAndUpdate({_id: idCart},{product: addProduct})
+      await carrito.carritos.findByIdAndUpdate({_id: idCart},{product: getProducts})
     }catch (e) {
       console.log('Error al insertar un producto en el carrito: ', e)
     }

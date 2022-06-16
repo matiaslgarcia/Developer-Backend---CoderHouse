@@ -5,7 +5,7 @@ const cartCollection = "carritos"
 
 const CarritosSChema = new mongoose.Schema({
   timestamps: Date,
-  product: {type: [], required:true}
+  product: []
 })
 
 export const carritos = mongoose.model(cartCollection,CarritosSChema)
