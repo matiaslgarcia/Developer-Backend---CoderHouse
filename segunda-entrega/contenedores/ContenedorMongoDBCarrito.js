@@ -56,11 +56,8 @@ export default class ContenedorMongoDBCarrito {
   // }
 
   async insertProductToCart(idCart, prod) {
-    console.log(idCart, "idCart");
-    console.log(prod, "prod");
     try {
       let cart = await carrito.carritos.findOne({ _id: idCart });
-      console.log(cart, "cart");
       if (cart) {
         const createProd = {
           productId: prod.productId,
@@ -75,7 +72,7 @@ export default class ContenedorMongoDBCarrito {
         let itemIndex = cart.product.findIndex(
           (item) => item.productId === prod.productId
         );
-        console.log(itemIndex, "itemIndex");
+        console.log(itemIndex)
         if (itemIndex > -1) {
           cart.product[itemIndex].quantity = cart.product[itemIndex].quantity + prod.quantity;
         } else {
@@ -91,43 +88,15 @@ export default class ContenedorMongoDBCarrito {
 
   async deleteProductInCartById(idCart, idProd){
     try{
-      // let getProducts = []
-      // getProducts = await carrito.carritos.find({_id: idCart},{_id:0, product:1})
-      // console.log(getProducts)
-      // let band = false;
-      // let prodSearch = {}
-      // for (const prod of getProducts) {
-      //   if (prod.productId === idProd){
-      //     band = true
-      //     prodSearch = prod
-      //   }
-      // }
-      // if (band){
-      //   const indice = getProducts.indexOf(prodSearch)
-      //   getProducts.splice(indice)
-      //   await getProducts.save()
-      // }
-      //const id = mongoose.Types.ObjectId(idProd);
-      //console.log("id convertido " + id)
-      console.log("id pasado por parametro " + idProd)
       let cart = await carrito.carritos.findOne({ _id: idCart });
-      let pos = cart.product.findIndex((item) => {
-      console.log('Item ' + item)
-      item.productId === idProd});
-      console.log('Posicion de producto: ' + pos)
-      
-      // if (cart) {
-      //   //
-      //   let itemIndex = cart.product.findIndex(
-      //     (item) => item.productId === idProd
-      //   );
-      //   console.log(itemIndex, "itemIndex");
-      //   if (itemIndex > -1) {
-      //     cart.product.splice(itemIndex);
-      //     //cart.product[itemIndex].quantity += 1;
-      //   }
-      //  await cart.save();
-      
+      if(cart){
+        let posi = cart.product.findIndex((item) => {item._id === mongoose.Types.ObjectId(idProd)});
+        console.log('Posicion de producto: ' + posi)
+        if (posi > -1) {
+          cart.product.splice(posi);
+        }
+        await cart.save();
+      }
     }catch(e){
       console.log('Error al eliminar un producto del carrito: ', e)
     }
