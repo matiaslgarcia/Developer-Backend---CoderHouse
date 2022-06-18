@@ -9,6 +9,7 @@ export default class ContenedorMongoDBCarrito {
   async createCart(){
     try {
       const cart = {
+        timestamp: Date.now(),
         product: []
       }
       await carrito.carritos.create(cart)
@@ -33,48 +34,100 @@ export default class ContenedorMongoDBCarrito {
     }
   }
 
-  async insertProductToCart(idCart, prod){
+  // async insertProductToCart(idCart, prod){
+  //   try {
+  //     const id = mongoose.Types.ObjectId();
+  //     const getProducts = await carrito.carritos.find({_id: idCart},{_id:0, product:1})
+  //     const createProduct = {
+  //       _id: id,
+  //       name: prod.name,
+  //       description: prod.description,
+  //       code: prod.code,
+  //       thumbnail: prod.thumbnail,
+  //       price: prod.price,
+  //       stock: prod.stock,
+  //     }
+  //     getProducts.push(createProduct)
+  //     console.log('addProduct ' + addProduct)
+  //     await carrito.carritos.findByIdAndUpdate({_id: idCart},{product: getProducts})
+  //   }catch (e) {
+  //     console.log('Error al insertar un producto en el carrito: ', e)
+  //   }
+  // }
+
+  async insertProductToCart(idCart, prod) {
+    console.log(idCart, "idCart");
+    console.log(prod, "prod");
     try {
-      const id = mongoose.Types.ObjectId();
-      const getProducts = await carrito.carritos.find({_id: idCart},{_id:0, product:1})
-      const listaProductos = Object.entries(getProducts)
-      console.log('getProducts ' + getProducts)
-      console.log('Array de productos: ' + listaProductos)
-      const createProduct = {
-        _id: id,
-        name: prod.name,
-        description: prod.description,
-        code: prod.code,
-        thumbnail: prod.thumbnail,
-        price: prod.price,
-        stock: prod.stock,
+      let cart = await carrito.carritos.findOne({ _id: idCart });
+      console.log(cart, "cart");
+      if (cart) {
+        const createProd = {
+          productId: prod.productId,
+          timestamp: Date.now(),
+          name: prod.name,
+          description: prod.description,
+          code: prod.code,
+          thumbnail: prod.thumbnail,
+          price: prod.price,
+          quantity:prod.quantity
+        }
+        let itemIndex = cart.product.findIndex(
+          (item) => item.productId === prod.productId
+        );
+        console.log(itemIndex, "itemIndex");
+        if (itemIndex > -1) {
+          cart.product[itemIndex].quantity = cart.product[itemIndex].quantity + prod.quantity;
+        } else {
+          cart.product.push(createProd);
+        }
+        await cart.save();
       }
-      getProducts.push(createProduct)
-      console.log('addProduct ' + addProduct)
-      await carrito.carritos.findByIdAndUpdate({_id: idCart},{product: getProducts})
-    }catch (e) {
-      console.log('Error al insertar un producto en el carrito: ', e)
+      return cart;
+    } catch (e) {
+      console.log("Error al insertar un producto en el carrito: ", e);
     }
   }
 
   async deleteProductInCartById(idCart, idProd){
     try{
-      let getProducts = []
-      getProducts = await carrito.carritos.find({_id: idCart},{_id:0, product:1})
-      console.log(getProducts)
-      let band = false;
-      let prodSearch = {}
-      for (const prod of getProducts) {
-        if (prod.id === idProd){
-          band = true
-          prodSearch = prod
-        }
-      }
-      if (band){
-        const indice = getProducts.indexOf(prodSearch)
-        getProducts.splice(indice)
-        await carrito.carritos.findByIdAndUpdate({_id: idCart},{product: getProducts})
-      }
+      // let getProducts = []
+      // getProducts = await carrito.carritos.find({_id: idCart},{_id:0, product:1})
+      // console.log(getProducts)
+      // let band = false;
+      // let prodSearch = {}
+      // for (const prod of getProducts) {
+      //   if (prod.productId === idProd){
+      //     band = true
+      //     prodSearch = prod
+      //   }
+      // }
+      // if (band){
+      //   const indice = getProducts.indexOf(prodSearch)
+      //   getProducts.splice(indice)
+      //   await getProducts.save()
+      // }
+      //const id = mongoose.Types.ObjectId(idProd);
+      //console.log("id convertido " + id)
+      console.log("id pasado por parametro " + idProd)
+      let cart = await carrito.carritos.findOne({ _id: idCart });
+      let pos = cart.product.findIndex((item) => {
+      console.log('Item ' + item)
+      item.productId === idProd});
+      console.log('Posicion de producto: ' + pos)
+      
+      // if (cart) {
+      //   //
+      //   let itemIndex = cart.product.findIndex(
+      //     (item) => item.productId === idProd
+      //   );
+      //   console.log(itemIndex, "itemIndex");
+      //   if (itemIndex > -1) {
+      //     cart.product.splice(itemIndex);
+      //     //cart.product[itemIndex].quantity += 1;
+      //   }
+      //  await cart.save();
+      
     }catch(e){
       console.log('Error al eliminar un producto del carrito: ', e)
     }
