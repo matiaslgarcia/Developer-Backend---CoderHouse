@@ -1,6 +1,6 @@
-const admin = require("firebase-admin");
+import admin from "firebase-admin"
 
-class ContenedorFirebaseProducto {
+export default class ContenedorFirebaseProducto {
   constructor(connection, nameDocument) {
     this.connection = connection;
     this.nameDocument = nameDocument
@@ -82,4 +82,3 @@ class ContenedorFirebaseProducto {
   }
 }
 
-module.exports = ContenedorFirebaseProducto

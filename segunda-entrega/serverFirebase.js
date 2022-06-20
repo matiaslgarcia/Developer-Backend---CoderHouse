@@ -1,10 +1,10 @@
 //LIBRERIAS
-const express = require('express')
-const { Router } = express
-const admin = require("firebase-admin");
-const Producto = require('./contenedores/ContenedorFirebaseProducto.js')
-const Carrito = require('./contenedores/ContenedorFirebaseCarrito.js')
-const serviceAccount = require('./db/coderhouse-backend-82fda-firebase-adminsdk-g7713-1f77e164fd.json');
+import express from 'express'
+import admin from "firebase-admin"
+import Producto from './contenedores/ContenedorFirebaseProducto.js'
+import Carrito from './contenedores/ContenedorFirebaseCarrito.js'
+const serviceAccount = require('./db/coderhouse-backend-82fda-firebase-adminsdk-g7713-1f77e164fd.json')
+//Descargar archivo JSON
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
@@ -14,8 +14,8 @@ console.log('Firebase Conectado correctamente')
 
 //DEPENDENCIAS
 const app = express()
-const routerProducto = new Router()
-const routerCarrito = new Router()
+const routerProducto = express.Router()
+const routerCarrito = express.Router()
 
 app.use(express.static('public'))
 routerProducto.use(express.json())
@@ -31,7 +31,7 @@ const contenedorProducto = new Producto()
 const contenedorCarrito = new Carrito()
 
 //ENDPOINTS
-let admin = false
+let administrador = false
 
 //PRODUCTOS
 routerProducto.get('/:id?', async (req,res) =>{
@@ -59,7 +59,7 @@ routerProducto.get('/:id?', async (req,res) =>{
 
 routerProducto.post('/', async (req,res) =>{
   const producto = req.body
-  if(!admin){
+  if(!administrador){
     await contenedorProducto.createProduct(producto)
     res.send(
       {
@@ -91,7 +91,7 @@ routerProducto.put('/:id', async (req,res) =>{
     "price": price,
     "stock": stock
   }
-  if(!admin){
+  if(!administrador){
     await contenedorProducto.updateProductById(id, producto)
     res.send({
       result: 'ok',
@@ -112,7 +112,7 @@ routerProducto.put('/:id', async (req,res) =>{
 
 routerProducto.delete('/:id', async (req,res) =>{
   const id = parseInt(req.params.id)
-  if(!admin){
+  if(!administrador){
     await contenedorProducto.deleteProductById(id)
     res.send({
       result: 'Delete ok',

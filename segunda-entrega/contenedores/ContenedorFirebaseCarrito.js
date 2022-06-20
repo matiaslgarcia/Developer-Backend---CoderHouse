@@ -1,7 +1,6 @@
-const admin = require("firebase-admin");
-const carrito = require("../models/carrito.js");
+import admin from "firebase-admin"
 
-class ContenedorFirebaseCarrito{
+export default class ContenedorFirebaseCarrito{
   constructor(connection, nameDocument) {
     this.connection = connection;
     this.nameDocument = nameDocument
@@ -104,4 +103,3 @@ class ContenedorFirebaseCarrito{
   }
 }
 
-module.exports = ContenedorFirebaseCarrito
