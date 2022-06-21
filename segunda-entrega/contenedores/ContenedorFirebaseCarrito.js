@@ -21,6 +21,13 @@ export default class ContenedorFirebaseCarrito{
     return documentIds[documentIds.length - 1]
   }
 
+  async getIdCarritos(){  
+    const documentReferences = await admin.firestore()
+        .collection(this.nameDocument)
+        .listDocuments()
+    return documentReferences.map(it => it.id)
+  }
+
   async createCart(){
     await this.connectionDb()
     try {
@@ -51,6 +58,7 @@ export default class ContenedorFirebaseCarrito{
     try {
       const doc = this.getQuery().doc(`${id}`)
       const cart = await doc.get()
+      console.log(await this.getID())
       return cart.data()
     }catch (e) {
       console.log('Error al Buscar un Carrito: ' + e)
@@ -62,44 +70,56 @@ export default class ContenedorFirebaseCarrito{
     let idProd
     let newProduct = []
     let control
+    let carritos
+    let posicion
+    let createProduct
     try {
-      const doc = this.getQuery().doc(`${idCart}`)
-      const querySnapshot = await this.getQuery().get()
-      const response = querySnapshot.docs.map( prod => ({
+      let clave = await this.getIdCarritos() 
+      control = clave.includes(String(idCart)) 
+
+      if (control){
+        carritos = await this.getIdCarritos();
+        posicion = carritos.findIndex(e => e === String(idCart))
+
+        const doc = this.getQuery().doc(`${idCart}`)
+        const querySnapshot = await this.getQuery().get()
+        const response = querySnapshot.docs.map( prod => ({
         product: prod.data().product,
         timestamp: prod.data().timestamp,
-      }))
-      control = response[idCart-1].product.length 
-      if (control === 0){
-        const createProduct = {
-          id: 1,
-          name: prod.name,
-          description: prod.description,
-          code: prod.code,
-          thumbnail: prod.thumbnail,
-          price: prod.price,
-          quantity: prod. quantity,
+        }))
+        let contenido = response[posicion].product.length
+        if(contenido === 0) {
+          createProduct = {
+            id: 1,
+            name: prod.name,
+            description: prod.description,
+            code: prod.code,
+            thumbnail: prod.thumbnail,
+            price: prod.price,
+            quantity: prod. quantity,
+          }
+        } else {
+          idProd = response[posicion].product[(response[posicion].product.length)-1].id
+          createProduct = {
+            id: parseInt(idProd)+1,
+            name: prod.name,
+            description: prod.description,
+            code: prod.code,
+            thumbnail: prod.thumbnail,
+            price: prod.price,
+            quantity: prod.quantity,
+          }
         }
-        newProduct = response[idCart-1].product
+        newProduct = response[posicion].product
         newProduct.push(createProduct)
-      }else{
-        idProd = response[idCart-1].product[(response[idCart-1].product.length)-1].id
-        const createProduct = {
-          id: parseInt(idProd)+1,
-          name: prod.name,
-          description: prod.description,
-          code: prod.code,
-          thumbnail: prod.thumbnail,
-          price: prod.price,
-          quantity: prod.quantity,
-        }
-        newProduct = response[idCart-1].product
-        newProduct.push(createProduct)
+        await doc.update({
+          timestamp: new Date(Date.now()).toLocaleString(),
+          product: newProduct,
+        })
+        return 'Producto insertado correctamente en el carrito'
+      } else {
+        return 'Error: El carrito no existe'
       }
-      await doc.update({
-        timestamp: new Date(Date.now()).toLocaleString(),
-        product: newProduct,
-      })
     }catch (e) {
       console.log('Error al insertar un producto en el carrito: ', e)
     }
@@ -110,29 +130,41 @@ export default class ContenedorFirebaseCarrito{
     let newProduct = []
     let control
     let productos
+    let posicionCarrito
     let posicion
+    let carritos
+    let contenido
     try {
+      let clave = await this.getIdCarritos() 
+      control = clave.includes(String(idCart)) 
       const doc = this.getQuery().doc(`${idCart}`)
-      const querySnapshot = await this.getQuery().get()
-      const response = querySnapshot.docs.map( prod => ({
-        product: prod.data().product,
-        timestamp: prod.data().timestamp,
-      }))
-      control = response[idCart-1].product.length
-      if (control !== 0){
-        for (let i = 0; i < control; i++) {
-          productos = response[idCart-1].product[i]
-          if(idProd === productos.id){
-            posicion = i
-          }          
-        }
-        newProduct = response[idCart-1].product
-        newProduct.splice(posicion,1)
+      if(control){
+        carritos = await this.getIdCarritos();
+        posicion = carritos.findIndex(e => e === String(idCart))  
+        const querySnapshot = await this.getQuery().get()
+        const response = querySnapshot.docs.map( prod => ({
+          product: prod.data().product,
+          timestamp: prod.data().timestamp,
+        }))
+        contenido = response[posicion].product.length
+        if (contenido !== 0){
+          for (let i = 0; i < contenido; i++) {
+            productos = response[posicion].product[i]
+            if(idProd === productos.id){
+              posicionCarrito = i
+            }          
+          } 
+        newProduct = response[posicion].product
+        newProduct.splice(posicionCarrito,1)
+        } 
+        await doc.update({
+          timestamp: new Date(Date.now()).toLocaleString(),
+          product: newProduct,
+        })    
+        return 'Producto eliminado correctamente del carrito'
+      } else {
+        return 'Error: El carrito no existe'
       }
-      await doc.update({
-        timestamp: new Date(Date.now()).toLocaleString(),
-        product: newProduct,
-      })
     }catch(e){
       console.log('Error al eliminar un producto del carrito: ', e)
     }
