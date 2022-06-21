@@ -70,7 +70,7 @@ export default class ContenedorFirebaseCarrito{
         timestamp: prod.data().timestamp,
       }))
       control = response[idCart-1].product.length 
-      if (control == 0){
+      if (control === 0){
         const createProduct = {
           id: 1,
           name: prod.name,
@@ -118,19 +118,14 @@ export default class ContenedorFirebaseCarrito{
         product: prod.data().product,
         timestamp: prod.data().timestamp,
       }))
-      control = response[idCart-1].product.length 
-      console.log(control)
-      if (control == 0){
-        console.log('CARRITO VACIO')
-      }else{
+      control = response[idCart-1].product.length
+      if (control !== 0){
         for (let i = 0; i < control; i++) {
           productos = response[idCart-1].product[i]
-          console.log(productos)
-          if(idProd == productos.id){
+          if(idProd === productos.id){
             posicion = i
           }          
         }
-        console.log(posicion)
         newProduct = response[idCart-1].product
         newProduct.splice(posicion,1)
       }

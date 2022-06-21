@@ -19,37 +19,29 @@ export default class ContenedorFirebaseProducto {
   getQuery(){
     return admin.firestore().collection(this.nameDocument)
   }
-  
-  async createProduct(prod){
+  generateProduct(prod){
+    let product;
+    return product = {
+        timestamp: new Date(Date.now()).toLocaleString(),
+        name: prod.name,
+        description: prod.description,
+        code: prod.code,
+        thumbnail: prod.thumbnail,
+        price: prod.price,
+        stock: prod.stock,
+      }
+  }
+  async createProduct(product){
     await this.connectionDb()
     try {
       let id = await this.getID()
       let doc
-      let product
       if (isNaN(id)){
         doc = await this.getQuery().doc((1).toString())
-        product = {
-          timestamp: new Date(Date.now()).toLocaleString(),
-          name: prod.name,
-          description: prod.description,
-          code: prod.code,
-          thumbnail: prod.thumbnail,
-          price: prod.price,
-          stock: prod.stock,
-        }
       } else {
         doc = await this.getQuery().doc((parseInt(id) + 1).toString())
-        product = {
-          timestamp: new Date(Date.now()).toLocaleString(),
-          name: prod.name,
-          description: prod.description,
-          code: prod.code,
-          thumbnail: prod.thumbnail,
-          price: prod.price,
-          stock: prod.stock,
-        }
       }
-      await doc.create(product)
+      await doc.create(this.generateProduct(product))
     }catch (e) {
       console.log('Error al Crear un Producto: ' + e)
     }
@@ -61,7 +53,6 @@ export default class ContenedorFirebaseProducto {
       const doc = this.getQuery().doc(`${id}`)
       const product = await doc.get()
       return product.data()
-
     }catch (e) {
       console.log('Error al Buscar un Producto: ' + e)
     }
@@ -92,15 +83,7 @@ export default class ContenedorFirebaseProducto {
     await this.connectionDb()
     try {
       const doc = this.getQuery().doc(`${id}`)
-      await doc.update({
-        timestamp: new Date(Date.now()).toLocaleString(),
-        name: prod.name,
-        description: prod.description,
-        code: prod.code,
-        thumbnail: prod.thumbnail,
-        price: prod.price,
-        stock: prod.stock,
-      })
+      await doc.update(this.generateProduct(prod))
     }catch (e) {
       console.log('Error al Actualizar un Producto: ' + e)
     }
