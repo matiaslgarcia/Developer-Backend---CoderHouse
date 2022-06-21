@@ -91,9 +91,30 @@ export default class ContenedorMongoDBCarrito {
 
   async deleteProductInCartById(idCart, idProd){
     try{
-      // let getProducts = []
-      // getProducts = await carrito.carritos.find({_id: idCart},{_id:0, product:1})
-      // console.log(getProducts)
+      
+      let getProducts = await carrito.carritos.find({_id: idCart},{_id:0, product:1})
+      console.log('Productos almacenados en el carrito: ' + Object.values(getProducts[0]))
+      let itemIndex = getProducts.findIndex(        
+        (item) => {
+          console.log(item._id)
+          console.log(mongoose.Types.ObjectId(idProd))
+          item._id === mongoose.Types.ObjectId(idProd)}
+      );
+      console.log(itemIndex)
+     
+      // let indice = 0
+      // for (let i = 0; i < getProducts.length; i++) {
+      //   const element = getProducts[i];
+        
+      //   console.log('Id del array: ' + getProducts[i])
+      //   console.log('Id del parametro: ' + idProd)
+      //   if (id == idProd) {
+      //     indice = i
+      //   }
+      //   console.log(element)
+      // }
+      // console.log(indice)
+      
       // let band = false;
       // let prodSearch = {}
       // for (const prod of getProducts) {
@@ -107,14 +128,15 @@ export default class ContenedorMongoDBCarrito {
       //   getProducts.splice(indice)
       //   await getProducts.save()
       // }
-      //const id = mongoose.Types.ObjectId(idProd);
-      //console.log("id convertido " + id)
-      console.log("id pasado por parametro " + idProd)
-      let cart = await carrito.carritos.findOne({ _id: idCart });
-      let pos = cart.product.findIndex((item) => {
-      console.log('Item ' + item)
-      item.productId === idProd});
-      console.log('Posicion de producto: ' + pos)
+      // const id = mongoose.Types.ObjectId(idProd);
+      // console.log("id convertido " + id)
+      
+      // console.log("id pasado por parametro " + idProd)
+      // let cart = await carrito.carritos.findOne({ _id: idCart });
+      // let pos = cart.product.findIndex((item) => {
+      // console.log('Item ' + item)
+      // item.productId === idProd});
+      // console.log('Posicion de producto: ' + pos)
       
       // if (cart) {
       //   //

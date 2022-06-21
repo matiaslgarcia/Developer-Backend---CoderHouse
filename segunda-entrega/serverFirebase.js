@@ -3,8 +3,7 @@ import express from 'express'
 import admin from "firebase-admin"
 import Producto from './contenedores/ContenedorFirebaseProducto.js'
 import Carrito from './contenedores/ContenedorFirebaseCarrito.js'
-const serviceAccount = require('./db/coderhouse-backend-82fda-firebase-adminsdk-g7713-1f77e164fd.json')
-//Descargar archivo JSON
+import serviceAccount from './db/coderhouse-backend-82fda-firebase-adminsdk-g7713-1f77e164fd.json'
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)

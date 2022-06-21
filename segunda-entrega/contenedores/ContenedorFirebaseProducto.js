@@ -1,38 +1,64 @@
-import admin from "firebase-admin"
+  import admin from "firebase-admin"
 
 export default class ContenedorFirebaseProducto {
-  constructor(connection, nameDocument) {
-    this.connection = connection;
+  constructor(nameDocument) {
     this.nameDocument = nameDocument
   }
+  async connectionDb(){
+    return admin.firestore().collection(this.nameDocument)
+  }
 
+  async getID(){  
+    const documentReferences = await admin.firestore()
+        .collection(this.nameDocument)
+        .listDocuments()
+    const documentIds = documentReferences.map(it => it.id)
+    return documentIds[documentIds.length - 1]
+  }
+
+  getQuery(){
+    return admin.firestore().collection(this.nameDocument)
+  }
+  
   async createProduct(prod){
-    const db = admin.firestore()
-    const query = db.collection(this.nameDocument)
+    await this.connectionDb()
     try {
-      let id = 1;
-      let doc = await query.doc(id.toString())
-      const product = {
-        timestamp: Date.now(),
-        name: prod.name,
-        description: prod.description,
-        code: prod.code,
-        thumbnail: prod.thumbnail,
-        price: prod.price,
-        stock: prod.stock,
+      let id = await this.getID()
+      let doc
+      let product
+      if (isNaN(id)){
+        doc = await this.getQuery().doc((1).toString())
+        product = {
+          timestamp: new Date(Date.now()).toLocaleString(),
+          name: prod.name,
+          description: prod.description,
+          code: prod.code,
+          thumbnail: prod.thumbnail,
+          price: prod.price,
+          stock: prod.stock,
+        }
+      } else {
+        doc = await this.getQuery().doc((parseInt(id) + 1).toString())
+        product = {
+          timestamp: new Date(Date.now()).toLocaleString(),
+          name: prod.name,
+          description: prod.description,
+          code: prod.code,
+          thumbnail: prod.thumbnail,
+          price: prod.price,
+          stock: prod.stock,
+        }
       }
       await doc.create(product)
-      id++
     }catch (e) {
       console.log('Error al Crear un Producto: ' + e)
     }
   }
 
   async findProductById(id){
-    const db = admin.firestore()
-    const query = db.collection(this.nameDocument)
+    await this.connectionDb()
     try {
-      const doc = query.doc(`${id}`)
+      const doc = this.getQuery().doc(`${id}`)
       const product = await doc.get()
       return product.data()
 
@@ -42,22 +68,32 @@ export default class ContenedorFirebaseProducto {
   }
 
   async findProducts(){
-    const db = admin.firestore()
-    const query = db.collection(this.nameDocument)
+    await this.connectionDb()
     try {
-      const querySnapshot = await query.get()
-      querySnapshot.docs.map( prod => {return prod})
+      let id = await this.getID()
+      const querySnapshot = await this.getQuery().get()
+      const response = querySnapshot.docs.map( prod => ({
+        id: prod.data().id,
+        timestamp: prod.data().timestamp,
+        name: prod.data().name,
+        description: prod.data().description,
+        code: prod.data().code,
+        thumbnail: prod.data().thumbnail,
+        price: prod.data().price,
+        stock: prod.data().stock,
+      }))
+      return response
     }catch (e) {
       console.log('Error al Buscar un Producto: ' + e)
     }
   }
 
   async updateProductById(id, prod){
-    const db = admin.firestore()
-    const query = db.collection(this.nameDocument)
+    await this.connectionDb()
     try {
-      const doc = query.doc(`${id}`)
+      const doc = this.getQuery().doc(`${id}`)
       await doc.update({
+        timestamp: new Date(Date.now()).toLocaleString(),
         name: prod.name,
         description: prod.description,
         code: prod.code,
@@ -71,10 +107,9 @@ export default class ContenedorFirebaseProducto {
   }
 
   async deleteProductById(id){
-    const db = admin.firestore()
-    const query = db.collection(this.nameDocument)
+    await this.connectionDb()
     try {
-      const doc = query.doc(`${id}`)
+      const doc = this.getQuery().doc(`${id}`)
       await doc.delete()
     }catch (e){
       console.log('Error al Eliminar un Producto: ' + e)

@@ -1,33 +1,45 @@
 import admin from "firebase-admin"
 
 export default class ContenedorFirebaseCarrito{
-  constructor(connection, nameDocument) {
-    this.connection = connection;
+  constructor(nameDocument) {
     this.nameDocument = nameDocument
   }
 
+  async connectionDb(){
+    return admin.firestore().collection(this.nameDocument)
+  }
+
+  getQuery(){
+    return admin.firestore().collection(this.nameDocument)
+  }
+
+  async getID(){  
+    const documentReferences = await admin.firestore()
+        .collection(this.nameDocument)
+        .listDocuments()
+    const documentIds = documentReferences.map(it => it.id)
+    return documentIds[documentIds.length - 1]
+  }
+
   async createCart(){
-    const db = admin.firestore()
-    const query = db.collection(this.nameDocument)
+    await this.connectionDb()
     try {
-      let id = 1;
-      let doc = await query.doc(id.toString())
+      let id = await this.getID();
+      let doc = await this.getQuery().doc((parseInt(id) + 1).toString())
       const cart = {
-        timestamp: Date.now(),
+        timestamp: new Date(Date.now()).toLocaleString(),
         product: [],
       }
       await doc.create(cart)
-      id++
     }catch (e){
       console.log('Error al crear un Carrito: ' ,e)
     }
   }
 
   async deleteCartById(id){
-    const db = admin.firestore()
-    const query = db.collection(this.nameDocument)
+    await this.connectionDb()
     try {
-      const doc = query.doc(`${id}`)
+      const doc = this.getQuery().doc(`${id}`)
       await doc.delete()
     }catch (e){
       console.log('Error al Eliminar un Carrito: ' + e)
@@ -35,10 +47,9 @@ export default class ContenedorFirebaseCarrito{
   }
 
   async findCartById(id){
-    const db = admin.firestore()
-    const query = db.collection(this.nameDocument)
+    await this.connectionDb()
     try {
-      const doc = query.doc(`${id}`)
+      const doc = this.getQuery().doc(`${id}`)
       const cart = await doc.get()
       return cart.data()
     }catch (e) {
@@ -47,56 +58,86 @@ export default class ContenedorFirebaseCarrito{
   }
 
   async insertProductToCart(idCart, prod){
-    const db = admin.firestore()
-    const query = db.collection(this.nameDocument)
+    await this.connectionDb()
+    let idProd
+    let newProduct = []
+    let control
     try {
-      let getProducts = []
-      const querySnapshot =  query.doc(`${idCart}`)
-      const cart = await querySnapshot.get()
-      getProducts = cart.data().product
-      let id = 1;
-      const createProduct = {
-        id: id,
-        name: prod.name,
-        description: prod.description,
-        code: prod.code,
-        thumbnail: prod.thumbnail,
-        price: prod.price,
-        stock: prod.stock,
+      const doc = this.getQuery().doc(`${idCart}`)
+      const querySnapshot = await this.getQuery().get()
+      const response = querySnapshot.docs.map( prod => ({
+        product: prod.data().product,
+        timestamp: prod.data().timestamp,
+      }))
+      control = response[idCart-1].product.length 
+      if (control == 0){
+        const createProduct = {
+          id: 1,
+          name: prod.name,
+          description: prod.description,
+          code: prod.code,
+          thumbnail: prod.thumbnail,
+          price: prod.price,
+          quantity: prod. quantity,
+        }
+        newProduct = response[idCart-1].product
+        newProduct.push(createProduct)
+      }else{
+        idProd = response[idCart-1].product[(response[idCart-1].product.length)-1].id
+        const createProduct = {
+          id: parseInt(idProd)+1,
+          name: prod.name,
+          description: prod.description,
+          code: prod.code,
+          thumbnail: prod.thumbnail,
+          price: prod.price,
+          quantity: prod.quantity,
+        }
+        newProduct = response[idCart-1].product
+        newProduct.push(createProduct)
       }
-      const addProduct = [...getProducts,createProduct]
-      await querySnapshot.update({
-        product: addProduct
+      await doc.update({
+        timestamp: new Date(Date.now()).toLocaleString(),
+        product: newProduct,
       })
-      id++
     }catch (e) {
       console.log('Error al insertar un producto en el carrito: ', e)
     }
   }
 
   async deleteProductInCartById(idCart, idProd){
-    const db = admin.firestore()
-    const query = db.collection(this.nameDocument)
-    try{
-      let getProducts = []
-      let band = false;
-      let prodSearch = {}
-      const doc = query.doc(`${idCart}`)
-      const cart = await doc.get()
-      getProducts = cart.data().product
-      getProducts.forEach(prod => {
-        if (prod.id === idProd){
-          band = true
-          prodSearch = prod
+    await this.connectionDb()
+    let newProduct = []
+    let control
+    let productos
+    let posicion
+    try {
+      const doc = this.getQuery().doc(`${idCart}`)
+      const querySnapshot = await this.getQuery().get()
+      const response = querySnapshot.docs.map( prod => ({
+        product: prod.data().product,
+        timestamp: prod.data().timestamp,
+      }))
+      control = response[idCart-1].product.length 
+      console.log(control)
+      if (control == 0){
+        console.log('CARRITO VACIO')
+      }else{
+        for (let i = 0; i < control; i++) {
+          productos = response[idCart-1].product[i]
+          console.log(productos)
+          if(idProd == productos.id){
+            posicion = i
+          }          
         }
-      })
-      if (band){
-        const indice = getProducts.indexOf(prodSearch)
-        getProducts.splice(indice)
-        await doc.update({
-          product: getProducts
-        })
+        console.log(posicion)
+        newProduct = response[idCart-1].product
+        newProduct.splice(posicion,1)
       }
+      await doc.update({
+        timestamp: new Date(Date.now()).toLocaleString(),
+        product: newProduct,
+      })
     }catch(e){
       console.log('Error al eliminar un producto del carrito: ', e)
     }
