@@ -176,12 +176,11 @@ routerCarrito.post('/:id/productos', async (req,res) =>{
 routerCarrito.delete('/:id/productos/:id_prod', async (req,res) =>{
   const idCarrito = req.params.id
   const idProducto = req.params.id_prod
-  await contenedorCarrito.deleteProductInCartById(idCarrito,idProducto)
-    res.send({
-      result: 'ok',
-      idCarrito: idCarrito,
-      idProducto: idProducto
-    })
+  res.send({
+    result: await contenedorCarrito.deleteProductInCartById(idCarrito,idProducto),
+    idCarrito: idCarrito,
+    idProducto: idProducto
+  })
 })
 
 routerCarrito.all('*', (req, res) =>{

@@ -66,16 +66,28 @@ export default class ContenedorMongoDBCarrito {
 
   async deleteProductInCartById(idCart, idProd){
     try{
-      
-      let getProducts = await carrito.carritos.find({_id: idCart},{_id:0, product:1})
-      let itemIndex = getProducts.findIndex(        
-        (item) => {
-          console.log(item._id)
-          console.log(mongoose.Types.ObjectId(idProd))
-          item._id === mongoose.Types.ObjectId(idProd)}
-      );
-      await cart.save(); 
-      
+      let posicion
+      let mensaje
+      let getProducts = await carrito.carritos.find(
+        {_id: idCart},
+        {_id: 0, product:1})
+      let cart = getProducts[0].product
+      for (let i = 0; i < cart.length; i++) {
+        if(cart[i]._id == idProd){
+          posicion = i
+        }
+      }
+      if(isNaN(posicion)){
+        mensaje = "Error: Producto no econtrado en el carrito"
+      } else {
+        cart.splice(posicion,1)
+        mensaje = "Producto eliminado del carrito"
+      }
+      await carrito.carritos.findByIdAndUpdate(
+        {_id: idCart},
+        {product: cart}
+      )      
+      return mensaje
     }catch(e){
       console.log('Error al eliminar un producto del carrito: ', e)
     }
