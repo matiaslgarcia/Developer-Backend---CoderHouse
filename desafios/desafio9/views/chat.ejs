@@ -1,0 +1,26 @@
+<section>
+    <div class="container py-5 px-4">
+        <div class="row rounded-lg overflow-hidden shadow">
+            <div class=" px-4 py-2"  id="chat-header">
+                <p class="h5 mb-0 py-1 align-middle text-center text-white">Sala</p>
+            </div>
+            <div class="col-12 px-0">
+                <div class="px-4 py-5 chat-box bg-white" id="messages">
+                </div>
+                <form onsubmit="return addMessage(this)" class="bg-light mt-1">
+                    <div class="input-group">
+                        <div class="col-3">
+                            <input type="email" placeholder="Ingrese su Email"  id="email" class="form-control rounded-0 border-0 py-2 bg-light">
+                        </div>
+                        <div class="col-9 d-flex ">
+                            <input type="text" placeholder="Escribe su mensaje" aria-describedby="button-addon2" id="message" class="form-control rounded-0 border-1 py-2 bg-light">
+                            <button id="button-addon2" type="submit" class="btn rounded-2 border-2 ">
+                                <i class="icon-location-arrow" id="chat-header-arrow"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
