@@ -8,24 +8,18 @@ const knex2 = require('knex')(configuracionSQLite.optionSQLite);
 const Contenedor = require('./contenedor')
 const Mensajes = require('./mensajes')
 const MetodosDB = require('./metodosDB')
+const Producto = require('./utils/producto')
 const { faker } = require('@faker-js/faker')
 faker.locale = 'es'
 
 const app = express()
 const httpServer = new HttpServer(app)
 const io = new IOServer(httpServer)
-const variable = require('./generadorDeProductos')
+
+const producto = new Producto()
 
 app.set('view engine', 'ejs')
-
-function generarProductos(){
-    return {
-        title: faker.commerce.product(),
-        price: faker.commerce.price(),
-        thumbnail: faker.image.food()
-    }
-}
-
+ 
 //MIDDLEWARE
 app.use(express.static('./public'))
 
@@ -47,9 +41,17 @@ app.get('/', async (req, res) => {
     res.render('principal.ejs', {root: __dirname})
 })
 
-app.get('/api/productos-test' , (req, res) => {
-    console.log(generarProductos())
-    res.render('productosTest.ejs')
+
+app.get('/api/productos-test' ,async (req, res) => {
+  try{
+    await producto.crearProductosParaFront().then(resp =>
+      res.render('productosTest.ejs',{productos: resp, prodExists: resp.length !==0})
+    )
+
+    //res.render('productosTest.ejs',{productos: productosVarios})
+  }catch (e) {
+    res.send(e)
+  }
 })
 
 //SOCKET
