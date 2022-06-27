@@ -1,24 +1,35 @@
-const express = require('express')
-const mongoose = require('mongoose')
-const { Server: HttpServer } = require('http')
-const { Server: IOServer } = require('socket.io')
-const configuracionMariaDB = require('./mysqlconn')
-const configuracionSQLite = require('./sqliteconn')
-const knex1 = require('knex')(configuracionMariaDB.optionsMariaDB);
-const knex2 = require('knex')(configuracionSQLite.optionSQLite);
-const Contenedor = require('./contenedor')
-const Mensajes = require('./ContenedorMongoMensajes')
-const MetodosDB = require('./metodosDB')
-const Producto = require('./utils/producto')
-const { faker } = require('@faker-js/faker')
+import express from 'express'
+import mongoose from 'mongoose'
+import path from 'path';
+import { createServer } from "http";
+import { Server } from "socket.io";
+//import optionsMariaDB from './mysqlconn.js'
+import knex from 'knex'
+import Contenedor from './contenedores/contenedor.js'
+import MetodosDB from './metodosDB.js'
+import Producto from './utils/producto.js'
+import { faker } from '@faker-js/faker'
+import ContenedorMongoMensajes from './contenedores/ContenedorMongoMensajes.js'
 faker.locale = 'es'
+
+const __dirname = path.resolve();
+const optionsMariaDB = {
+  client: 'mysql',
+  connection: {
+      host: 'localhost',
+      user: 'root',
+      password: '',
+      database: 'productosdb'
+  }
+}
+const knex1 = knex(optionsMariaDB)
 
 const URL = "mongodb+srv://coderhouse:coderhouse@cluster0.utluy.mongodb.net/?retryWrites=true&w=majority"
 let conexion = mongoose.connect(URL);
 
 const app = express()
-const httpServer = new HttpServer(app)
-const io = new IOServer(httpServer)
+const httpServer = createServer(app)
+const io = new Server(httpServer)
 
 const producto = new Producto()
 
@@ -32,20 +43,15 @@ const dbProduct = new MetodosDB(knex1, 'productos')
 dbProduct.crearTablaProductos()
   .then(r => r)
   .catch(e => console.log('Error:' + e))
-const dbMessage = new MetodosDB(knex2,'mensajes')
-dbMessage.crearTablaMensajes()
-  .then(r => r)
-  .catch(e => console.log('Error:' + e))
-
 
 const contenedor = new Contenedor(knex1, 'productos')
-const mensajes = new Mensajes(conexion)
+
+const mensajes = new ContenedorMongoMensajes(conexion)
 
 //EndPoint
 app.get('/', async (req, res) => {
     res.render('principal.ejs', {root: __dirname})
 })
-
 
 app.get('/api/productos-test' ,async (req, res) => {
   try{

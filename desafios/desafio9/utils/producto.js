@@ -1,6 +1,6 @@
-const { faker } = require('@faker-js/faker')
+import { faker } from '@faker-js/faker'
 
-class Producto{
+export default class Producto{
     async createProduct(prod){
         const newProducto = {
             "title":prod.title,
@@ -16,11 +16,10 @@ class Producto{
             const prod = await this.createProduct({
                 title: faker.commerce.product(),
                 price: faker.commerce.price(),
-                thumbnail: faker.image.food()
+                thumbnail: faker.image.abstract(45, 45, true)
             })
             productos.push(prod)        
         }
         return productos
     }
 }
-module.exports=Producto

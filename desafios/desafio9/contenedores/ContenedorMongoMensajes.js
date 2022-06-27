@@ -1,8 +1,9 @@
-const mensajes = require("./models/mensaje.js")
+import * as mensajes from "../models/mensaje.js"
 
-class ContenedorMongoMensajes{
-    constructor(connection) {
-    this.connection = connection;
+export default class ContenedorMongoMensajes{
+    
+  constructor(connection) {
+    this.connection = connection
   }
 
   async saveMessage(nuevoMensaje) {
@@ -16,9 +17,9 @@ class ContenedorMongoMensajes{
             "alias": nuevoMensaje.alias,
             "avatar": nuevoMensaje.avatar
           },
-          "text": nuevoMensaje.mensaje 
+          "text": nuevoMensaje.message
         }
-        await mensajes.mensaje.create(newMensaje)
+        await mensajes.mensajes.create(newMensaje)
     }catch(error){
       console.log(error)
     }
@@ -26,12 +27,11 @@ class ContenedorMongoMensajes{
 
   async getAllMessages(){
     try{
-      return await mensajes.mensaje.find()
+      return await mensajes.mensajes.find()
     }catch (e) {
       console.log(error)
     }
   }
 }
 
-module.exports = Mensajes
 

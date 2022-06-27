@@ -1,10 +1,10 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose'
 
-const mensCollection = "mensajes"
+const mensCollection = "mensajes";
 
-const Mensaje = new mongoose.Schema({
+const MensajeShema = new mongoose.Schema({
     author:{
-        id: Number,
+        id: { type: String, max: 150 },
         nombre: { type: String, max: 50 },
         apellido: { type: String, max: 50 },
         edad: Number,
@@ -12,6 +12,6 @@ const Mensaje = new mongoose.Schema({
         avatar: { type: String, max: 255 },
     },
     text: { type: String, max: 255 },
-});
+})
 
-export const mensaje = mongoose.model(mensCollection,Mensaje)
+export const mensajes = mongoose.model(mensCollection,MensajeShema)

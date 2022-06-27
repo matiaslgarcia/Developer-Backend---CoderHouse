@@ -39,14 +39,17 @@ sockets.on('products', function(data){
 })
 
 function addMessage() {
-  let date = new Date();
-  const message = {
-    email: document.getElementById("email").value,
-    message: document.getElementById("message").value,
-    date: date.toLocaleDateString(),
-    hour: date.toLocaleTimeString(),
-  }
-  sockets.emit("new-message", message);
+    const author ={
+      id: document.getElementById("id").value,
+      nombre: document.getElementById("nombre").value,
+      apellido: document.getElementById("apellido").value,
+      edad: document.getElementById("edad").value,
+      alias: document.getElementById("alias").value,
+      avatar: document.getElementById("avatar").value,
+      text: document.getElementById("message").value
+    }    
+  
+  sockets.emit("new-message", author);
   return false
 }
 
@@ -56,11 +59,11 @@ function renderMessage(data) {
       `
             <div class="media w-50 mb-3">
                 <div class="media-body ml-3">
-                 <p class="text-small mb-0 text-muted">${msg.email}</p>
+                 <p class="text-small mb-0 text-muted">${msg.id}</p>
                     <div class="text-general rounded py-2 px-3 mb-2">
-                        <p class="text-small mb-0 text-white">${msg.message}</p>
+                        <p class="text-small mb-0 text-white">${msg.text}</p>
+                        <img src=${msg.avatar} alt="avatar" style="width: 45px; height: 100%;">
                     </div>
-                    <p class="small text-muted">${msg.hour} | ${msg.date}</p>
                 </div>
             </div>
          `

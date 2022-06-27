@@ -1,4 +1,4 @@
-class Contenedor {
+export default class Contenedor {
 
     constructor(configuracion, tableName) {
         this.knex = configuracion;
@@ -66,5 +66,4 @@ class Contenedor {
         }
     }
 }
-module.exports = Contenedor
 
