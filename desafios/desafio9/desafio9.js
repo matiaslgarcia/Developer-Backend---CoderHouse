@@ -1,4 +1,5 @@
 const express = require('express')
+const mongoose = require('mongoose')
 const { Server: HttpServer } = require('http')
 const { Server: IOServer } = require('socket.io')
 const configuracionMariaDB = require('./mysqlconn')
@@ -6,11 +7,14 @@ const configuracionSQLite = require('./sqliteconn')
 const knex1 = require('knex')(configuracionMariaDB.optionsMariaDB);
 const knex2 = require('knex')(configuracionSQLite.optionSQLite);
 const Contenedor = require('./contenedor')
-const Mensajes = require('./mensajes')
+const Mensajes = require('./ContenedorMongoMensajes')
 const MetodosDB = require('./metodosDB')
 const Producto = require('./utils/producto')
 const { faker } = require('@faker-js/faker')
 faker.locale = 'es'
+
+const URL = "mongodb+srv://coderhouse:coderhouse@cluster0.utluy.mongodb.net/?retryWrites=true&w=majority"
+let conexion = mongoose.connect(URL);
 
 const app = express()
 const httpServer = new HttpServer(app)
@@ -33,8 +37,9 @@ dbMessage.crearTablaMensajes()
   .then(r => r)
   .catch(e => console.log('Error:' + e))
 
+
 const contenedor = new Contenedor(knex1, 'productos')
-const mensajes = new Mensajes(knex2, 'mensajes')
+const mensajes = new Mensajes(conexion)
 
 //EndPoint
 app.get('/', async (req, res) => {
@@ -47,8 +52,6 @@ app.get('/api/productos-test' ,async (req, res) => {
     await producto.crearProductosParaFront().then(resp =>
       res.render('productosTest.ejs',{productos: resp, prodExists: resp.length !==0})
     )
-
-    //res.render('productosTest.ejs',{productos: productosVarios})
   }catch (e) {
     res.send(e)
   }
