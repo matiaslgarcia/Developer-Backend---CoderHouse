@@ -10,14 +10,14 @@ export default class ContenedorMongoMensajes{
     try {
         const newMensaje ={
           author: {
-            "id": nuevoMensaje.email,
+            "id": nuevoMensaje.id,
             "nombre": nuevoMensaje.nombre,
             "apellido": nuevoMensaje.apellido,
             "edad": nuevoMensaje.edad,
             "alias": nuevoMensaje.alias,
             "avatar": nuevoMensaje.avatar
           },
-          "text": nuevoMensaje.message
+          "text": nuevoMensaje.text
         }
         await mensajes.mensajes.create(newMensaje)
     }catch(error){

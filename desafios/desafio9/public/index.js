@@ -39,17 +39,17 @@ sockets.on('products', function(data){
 })
 
 function addMessage() {
-    const author ={
+
+  const newMessage = {
       id: document.getElementById("id").value,
       nombre: document.getElementById("nombre").value,
       apellido: document.getElementById("apellido").value,
       edad: document.getElementById("edad").value,
       alias: document.getElementById("alias").value,
       avatar: document.getElementById("avatar").value,
-      text: document.getElementById("message").value
-    }    
-  
-  sockets.emit("new-message", author);
+      text: document.getElementById("text").value 
+    }
+  sockets.emit("new-message", newMessage);
   return false
 }
 
@@ -59,10 +59,11 @@ function renderMessage(data) {
       `
             <div class="media w-50 mb-3">
                 <div class="media-body ml-3">
-                 <p class="text-small mb-0 text-muted">${msg.id}</p>
+                 <p class="text-small mb-0 text-muted">${msg.author.id}</p>
                     <div class="text-general rounded py-2 px-3 mb-2">
-                        <p class="text-small mb-0 text-white">${msg.text}</p>
-                        <img src=${msg.avatar} alt="avatar" style="width: 45px; height: 100%;">
+                        <p class="text-small mb-0 text-white">
+                          <img src=${msg.author.avatar} alt="avatar" style="width: 45px; height: 100%;"> ${msg.text}
+                        </p>
                     </div>
                 </div>
             </div>
@@ -76,3 +77,12 @@ sockets.on('messages', function(data) {
   }
 )
 
+{/* <div class="media w-50 mb-3">
+<div class="media-body ml-3">
+ <p class="text-small mb-0 text-muted">${msg.id}</p>
+    <div class="text-general rounded py-2 px-3 mb-2">
+        <p class="text-small mb-0 text-white">${msg.text}</p>
+        <img src=${msg.avatar} alt="avatar" style="width: 45px; height: 100%;">
+    </div>
+</div>
+</div> */}

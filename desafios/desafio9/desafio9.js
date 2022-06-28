@@ -77,6 +77,7 @@ setTimeout(() =>{
         })
 
         const messages = await mensajes.getAllMessages()
+        console.log(messages)
         sockets.emit('messages', messages)
 
         sockets.on('new-message', async data => {
