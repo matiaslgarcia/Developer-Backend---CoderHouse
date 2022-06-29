@@ -3,7 +3,6 @@ import mongoose from 'mongoose'
 import path from 'path';
 import { createServer } from "http";
 import { Server } from "socket.io";
-//import optionsMariaDB from './mysqlconn.js'
 import knex from 'knex'
 import Contenedor from './contenedores/contenedor.js'
 import MetodosDB from './metodosDB.js'

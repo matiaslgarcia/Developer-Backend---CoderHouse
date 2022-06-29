@@ -9,15 +9,6 @@ let conexion = mongoose.connect(URL);
 const mensajes = new ContenedorMongoMensajes(conexion)
 const aut = await mensajes.getAllMessages()
 
-// const arregloString = JSON.stringify(aut)
-// console.log(JSON.parse(arregloString))
-
-// //arregloString.replace('[','')
-// let objeto = arregloString.replace('[',' ')
-// let objeto2 = objeto.replace(']',' ')
-// const arregloObjeto = JSON.parse(objeto2)
-// console.log(arregloObjeto)
-
 const autoresTodos = {
     id: "100000",
     autores : aut
@@ -25,7 +16,6 @@ const autoresTodos = {
 
 const autores = new schema.Entity('authors', {}, { idAttribute: 'autores.id' })
 console.log(autores)
-//const autor = new schema.Entity('autor')
 
 const mens = new schema.Entity('texts', { idAttribute: 'autores.text' })
 console.log(mens)

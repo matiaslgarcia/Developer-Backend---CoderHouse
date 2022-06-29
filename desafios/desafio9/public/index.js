@@ -76,13 +76,4 @@ sockets.on('messages', function(data) {
   renderMessage(data)
   }
 )
-
-{/* <div class="media w-50 mb-3">
-<div class="media-body ml-3">
- <p class="text-small mb-0 text-muted">${msg.id}</p>
-    <div class="text-general rounded py-2 px-3 mb-2">
-        <p class="text-small mb-0 text-white">${msg.text}</p>
-        <img src=${msg.avatar} alt="avatar" style="width: 45px; height: 100%;">
-    </div>
-</div>
-</div> */}
+console.log("Tu mama")
