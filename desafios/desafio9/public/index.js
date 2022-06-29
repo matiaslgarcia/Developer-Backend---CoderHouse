@@ -1,4 +1,8 @@
 const sockets = io.connect()
+const normalizr = "./node_modules/normalizr/dist/normalizr.js";
+const schema = "./node_modules/normalizr/dist/normalizr.js"; 
+const entity = "./node_modules/normalizr/dist/normalizr.js"; 
+
 
 function addProduct() {
   const product = {
@@ -72,8 +76,35 @@ function renderMessage(data) {
   })
 }
 
+function normalizador(data){
+    const aut = data.map(msg => {return msg})
+    const autoresTodos = {
+      id: "100000",
+      autores : aut
+    }
+
+    const autores = new normalizr.schema.entity('autores')
+
+    const organigrama = new normalizr.schema.entity('organigrama', {
+      autor: autores,
+      mensajes: [autoresTodos.autores.text]
+    })
+
+    const grupo = new normalizr.schema.entity('grupo', {
+      autoresTodos: [organigrama]
+    })
+
+    function print(objeto) {
+      console.log(util.inspect(objeto,false,12,true))
+    }
+
+    console.log('Objeto normalizado')
+    const normalizedHolding = normalize(autoresTodos, grupo)
+    print(normalizedHolding)
+}
+
 sockets.on('messages', function(data) {
   renderMessage(data)
+  normalizador(data)
   }
 )
-console.log("Tu mama")

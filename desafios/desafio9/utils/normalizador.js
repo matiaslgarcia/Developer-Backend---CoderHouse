@@ -14,15 +14,15 @@ const autoresTodos = {
     autores : aut
 }
 
-const autores = new schema.Entity('authors', {}, { idAttribute: 'autores.id' })
-console.log(autores)
-
-const mens = new schema.Entity('texts', { idAttribute: 'autores.text' })
-console.log(mens)
+const autores = new schema.Entity('autores')
 
 const organigrama = new schema.Entity('organigrama', {
     autor: autores,
-    mensajes: [mens]
+    mensajes: [autoresTodos.autores.text]
+})
+
+const grupo = new schema.Entity('grupo', {
+    autoresTodos: [organigrama]
 })
 
 import util from 'util'
@@ -32,5 +32,5 @@ function print(objeto) {
 }
 
 console.log('Objeto normalizado')
-const normalizedHolding = normalize(autoresTodos, organigrama)
+const normalizedHolding = normalize(autoresTodos, grupo)
 print(normalizedHolding)
