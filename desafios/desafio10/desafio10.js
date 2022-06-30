@@ -48,6 +48,11 @@ const contenedor = new Contenedor(knex1, 'productos')
 const mensajes = new ContenedorMongoMensajes(conexion)
 
 //EndPoint
+//Para login
+app.get('/login', async (req, res) => {
+  res.render('principalLogueoUsuario.ejs', {root: __dirname})
+})
+
 app.get('/', async (req, res) => {
     res.render('principal.ejs', {root: __dirname})
 })
