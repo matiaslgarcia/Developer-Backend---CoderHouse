@@ -1,15 +1,29 @@
-
 import express from 'express'
 import session from 'express-session'
-import sfs from 'session-file-store'
-
-const FileStore = sfs(session)
+// ---------------------------------------------------- //
+import redis from 'redis'
+import redisStore from 'connect-redis'
+const RedisStore = redisStore(session)
+// ---------------------------------------------------- //
+const REDIS_URL = 'redis-18107.c276.us-east-1-2.ec2.cloud.redislabs.com'
+const REDIS_PORT = 18107
+const REDIS_PASSWORD = 'Q8XCF5DPagbmMfGF0Mr1vED859Zt7Ljh'
+const client = redis.createClient({
+  url: `redis://default:${REDIS_PASSWORD}@${REDIS_URL}:${REDIS_PORT}`,
+  legacyMode: true,
+})
+await client.connect()
+// ---------------------------------------------------- //
 
 const app = express()
 
 app.use(
   session({
-    store: new FileStore({path: './sessionss', ttl: 60}), // linea que diferencia con memoryStore
+    store: new RedisStore(
+      {
+        client: client,
+        ttl: 60
+      }),
     secret: 'obiwankenobi',
     resave: false,
     saveUninitialized: false,

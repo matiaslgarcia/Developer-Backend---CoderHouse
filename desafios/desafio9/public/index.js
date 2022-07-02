@@ -79,27 +79,27 @@ function normalizador(data){
       autores : aut
     }
 
-    const schemaAuthor = new schema.Entity(
+    const schemaAuthor = new normalizr.schema.Entity(
       "authors",
       {},
       {idAttribute: "autores.id"}
     )
-  const schemaMensaje = new schema.Entity(
+  const schemaMensaje = new normalizr.schema.Entity(
     "text",
     {author: schemaAuthor},
     {idAttribute: "id"}
   )
-  const schemaMensajes = new schema.Entity(
+  const schemaMensajes = new normalizr.schema.Entity(
     "texts",
     {mensajes: [schemaMensaje]},
     {idAttribute: "id"}
   )
 
     console.log('Objeto normalizado')
-    const normalizedMessages = normalize(autoresTodos, schemaMensajes)
+    const normalizedMessages = normalizr.normalize(autoresTodos, schemaMensajes)
     console.log(normalizedMessages)
     console.log('Objeto desnormalizado')
-    const desnormalizedMessages = denormalize(
+    const desnormalizedMessages = normalizr.denormalize(
       normalizedMessages.result,
       schemaMensajes,
       normalizedMessages.entities
