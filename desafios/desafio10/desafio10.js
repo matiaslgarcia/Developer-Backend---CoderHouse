@@ -1,5 +1,7 @@
 import express from 'express'
 import mongoose from 'mongoose'
+import session from 'express-session';
+import MongoStore from 'connect-mongo';
 import path from 'path';
 import { createServer } from "http";
 import { Server } from "socket.io";
@@ -10,6 +12,8 @@ import Producto from './utils/producto.js'
 import { faker } from '@faker-js/faker'
 import ContenedorMongoMensajes from './contenedores/ContenedorMongoMensajes.js'
 faker.locale = 'es'
+
+const advancedOptions = {useNewUrlParser: true, useUnifiedTopology: true}
 
 const __dirname = path.resolve();
 const optionsMariaDB = {
@@ -23,10 +27,24 @@ const optionsMariaDB = {
 }
 const knex1 = knex(optionsMariaDB)
 
-const URL = "mongodb+srv://coderhouse:coderhouse@cluster0.utluy.mongodb.net/?retryWrites=true&w=majority"
+const URL = "mongodb+srv://coderhouse:coderhouse@cluster0.utluy.mongodb.net/sessions?retryWrites=true&w=majority"
 let conexion = mongoose.connect(URL);
 
 const app = express()
+app.use(
+  session({
+    store: MongoStore.create({
+      mongoUrl: URL,
+      mongoOptions: advancedOptions,
+    }),
+    secret: 'stringSecreto',
+    resave: false,
+    saveUninitialized: false,
+  })
+  // cookie: {
+  //   maxAge: 1000
+  // }
+)
 const httpServer = createServer(app)
 const io = new Server(httpServer)
 
@@ -50,7 +68,12 @@ const mensajes = new ContenedorMongoMensajes(conexion)
 //EndPoint
 //Para login
 app.get('/login', async (req, res) => {
-  res.render('principalLogueoUsuario.ejs', {root: __dirname})
+  
+  if(req.session.id){
+    //quiere decir que esta logueado
+  }else{
+    res.render('principalLogueoUsuario.ejs')
+  }
 })
 
 app.get('/', async (req, res) => {
