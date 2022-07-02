@@ -1,8 +1,4 @@
 const sockets = io.connect()
-const normalizr = "./node_modules/normalizr/dist/normalizr.js";
-const schema = "./node_modules/normalizr/dist/normalizr.js"; 
-const entity = "./node_modules/normalizr/dist/normalizr.js"; 
-
 
 function addProduct() {
   const product = {
@@ -83,24 +79,32 @@ function normalizador(data){
       autores : aut
     }
 
-    const autores = new normalizr.schema.entity('autores')
-
-    const organigrama = new normalizr.schema.entity('organigrama', {
-      autor: autores,
-      mensajes: [autoresTodos.autores.text]
-    })
-
-    const grupo = new normalizr.schema.entity('grupo', {
-      autoresTodos: [organigrama]
-    })
-
-    function print(objeto) {
-      console.log(util.inspect(objeto,false,12,true))
-    }
+    const schemaAuthor = new schema.Entity(
+      "authors",
+      {},
+      {idAttribute: "autores.id"}
+    )
+  const schemaMensaje = new schema.Entity(
+    "text",
+    {author: schemaAuthor},
+    {idAttribute: "id"}
+  )
+  const schemaMensajes = new schema.Entity(
+    "texts",
+    {mensajes: [schemaMensaje]},
+    {idAttribute: "id"}
+  )
 
     console.log('Objeto normalizado')
-    const normalizedHolding = normalize(autoresTodos, grupo)
-    print(normalizedHolding)
+    const normalizedMessages = normalize(autoresTodos, schemaMensajes)
+    console.log(normalizedMessages)
+    console.log('Objeto desnormalizado')
+    const desnormalizedMessages = denormalize(
+      normalizedMessages.result,
+      schemaMensajes,
+      normalizedMessages.entities
+    )
+    console.log(desnormalizedMessages)
 }
 
 sockets.on('messages', function(data) {
