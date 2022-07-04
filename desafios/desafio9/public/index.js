@@ -73,38 +73,39 @@ function renderMessage(data) {
 }
 
 function normalizador(data){
-    const aut = data.map(msg => {return msg})
-    const autoresTodos = {
-      id: "100000",
-      autores : aut
-    }
+  const aut = data.map(msg => {return msg})
+  const autoresTodos = {
+    autores : aut
+  }
 
-    const schemaAuthor = new normalizr.schema.Entity(
-      "authors",
-      {},
-      {idAttribute: "autores.id"}
-    )
+  const schemaAuthor = new normalizr.schema.Entity(
+    "authors",
+    {},
+    {idAttribute: "autores.id"}
+  )
+
   const schemaMensaje = new normalizr.schema.Entity(
     "text",
     {author: schemaAuthor},
     {idAttribute: "id"}
   )
+
   const schemaMensajes = new normalizr.schema.Entity(
     "texts",
     {mensajes: [schemaMensaje]},
     {idAttribute: "id"}
   )
 
-    console.log('Objeto normalizado')
-    const normalizedMessages = normalizr.normalize(autoresTodos, schemaMensajes)
-    console.log(normalizedMessages)
-    console.log('Objeto desnormalizado')
-    const desnormalizedMessages = normalizr.denormalize(
-      normalizedMessages.result,
-      schemaMensajes,
-      normalizedMessages.entities
-    )
-    console.log(desnormalizedMessages)
+  console.log('Objeto normalizado')
+  const normalizedMessages = normalizr.normalize(data, schemaMensajes)
+  console.log(normalizedMessages)
+  // console.log('Objeto desnormalizado')
+  // const desnormalizedMessages = normalizr.denormalize(
+  //   normalizedMessages.result,
+  //   schemaMensajes,
+  //   normalizedMessages.entities
+  // )
+  // console.log(desnormalizedMessages)
 }
 
 sockets.on('messages', function(data) {

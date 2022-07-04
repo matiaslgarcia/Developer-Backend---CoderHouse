@@ -27,23 +27,25 @@ const optionsMariaDB = {
 }
 const knex1 = knex(optionsMariaDB)
 
-const URL = "mongodb+srv://coderhouse:coderhouse@cluster0.utluy.mongodb.net/sessions?retryWrites=true&w=majority"
+const URL = "mongodb+srv://coderhouse:coderhouse@cluster0.utluy.mongodb.net/?retryWrites=true&w=majority"
 let conexion = mongoose.connect(URL);
 
 const app = express()
+app.use(express.urlencoded())
+
 app.use(
   session({
     store: MongoStore.create({
-      mongoUrl: URL,
+      mongoUrl: "mongodb+srv://coderhouse:coderhouse@cluster0.utluy.mongodb.net/sessions?retryWrites=true&w=majority",
       mongoOptions: advancedOptions,
     }),
     secret: 'stringSecreto',
     resave: false,
     saveUninitialized: false,
-  })
-  // cookie: {
-  //   maxAge: 1000
-  // }
+    cookie: {
+      maxAge: 10000
+    }
+  })  
 )
 const httpServer = createServer(app)
 const io = new Server(httpServer)
@@ -65,29 +67,63 @@ const contenedor = new Contenedor(knex1, 'productos')
 
 const mensajes = new ContenedorMongoMensajes(conexion)
 
+function autorizacionWeb(req, res, next) {
+  if (req.session?.nombre) {
+      next()
+  } else {
+      res.redirect('/login')
+  }
+}
+
 //EndPoint
 //Para login
-app.get('/login', async (req, res) => {
-  
-  if(req.session.id){
-    //quiere decir que esta logueado
-  }else{
-    res.render('principalLogueoUsuario.ejs')
+
+app.get('/', (req, res) => {
+  res.redirect('/landing')
+})
+
+app.get('/login', (req, res) => {
+  const nombre = req.session?.nombre
+  if (nombre) {
+      res.redirect('/')
+  } else {
+      res.render('principalLogueoUsuario.ejs')
   }
 })
 
-app.get('/', async (req, res) => {
-    res.render('principal.ejs', {root: __dirname})
+app.get('/logout', (req, res) => {
+  const nombre = req.session?.nombre
+  if (nombre) {
+      req.session.destroy(err => {
+          if (!err) {
+              res.render('principalDeslogueo.ejs', { nombre })
+          } else {
+              res.redirect('/')
+          }
+      })
+  } else {
+      res.redirect('/')
+  }
 })
+
+app.get('/landing', autorizacionWeb, (req, res) => {
+  res.render('principal.ejs', { nombre: req.session.nombre })
+})
+
 
 app.get('/api/productos-test' ,async (req, res) => {
   try{
-    await producto.crearProductosParaFront().then(resp =>
-      res.render('productosTest.ejs',{productos: resp, prodExists: resp.length !==0})
-    )
+      res.render('productosTest.ejs',{productos: await producto.crearProductosParaFront(), 
+                                      prodExists: await producto.crearProductosParaFront().length !==0})
   }catch (e) {
     res.send(e)
   }
+})
+
+
+app.post('/login', (req, res) => {
+  req.session.nombre = req.body.nombre
+  res.redirect('/landing')
 })
 
 //SOCKET

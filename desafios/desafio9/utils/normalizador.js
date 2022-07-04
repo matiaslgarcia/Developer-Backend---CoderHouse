@@ -9,28 +9,38 @@ let conexion = mongoose.connect(URL);
 const mensajes = new ContenedorMongoMensajes(conexion)
 const aut = await mensajes.getAllMessages()
 
-const autoresTodos = {
-    id: "100000",
-    autores : aut
-}
+    const autoresTodos = {
+      id: "100000",
+      autores : aut
+    }
 
-const autores = new schema.Entity('autores')
+    const schemaAuthor = new schema.Entity(
+      "authors",
+      {},
+      {idAttribute: "autores.id"}
+    )
+  const schemaMensaje = new schema.Entity(
+    "text",
+    {author: schemaAuthor},
+    {idAttribute: "id"}
+  )
+  const schemaMensajes = new schema.Entity(
+    "texts",
+    {mensajes: [schemaMensaje]},
+    {idAttribute: "id"}
+  )
 
-const organigrama = new schema.Entity('organigrama', {
-    autor: autores,
-    mensajes: [autoresTodos.autores.text]
-})
+    console.log('Objeto normalizado')
+    const normalizedMessages = normalize(autoresTodos, schemaAuthor)
+    console.log(normalizedMessages)
+    //console.log('Porcentaje de compresion: ' + (100- (JSON.stringify(normalizedMessages).length * 100 / JSON.stringify(autoresTodos).length)) + '%')
+    // console.log('Longitud del objeto orginal: ' + JSON.stringify(autoresTodos).length)
+    // console.log('Longitud del objeto normalizado: ' + JSON.stringify(normalizedMessages).length)
 
-const grupo = new schema.Entity('grupo', {
-    autoresTodos: [organigrama]
-})
-
-import util from 'util'
-
-function print(objeto) {
-    console.log(util.inspect(objeto,false,12,true))
-}
-
-console.log('Objeto normalizado')
-const normalizedHolding = normalize(autoresTodos, grupo)
-print(normalizedHolding)
+    // console.log('Objeto desnormalizado')
+    // const desnormalizedMessages = denormalize(
+    //   normalizedMessages.result,
+    //   schemaMensajes,
+    //   normalizedMessages.entities
+    // )
+    // console.log(desnormalizedMessages)

@@ -1,8 +1,4 @@
 const sockets = io.connect()
-const normalizr = "./node_modules/normalizr/dist/normalizr.js";
-const schema = "./node_modules/normalizr/dist/normalizr.js"; 
-const entity = "./node_modules/normalizr/dist/normalizr.js"; 
-
 
 function addProduct() {
   const product = {
