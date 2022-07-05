@@ -31,7 +31,7 @@ const URL = "mongodb+srv://coderhouse:coderhouse@cluster0.utluy.mongodb.net/?ret
 let conexion = mongoose.connect(URL);
 
 const app = express()
-app.use(express.urlencoded())
+app.use(express.urlencoded({extended:true}))
 
 app.use(
   session({
@@ -53,11 +53,9 @@ const io = new Server(httpServer)
 const producto = new Producto()
 
 app.set('view engine', 'ejs')
- 
-//MIDDLEWARE
-app.use(express.static('./public'))
 
 //Instancias
+
 const dbProduct = new MetodosDB(knex1, 'productos')
 dbProduct.crearTablaProductos()
   .then(r => r)
@@ -67,6 +65,8 @@ const contenedor = new Contenedor(knex1, 'productos')
 
 const mensajes = new ContenedorMongoMensajes(conexion)
 
+//MIDDLEWARE
+app.use(express.static('./public'))
 function autorizacionWeb(req, res, next) {
   if (req.session?.nombre) {
       next()
@@ -76,7 +76,6 @@ function autorizacionWeb(req, res, next) {
 }
 
 //EndPoint
-//Para login
 
 app.get('/', (req, res) => {
   res.redirect('/landing')
@@ -89,6 +88,11 @@ app.get('/login', (req, res) => {
   } else {
       res.render('principalLogueoUsuario.ejs')
   }
+})
+
+app.post('/login', (req, res) => {
+  req.session.nombre = req.body.nombre
+  res.redirect('/landing')
 })
 
 app.get('/logout', (req, res) => {
@@ -110,7 +114,6 @@ app.get('/landing', autorizacionWeb, (req, res) => {
   res.render('principal.ejs', { nombre: req.session.nombre })
 })
 
-
 app.get('/api/productos-test' ,async (req, res) => {
   try{
       res.render('productosTest.ejs',{productos: await producto.crearProductosParaFront(), 
@@ -118,12 +121,6 @@ app.get('/api/productos-test' ,async (req, res) => {
   }catch (e) {
     res.send(e)
   }
-})
-
-
-app.post('/login', (req, res) => {
-  req.session.nombre = req.body.nombre
-  res.redirect('/landing')
 })
 
 //SOCKET
@@ -140,7 +137,6 @@ setTimeout(() =>{
         })
 
         const messages = await mensajes.getAllMessages()
-        console.log(messages)
         sockets.emit('messages', messages)
 
         sockets.on('new-message', async data => {
@@ -152,7 +148,6 @@ setTimeout(() =>{
       }
     })
   },1000)
-
 
 //SERVER
 const PORT = 8080
