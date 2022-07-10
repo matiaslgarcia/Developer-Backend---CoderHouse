@@ -11,7 +11,15 @@ import MetodosDB from './metodosDB.js'
 import Producto from './utils/producto.js'
 import { faker } from '@faker-js/faker'
 import ContenedorMongoMensajes from './contenedores/ContenedorMongoMensajes.js'
+import ContenedorMongoUsuarios from './contenedores/ContenedorMongoUsuarios.js'
+import jwt from 'jsonwebtoken'
+const PRIVATE_KEY = "myprivatekey"
 faker.locale = 'es'
+
+function generateToken(user){
+  const token = jwt.sign({ data: user }, PRIVATE_KEY, { expiresIn: 600 })
+  return token
+}
 
 const advancedOptions = {useNewUrlParser: true, useUnifiedTopology: true}
 
@@ -67,6 +75,8 @@ const contenedor = new Contenedor(knex1, 'productos')
 
 const mensajes = new ContenedorMongoMensajes(conexion)
 
+const user = new ContenedorMongoUsuarios(conexion)
+
 function autorizacionWeb(req, res, next) {
   if (req.session?.nombre) {
       next()
@@ -120,10 +130,31 @@ app.get('/api/productos-test' ,async (req, res) => {
   }
 })
 
+// app.post('/login', (req, res) => {
+//   req.session.nombre = req.body.nombre
+//   res.redirect('/landing')
+// })
 
 app.post('/login', (req, res) => {
-  req.session.nombre = req.body.nombre
-  res.redirect('/landing')
+  const { nombre, password } = req.body
+
+  const existe = user.findUser(nombre)
+
+  if(existe){
+    return res.redirect('/landing')
+  }
+
+  const usuario = { 
+    email: nombre,
+    password: password 
+  }
+
+  user.saveUsuario(usuario)
+
+  const access_token = generateToken(usuario)
+
+  res.json({ access_token })
+  return res.redirect('/landing')
 })
 
 //SOCKET
@@ -157,3 +188,48 @@ setTimeout(() =>{
 //SERVER
 const PORT = 8080
 httpServer.listen(PORT, () =>   console.log('Servidor escuchando en el puerto ' + PORT))
+
+
+//npm install jsonwebtoken
+
+
+
+
+
+// app.post('/register', (req, res) => {
+//   const { nombre, password, direcion } = req.body
+
+//   const existe = usuarios.find(usuario => usuario.nombre == nombre)
+
+//   if(existe){
+//     return res.json({error: 'ya existe el usuario ( entonces debo devolver la pantalla de inicio) '})
+//   }
+
+//   const usuario = { nombre, password, direcion }
+
+//   usuarios.push(usuario)
+
+//   const access_token = generateToken(usuario)
+
+//   res.json({ access_token })
+// })
+
+//Middelware de verificacion
+
+// function auth(req, res, next){
+//   const authHeader = req.headers.authorization
+
+//   if(!authHeader){
+//     return res.status(401).json({error: 'Pantalla de no autenticado'})
+//   }
+
+//   const token = authHeader.split(' ')[1]
+
+//   jwt.verify(token, PRIVATE_KEY, (err, decoded) => {
+//     if(err){
+//       return res.status(403).json({error: 'Pantalla de no autenticado'})
+//     }
+//     req.user = decoded.data
+//     next()
+//   })
+// } 

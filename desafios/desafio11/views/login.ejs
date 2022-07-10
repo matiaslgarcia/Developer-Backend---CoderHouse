@@ -8,11 +8,16 @@
         </div>
         <div class="col-md-9">
             <div class="contact-form">
-                <form action="/login" method="post">
+                <form autocomplete="off" action="/login" method="post">
                     <div class="form-group">
-                        <label class="control-label col-sm-2" >Registro:</label>
+                        <label class="control-label col-sm-2" >Usuario:</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" name="nombre" id="nombre" placeholder="Ingrese su Nombre" >
+                            <input type="text" class="form-control" name="nombre" id="nombre" placeholder="Ingrese su Email" >
+                        </div>
+                        <br>
+                        <label class="control-label col-sm-2" >Contraseña:</label>
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" name="password" id="password" placeholder="Ingrese su Contraseña" >
                         </div>
                         <br>
                         <div class="col-sm-offset-2 col-sm-10">
@@ -20,6 +25,9 @@
                         </div>
                     </div>
                 </form>
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="submit" class="btn btn-default">Registrarse</button>
+                </div>
             </div>
         </div>
     </div>

@@ -1,8 +1,8 @@
 {
-  "name": "desafio10",
+  "name": "desafio11",
   "version": "1.0.0",
   "description": "",
-  "main": "desafio10.js",
+  "main": "desafio11.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -16,6 +16,7 @@
     "ejs": "^3.1.8",
     "express": "^4.18.1",
     "express-session": "^1.17.3",
+    "jsonwebtoken": "^8.5.1",
     "knex": "^2.1.0",
     "mongoose": "^6.4.0",
     "mysql": "^2.18.1",
