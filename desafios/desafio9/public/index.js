@@ -41,14 +41,14 @@ sockets.on('products', function(data){
 function addMessage() {
 
   const newMessage = {
-      id: document.getElementById("id").value,
-      nombre: document.getElementById("nombre").value,
-      apellido: document.getElementById("apellido").value,
-      edad: document.getElementById("edad").value,
-      alias: document.getElementById("alias").value,
-      avatar: document.getElementById("avatar").value,
-      text: document.getElementById("text").value 
-    }
+    id: document.getElementById("id").value,
+    nombre: document.getElementById("nombre").value,
+    apellido: document.getElementById("apellido").value,
+    edad: document.getElementById("edad").value,
+    alias: document.getElementById("alias").value,
+    avatar: document.getElementById("avatar").value,
+    text: document.getElementById("text").value 
+  }
   sockets.emit("new-message", newMessage);
   return false
 }
@@ -72,44 +72,18 @@ function renderMessage(data) {
   })
 }
 
-function normalizador(data){
-  const aut = data.map(msg => {return msg})
-  const autoresTodos = {
-    autores : aut
-  }
-
-  const schemaAuthor = new normalizr.schema.Entity(
-    "authors",
-    {},
-    {idAttribute: "autores.id"}
-  )
-
-  const schemaMensaje = new normalizr.schema.Entity(
-    "text",
-    {author: schemaAuthor},
-    {idAttribute: "id"}
-  )
-
-  const schemaMensajes = new normalizr.schema.Entity(
-    "texts",
-    {mensajes: [schemaMensaje]},
-    {idAttribute: "id"}
-  )
-
-  console.log('Objeto normalizado')
-  const normalizedMessages = normalizr.normalize(data, schemaMensajes)
-  console.log(normalizedMessages)
-  // console.log('Objeto desnormalizado')
-  // const desnormalizedMessages = normalizr.denormalize(
-  //   normalizedMessages.result,
-  //   schemaMensajes,
-  //   normalizedMessages.entities
-  // )
-  // console.log(desnormalizedMessages)
-}
+// Denormalizacion -------------------------------------------------------------------------------
+const schemaAuthor = new normalizr.schema.Entity("authors", {}, {idAttribute: "autores.id"})
+const schemaMensaje = new normalizr.schema.Entity("text", {author: schemaAuthor}, {idAttribute: "id"})
+const schemaMensajes = new normalizr.schema.Entity("texts",{mensajes: [schemaMensaje]},{idAttribute: "id"})
+//------------------------------------------------------------------------------------------------
 
 sockets.on('messages', function(data) {
-  renderMessage(data)
-  normalizador(data)
+  let mensajesSize = JSON.stringify(data).length
+  let mensajesDenormalizado = normalizr.denormalize(data.result, schemaMensajes,data.entities)
+  let mensajesDenormalizadoSize = JSON.stringify(mensajesDenormalizado).length
+  let porcentajeCompresion = parseInt((mensajesSize * 100) / mensajesDenormalizadoSize)
+  document.getElementById("chat-header").innerText = "Porcentaje de compresión: " + porcentajeCompresion
+  renderMessage(mensajesDenormalizado.mensajesNormalizados)
   }
 )

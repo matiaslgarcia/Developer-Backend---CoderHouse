@@ -46,8 +46,12 @@ dbProduct.crearTablaProductos()
 
 const contenedor = new Contenedor(knex1, 'productos')
 
-const mensajes = new ContenedorMongoMensajes(conexion)
+const mensaje = new ContenedorMongoMensajes(conexion)
 
+async function getAllMessagesNormalized(){
+  const mensajesNormalizados = await mensaje.getAllMessages()
+  return normalizarMensajes({ id: 'mensajes', mensajesNormalizados})
+}
 
 // Normalizacion ------------------------------------------------------------------------
 const schemaAuthor = new schema.Entity("authors", {}, {idAttribute: "autores.id"})
@@ -55,6 +59,8 @@ const schemaAuthor = new schema.Entity("authors", {}, {idAttribute: "autores.id"
 const schemaMensaje = new schema.Entity("text", {author: schemaAuthor}, {idAttribute: "id"})
 
 const schemaMensajes = new schema.Entity("texts",{mensajes: [schemaMensaje]},{idAttribute: "id"})
+
+const normalizarMensajes = (mensajesConId) => normalize(mensajesConId, schemaMensajes)
 //---------------------------------------------------------------------------------------
 
 //EndPoint
@@ -85,12 +91,12 @@ setTimeout(() =>{
           io.sockets.emit('products', await contenedor.getAllProducts())
         })
 
-        const messages = await mensajes.getAllMessages()
+        const messages = await getAllMessagesNormalized()
         sockets.emit('messages', messages)
 
         sockets.on('new-message', async data => {
-          await mensajes.saveMessage(data)
-          io.sockets.emit('messages', await mensajes.getAllMessages())
+          await mensaje.saveMessage(data)
+          io.sockets.emit('messages', await getAllMessagesNormalized())
         })
       }catch (e){
         console.log('Error en el socket es: ' + e)
