@@ -12,16 +12,9 @@ import Producto from './utils/producto.js'
 import { faker } from '@faker-js/faker'
 import ContenedorMongoMensajes from './contenedores/ContenedorMongoMensajes.js'
 import ContenedorMongoUsuarios from './contenedores/ContenedorMongoUsuarios.js'
-import jwt from 'jsonwebtoken'
-const PRIVATE_KEY = "myprivatekey"
+import passport from 'passport'
+import { Strategy as LocalStrategy} from 'passport-local'
 faker.locale = 'es'
-
-function generateToken(user){
-  const token = jwt.sign({ data: user }, PRIVATE_KEY, { expiresIn: 600 })
-  return token
-}
-
-const advancedOptions = {useNewUrlParser: true, useUnifiedTopology: true}
 
 const __dirname = path.resolve();
 const optionsMariaDB = {
@@ -39,7 +32,8 @@ const URL = "mongodb+srv://coderhouse:coderhouse@cluster0.utluy.mongodb.net/?ret
 let conexion = mongoose.connect(URL);
 
 const app = express()
-app.use(express.urlencoded())
+
+const advancedOptions = {useNewUrlParser: true, useUnifiedTopology: true}
 
 app.use(
   session({
@@ -51,7 +45,7 @@ app.use(
     resave: false,
     saveUninitialized: false,
     cookie: {
-      maxAge: 60000
+      maxAge: 100000
     }
   })  
 )
@@ -64,6 +58,8 @@ app.set('view engine', 'ejs')
  
 //MIDDLEWARE
 app.use(express.static('./public'))
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
 //Instancias
 const dbProduct = new MetodosDB(knex1, 'productos')
@@ -77,6 +73,36 @@ const mensajes = new ContenedorMongoMensajes(conexion)
 
 const user = new ContenedorMongoUsuarios(conexion)
 
+passport.use('register', new LocalStrategy({
+  passReqToCallback: true
+  },async (done) => {
+      const { email , password } = req.body
+      const usuario = await user.findUser(email)
+      console.log(usuario)
+      if(usuario){
+          return done('Usuario registrado')
+      }
+      const userNuevo = {
+          username: email,
+          password: password,
+      }
+      await user.saveUsuario(userNuevo)
+      return done(null, userNuevo)
+  }
+))
+
+passport.use('login', new LocalStrategy(async (password,done) => {
+  const usuario = await user.findUser(email)
+  if(!usuario){
+      return done(null,false)
+  }
+  if(usuario.password != password){
+      return done(null,false)
+  }
+  return done(null,usuario)
+}))
+
+
 function autorizacionWeb(req, res, next) {
   if (req.session?.nombre) {
       next()
@@ -89,15 +115,10 @@ function autorizacionWeb(req, res, next) {
 //Para login
 
 app.get('/', (req, res) => {
-  res.redirect('/landing')
-})
-
-app.get('/login', (req, res) => {
-  const nombre = req.session?.nombre
-  if (nombre) {
-      res.redirect('/')
-  } else {
-      res.render('principalLogueoUsuario.ejs')
+  if(req.isAuthenticated()){
+    res.redirect('/landing')
+  }else{
+    res.redirect('/login')
   }
 })
 
@@ -130,31 +151,35 @@ app.get('/api/productos-test' ,async (req, res) => {
   }
 })
 
-// app.post('/login', (req, res) => {
-//   req.session.nombre = req.body.nombre
-//   res.redirect('/landing')
-// })
+app.get('/login', (req, res) => {
+  if(req.isAuthenticated()){
+    res.redirect('/landing')
+  }
+  res.render('principalLogueoUsuario.ejs')
+})
 
 app.post('/login', (req, res) => {
   const { nombre, password } = req.body
-
   const existe = user.findUser(nombre)
-
   if(existe){
     return res.redirect('/landing')
   }
-
   const usuario = { 
     email: nombre,
     password: password 
   }
-
   user.saveUsuario(usuario)
-
-  const access_token = generateToken(usuario)
-
-  res.json({ access_token })
   return res.redirect('/landing')
+})
+
+app.post('/register', passport.authenticate('register', {failureRedirect: '/failregister', successRedirect:'/'}))
+
+app.get('/register', async (req, res) => {
+  res.render('principalRegistrarUsuario.ejs')
+})
+
+app.get('/failregister',(req,res) => {
+  res.render('principalErrorLogin.ejs')
 })
 
 //SOCKET
@@ -188,48 +213,3 @@ setTimeout(() =>{
 //SERVER
 const PORT = 8080
 httpServer.listen(PORT, () =>   console.log('Servidor escuchando en el puerto ' + PORT))
-
-
-//npm install jsonwebtoken
-
-
-
-
-
-// app.post('/register', (req, res) => {
-//   const { nombre, password, direcion } = req.body
-
-//   const existe = usuarios.find(usuario => usuario.nombre == nombre)
-
-//   if(existe){
-//     return res.json({error: 'ya existe el usuario ( entonces debo devolver la pantalla de inicio) '})
-//   }
-
-//   const usuario = { nombre, password, direcion }
-
-//   usuarios.push(usuario)
-
-//   const access_token = generateToken(usuario)
-
-//   res.json({ access_token })
-// })
-
-//Middelware de verificacion
-
-// function auth(req, res, next){
-//   const authHeader = req.headers.authorization
-
-//   if(!authHeader){
-//     return res.status(401).json({error: 'Pantalla de no autenticado'})
-//   }
-
-//   const token = authHeader.split(' ')[1]
-
-//   jwt.verify(token, PRIVATE_KEY, (err, decoded) => {
-//     if(err){
-//       return res.status(403).json({error: 'Pantalla de no autenticado'})
-//     }
-//     req.user = decoded.data
-//     next()
-//   })
-// } 
