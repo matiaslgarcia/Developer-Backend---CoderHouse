@@ -61,6 +61,7 @@ app.use(express.static('./public'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
+
 //Instancias
 const dbProduct = new MetodosDB(knex1, 'productos')
 dbProduct.crearTablaProductos()
@@ -75,8 +76,8 @@ const user = new ContenedorMongoUsuarios(conexion)
 
 passport.use('register', new LocalStrategy({
   passReqToCallback: true
-  },async (done) => {
-      const { email , password } = req.body
+  },async (req, password, done) => {
+      const { email } = req.body
       const usuario = await user.findUser(email)
       console.log(usuario)
       if(usuario){
@@ -91,17 +92,29 @@ passport.use('register', new LocalStrategy({
   }
 ))
 
-passport.use('login', new LocalStrategy(async (password,done) => {
-  const usuario = await user.findUser(email)
-  if(!usuario){
-      return done(null,false)
-  }
-  if(usuario.password != password){
-      return done(null,false)
-  }
-  return done(null,usuario)
+passport.use('login', new LocalStrategy(
+  async (req, password,done) => {
+    const {email} = req.body;
+    const usuario = await user.findUser(email)
+      if(!usuario){
+          return done(null,false)
+      }
+      if(usuario.password != password){
+          return done(null,false)
+      }
+    return done(null,usuario)
 }))
 
+passport.serializeUser(function (req,done){
+  const {email} = req.email
+  done(null,email)
+})
+
+passport.deserializeUser( async function (req, done){
+  const {email} = req.email
+  const usuario = await user.findUser(email)
+  done(null, usuario)
+})
 
 function autorizacionWeb(req, res, next) {
   if (req.session?.nombre) {
@@ -111,6 +124,8 @@ function autorizacionWeb(req, res, next) {
   }
 }
 
+app.use(passport.initialize())
+app.use(passport.session())
 //EndPoint
 //Para login
 
