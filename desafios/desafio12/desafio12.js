@@ -11,6 +11,7 @@ import Producto from './utils/producto.js'
 import { faker } from '@faker-js/faker'
 import ContenedorMongoMensajes from './contenedores/ContenedorMongoMensajes.js'
 import ContenedorMongoUsuarios from './contenedores/ContenedorMongoUsuarios.js'
+import Informacion from './utils/informacion.js'
 import passport from 'passport'
 import { Strategy as LocalStrategy} from 'passport-local'
 faker.locale = 'es'
@@ -37,7 +38,7 @@ const contenedor = new Contenedor(knex1, 'productos')
 const mensajes = new ContenedorMongoMensajes(conexion)
 const producto = new Producto()
 const user = new ContenedorMongoUsuarios(conexion)
-
+const info = new Informacion()
 //MIDDLEWARE
 passport.use('register', new LocalStrategy({
     passReqToCallback: true
@@ -172,6 +173,15 @@ app.get('/failregister',(req,res) => {
 })
 
 app.post('/register', passport.authenticate('register', {failureRedirect: '/failregister', successRedirect:'/'}))
+
+app.get('/info' ,async (req, res) => {
+  try{
+      res.render('principalInfo.ejs',{informacion: await info.solicitarInformacion()})
+  }catch (e) {
+    res.send(e)
+  }
+})
+
 
 //SOCKET
 setTimeout(() =>{
