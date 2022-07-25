@@ -14,20 +14,26 @@ import ContenedorMongoUsuarios from './contenedores/ContenedorMongoUsuarios.js'
 import Informacion from './utils/informacion.js'
 import passport from 'passport'
 import { Strategy as LocalStrategy} from 'passport-local'
+import dotenv from 'dotenv'
+import parseArgs from 'yargs'
+import { fork } from 'child_process'
+import path from 'path'
 faker.locale = 'es'
 
+dotenv.config()
+
 const optionsMariaDB = {
-  client: 'mysql',
+  client: process.env.CLIENT_SQL,
   connection: {
-      host: 'localhost',
-      user: 'root',
-      password: '',
-      database: 'productosdb'
+      host: process.env.HOST_SQL,
+      user: process.env.USER_SQL,
+      password: process.env.PASSWORD_SQL,
+      database: process.env.DATABASE_SQL
   }
 }
 const knex1 = knex(optionsMariaDB)
 
-const URL = "mongodb+srv://coderhouse:coderhouse@cluster0.utluy.mongodb.net/?retryWrites=true&w=majority"
+const URL = process.env.MONGO_URI
 let conexion = mongoose.connect(URL);
 const advancedOptions = {useNewUrlParser: true, useUnifiedTopology: true}
 //Instancias
@@ -39,6 +45,7 @@ const mensajes = new ContenedorMongoMensajes(conexion)
 const producto = new Producto()
 const user = new ContenedorMongoUsuarios(conexion)
 const info = new Informacion()
+
 //MIDDLEWARE
 passport.use('register', new LocalStrategy({
     passReqToCallback: true
@@ -74,14 +81,16 @@ passport.use('login', new LocalStrategy({
 }))
 
 const app = express()
+const router = express.Router()
+app.use('/api', router)
 
 app.use(
   session({
     store: MongoStore.create({
-      mongoUrl: "mongodb+srv://coderhouse:coderhouse@cluster0.utluy.mongodb.net/sessions?retryWrites=true&w=majority",
+      mongoUrl: process.env.MONGO_URI_SESSION,
       mongoOptions: advancedOptions,
     }),
-    secret: 'stringSecreto',
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
@@ -182,6 +191,18 @@ app.get('/info' ,async (req, res) => {
   }
 })
 
+router.get('/randoms/:cantidad?', (req, res) => {
+  const computo = fork(path.resolve(process.cwd(),'./utils/random.js'))
+  const cantidad = req.params.cantidad || 100000000
+  computo.on('message', resultado => {
+      if (resultado === 'preparado') {
+          computo.send(cantidad)
+      } else {
+          res.json({ resultado })
+      }
+  })
+})
+
 
 //SOCKET
 setTimeout(() =>{
@@ -212,5 +233,16 @@ setTimeout(() =>{
 
 
 //SERVER
-const PORT = 8080
-httpServer.listen(PORT, () =>   console.log('Servidor escuchando en el puerto ' + PORT))
+
+const configuracion_puerto = parseArgs(process.argv.slice(2))
+
+const { puerto, _ } = configuracion_puerto 
+    .alias({
+        p: 'puerto',
+    })
+    .default({
+        puerto: 8080,
+    })
+    .argv
+
+httpServer.listen(puerto, () =>   console.log('Servidor escuchando en el puerto ' + puerto))
