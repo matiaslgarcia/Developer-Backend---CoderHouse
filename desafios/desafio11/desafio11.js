@@ -13,6 +13,7 @@ import ContenedorMongoMensajes from './contenedores/ContenedorMongoMensajes.js'
 import ContenedorMongoUsuarios from './contenedores/ContenedorMongoUsuarios.js'
 import passport from 'passport'
 import { Strategy as LocalStrategy} from 'passport-local'
+import bcrypt from 'bcrypt'
 faker.locale = 'es'
 
 const optionsMariaDB = {
@@ -39,37 +40,42 @@ const producto = new Producto()
 const user = new ContenedorMongoUsuarios(conexion)
 
 //MIDDLEWARE
-passport.use('register', new LocalStrategy({
+passport.use('local-register', new LocalStrategy({
+    usernameField: 'email',
+    passwordField: 'password',
     passReqToCallback: true
-  },async (req, password, done) => {
-    const { email } = req.body
+  },
+  async (req, email, password, done) => {
+    // const { email } = req.body
     const usuario = await user.findUser(email)
     console.log(usuario)
     if(usuario){
-      return done('Usuario registrado')
+      return done(null, false)
     }
     const userNuevo = {
       email: email,
-      password: password,
+      passwordHash: bcrypt.hashSync(password,10)
     }
     await user.saveUsuario(userNuevo)
     return done(null, userNuevo)
   }
 ))
 
-passport.use('login', new LocalStrategy({
+passport.use('local-login', new LocalStrategy({
+  usernameField: 'email',
+  passwordField: 'password',
   passReqToCallback: true
-}, async (req, password,done) => {
-  const {email} = req.body;
+}, async (req, email, password,done) => {
+  // const { email } = req.body
   const usuario = await user.findUser(email)
-  console.log(usuario)
-  if(!usuario){
-    return done(null,false)
+  const passwordValidate = usuario && bcrypt.compareSync(password,usuario.passwordHash)
+  if(passwordValidate){
+    return done(null,usuario)
   }
-  if(usuario.password !== password){
-    return done(null,false)
-  }
-  return done(null,usuario)
+
+  return done(null,false,{
+    message: 'Email y/o password invalido'
+  })
 }))
 
 const app = express()
@@ -83,14 +89,17 @@ app.use(
     secret: 'stringSecreto',
     resave: false,
     saveUninitialized: false,
+    rolling: true,
     cookie: {
       maxAge: 100000
     }
   })  
 )
 
+
+
 passport.serializeUser(function (usuario,done){
-  done(null,usuario.email)
+  done(null,usuario)
 })
 
 passport.deserializeUser( async function (email, done){
@@ -98,28 +107,26 @@ passport.deserializeUser( async function (email, done){
   done(null, usuario)
 })
 
+function autorizacionWeb(req, res, next) {
+  if(req.isAuthenticated()){
+    next()
+  }else {
+    res.redirect('/login')
+  }
+}
 const httpServer = createServer(app)
 const io = new Server(httpServer)
 
-app.use(passport.initialize())
-app.use(passport.session())
-app.use(express.static('./public'))
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-app.set('view engine', 'ejs')
+app.use(express.static('./public'))
 
-function autorizacionWeb(req, res, next) {
-  if(req.isAuthenticated()){
-      next()
-  } else {
-      res.redirect('/login')
-  }
-}
+app.set('view engine', 'ejs')
 
 //EndPoint
 //Para login
 
-app.get('/', autorizacionWeb, (req, res) => {
+app.get('/', autorizacionWeb, (req, res, next) => {
     res.redirect('/landing')
 })
 
@@ -138,7 +145,7 @@ app.get('/logout', (req, res) => {
   }
 })
 
-app.get('/landing', autorizacionWeb, (req, res) => {
+app.get('/landing', autorizacionWeb, (req, res, next) => {
   res.render('principal.ejs', { email: req.session.email })
 })
 
@@ -161,7 +168,12 @@ app.get('/faillogin',(req,res) => {
   res.render('principalErrorLogin.ejs')
 })
 
-app.post('/login',passport.authenticate('login', {failureRedirect: '/faillogin', successRedirect: '/landing'}))
+app.post('/login',passport.authenticate('local-login',
+  {
+  successRedirect: '/landing',
+  failureRedirect: '/faillogin'
+  }
+))
 
 app.get('/register', async (req, res) => {
   res.render('principalRegistrarUsuario.ejs')
@@ -171,7 +183,11 @@ app.get('/failregister',(req,res) => {
   res.render('principalErrorSignup.ejs')
 })
 
-app.post('/register', passport.authenticate('register', {failureRedirect: '/failregister', successRedirect:'/'}))
+app.post('/register', passport.authenticate('local-register',
+  {
+    successRedirect:'/',
+    failureRedirect: '/failregister'
+  }))
 
 //SOCKET
 setTimeout(() =>{
