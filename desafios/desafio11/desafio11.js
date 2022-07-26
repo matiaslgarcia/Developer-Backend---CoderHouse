@@ -99,7 +99,7 @@ app.use(
 
 
 passport.serializeUser(function (usuario,done){
-  done(null,usuario)
+  done(null,usuario.email)
 })
 
 passport.deserializeUser( async function (email, done){
