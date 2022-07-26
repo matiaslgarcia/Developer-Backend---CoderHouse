@@ -46,9 +46,7 @@ passport.use('local-register', new LocalStrategy({
     passReqToCallback: true
   },
   async (req, email, password, done) => {
-    // const { email } = req.body
     const usuario = await user.findUser(email)
-    console.log(usuario)
     if(usuario){
       return done(null, false)
     }
@@ -97,7 +95,6 @@ app.use(
 )
 
 
-
 passport.serializeUser(function (usuario,done){
   done(null,usuario.email)
 })
@@ -128,12 +125,12 @@ app.set('view engine', 'ejs')
 //EndPoint
 //Para login
 
-app.get('/', isAuth, (req, res, next) => {
-    res.redirect('/landing')
+app.get('/', isAuth, (req, res, next) => {  
+  res.redirect('/landing')
 })
 
 app.get('/logout', (req, res) => {
-  const email = req.session?.email
+  const email = req.user.email
   if (email) {
       req.session.destroy(err => {
           if (!err) {
@@ -148,7 +145,7 @@ app.get('/logout', (req, res) => {
 })
 
 app.get('/landing', isAuth, (req, res, next) => {
-  res.render('principal.ejs', { email: req.session.email })
+  res.render('principal.ejs', { email: req.user.email })
 })
 
 app.get('/api/productos-test' ,async (req, res) => {
@@ -166,6 +163,7 @@ app.get('/login', (req, res) => {
   }
   res.render('principalLogueoUsuario.ejs')
 })
+
 app.get('/faillogin',(req,res) => {
   res.render('principalErrorLogin.ejs')
 })
@@ -205,7 +203,6 @@ setTimeout(() =>{
         })
 
         const messages = await mensajes.getAllMessages()
-        console.log(messages)
         sockets.emit('messages', messages)
 
         sockets.on('new-message', async data => {
