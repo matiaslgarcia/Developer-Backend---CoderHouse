@@ -10,7 +10,7 @@ export default class ContenedorMongoUsuarios{
     try {
         const newUsuario = {
             "email": nuevoUsuario.email,
-            "password": nuevoUsuario.password,
+            "passwordHash": nuevoUsuario.passwordHash,
         }
         await usuarios.usuarios.create(newUsuario)
     }catch(error){
