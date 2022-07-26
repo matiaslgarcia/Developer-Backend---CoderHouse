@@ -107,7 +107,7 @@ passport.deserializeUser( async function (email, done){
   done(null, usuario)
 })
 
-function autorizacionWeb(req, res, next) {
+function isAuth(req, res, next) {
   if(req.isAuthenticated()){
     next()
   }else {
@@ -120,13 +120,15 @@ const io = new Server(httpServer)
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.static('./public'))
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.set('view engine', 'ejs')
 
 //EndPoint
 //Para login
 
-app.get('/', autorizacionWeb, (req, res, next) => {
+app.get('/', isAuth, (req, res, next) => {
     res.redirect('/landing')
 })
 
@@ -145,7 +147,7 @@ app.get('/logout', (req, res) => {
   }
 })
 
-app.get('/landing', autorizacionWeb, (req, res, next) => {
+app.get('/landing', isAuth, (req, res, next) => {
   res.render('principal.ejs', { email: req.session.email })
 })
 
