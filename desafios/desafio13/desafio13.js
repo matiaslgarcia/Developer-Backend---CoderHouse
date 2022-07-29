@@ -203,7 +203,6 @@ router.get('/randoms/:cantidad?', (req, res) => {
   })
 })
 
-
 //SOCKET
 setTimeout(() =>{
     io.on('connection', async (sockets) => {
@@ -231,18 +230,18 @@ setTimeout(() =>{
     })
   },1000)
 
-
 //SERVER
-
 const configuracion_puerto = parseArgs(process.argv.slice(2))
 
-const { puerto, _ } = configuracion_puerto 
+const {modo, puerto, _ } = configuracion_puerto
     .alias({
+        m: 'modo',
         p: 'puerto',
     })
     .default({
+        modo: process.argv[3] === 'FORK',
         puerto: 8080,
     })
     .argv
 
-httpServer.listen(puerto, () =>   console.log('Servidor escuchando en el puerto ' + puerto))
+httpServer.listen({modo,puerto}, () =>   console.log('Servidor escuchando en el puerto ' + puerto + ' en modo: ' + modo))
