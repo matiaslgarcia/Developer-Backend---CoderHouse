@@ -1,4 +1,4 @@
-import producto from "../../api/instanciaProductoTest"
+import producto from "../../api/instanciaProductoTest.js"
 import { Router } from "express"
 
 const productoTest = new Router()

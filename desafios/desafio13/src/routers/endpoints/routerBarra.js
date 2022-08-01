@@ -1,4 +1,4 @@
-import autorizacionWeb from "../../../utils/autenticacion"
+import autorizacionWeb from "../../../utils/autenticacion.js"
 import { Router } from "express"
 
 const generarDireccionBarra = new Router()

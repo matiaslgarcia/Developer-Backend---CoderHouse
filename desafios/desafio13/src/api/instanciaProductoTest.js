@@ -1,4 +1,4 @@
-import Producto from "../../utils/producto"
+import Producto from "../../utils/producto.js"
 
 const producto = new Producto()
 

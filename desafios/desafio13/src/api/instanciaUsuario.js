@@ -1,5 +1,5 @@
-import conexion from "../DB/connectionMongo"
-import ContenedorMongoUsuarios from "../../contenedores/ContenedorMongoUsuarios"
+import conexion from "../DB/connectionMongo.js"
+import ContenedorMongoUsuarios from "../../contenedores/ContenedorMongoUsuarios.js"
 
 const user = new ContenedorMongoUsuarios(conexion)
 
