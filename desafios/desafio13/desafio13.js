@@ -27,8 +27,6 @@ await contenedor.crearTablaProductos()
 
 //MIDDLEWARE
 const app = express()
-const router = express.Router()
-app.use('/api', router)
 
 app.use(
   session({
@@ -59,11 +57,11 @@ app.set('view engine', 'ejs')
 //EndPoint
 app.use(loginUser)
 app.use(registerUser)
-app.use(productoTest)
-app.use(generarRandom)
 app.use(generarInfo)
 app.use(generarDireccionBarra)
 app.use(generarLanding)
+app.use('/api', generarRandom)
+app.use('/api', productoTest)
 
 //SOCKET
 setTimeout(() =>{
@@ -104,12 +102,12 @@ const {modo, puerto, _ } = configuracion_puerto
         p: 'puerto',
     })
     .default({
-        modo: process.argv[3] === 'FORK',
+        modo: process.argv[3] || 'FORK',
         puerto: 8080,
     })
     .argv
 
-httpServer.listen({modo,puerto}, () =>   console.log('Servidor escuchando en el puerto ' + puerto + ' en modo: ' + modo))
+httpServer.listen({puerto, modo}, () => console.log('Servidor escuchando en el puerto ' + puerto + ' en modo: ' + modo))
 
 // -------------- MODO FORK -------------------
 //pm2 start server.js --name="Server1" --watch -- 8081 FORK
