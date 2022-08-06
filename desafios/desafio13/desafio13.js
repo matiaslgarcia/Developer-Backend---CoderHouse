@@ -20,94 +20,95 @@ import generarLanding from './src/routers/endpoints/routerLanding.js'
 
 dotenv.config()
 
-// const modoCluster = process.argv[3] == 'CLUSTER'
- 
+const modoCluster = process.argv[3] == 'CLUSTER'
+
 //Instancias
 await contenedor.crearTablaProductos()
 
-//MIDDLEWARE
-const app = express()
+if(modoCluster && cluster.isPrimary) {
+  const numCpus = os.cpus().length
 
-app.use(
-  session({
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGO_URI_SESSION,
-      mongoOptions: {useNewUrlParser: true, useUnifiedTopology: true},
-    }),
-    secret: process.env.SESSION_SECRET,
-    resave: false,
-    saveUninitialized: false,
-    rolling: true,
-    cookie: {
-      maxAge: 100000
-    }
-  })  
-)
+  console.log('Numero de procesadores: ' + numCpus)
+  console.log('PID:' + process.pid)
 
-const httpServer = createServer(app)
-const io = new Server(httpServer)
+  for(let i=0; i<numCpus; i++) {
+      cluster.fork()
+  }
 
-app.use(passport.initialize())
-app.use(passport.session())
-app.use(express.static('./public'))
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-app.set('view engine', 'ejs')
-
-//EndPoint
-app.use(loginUser)
-app.use(registerUser)
-app.use(generarInfo)
-app.use(generarDireccionBarra)
-app.use(generarLanding)
-app.use('/api', generarRandom)
-app.use('/api', productoTest)
-
-//SOCKET
-setTimeout(() =>{
-  io.on('connection', async (sockets) => {
-    console.log(`Cliente con ID: ${sockets.id} se hace conectado`)
-    try {
-      socketMensaje(sockets,io.sockets)
-      socketProducto(sockets,io.sockets)
-    }catch (e){
-      console.log('Error en el socket es: ' + e)
-    }
+  cluster.on('exit', worker => {
+      console.log('Worker ' + process.pid + ' murio')
+      cluster.fork()
   })
-},1000)
+}else {
 
-//SERVER
+    //MIDDLEWARE
+    const app = express()
 
-// if(modoCluster && cluster.isPrimary) {
-//   const numCpus = os.cpus().length
+    app.use(
+      session({
+        store: MongoStore.create({
+          mongoUrl: process.env.MONGO_URI_SESSION,
+          mongoOptions: {useNewUrlParser: true, useUnifiedTopology: true},
+        }),
+        secret: process.env.SESSION_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        rolling: true,
+        cookie: {
+          maxAge: 100000
+        }
+      })  
+    )
 
-//   console.log('Numero de procesadores: ' + numCpus)
-//   console.log('PID:' + process.pid)
+      const httpServer = createServer(app)
+      const io = new Server(httpServer)
 
-//   for(let i=0; i<numCpus; i++) {
-//       cluster.fork()
-//   }
+      app.use(passport.initialize())
+      app.use(passport.session())
+      app.use(express.static('./public'))
+      app.use(express.json())
+      app.use(express.urlencoded({ extended: true }))
+      app.set('view engine', 'ejs')
 
-//   cluster.on('exit', worker => {
-//       console.log('Worker ' + process.pid + ' murio')
-//       cluster.fork()
-//   })
-// }
+      //EndPoint
+      app.use(loginUser)
+      app.use(registerUser)
+      app.use(generarInfo)
+      app.use(generarDireccionBarra)
+      app.use(generarLanding)
+      app.use('/api', generarRandom)
+      app.use('/api', productoTest)
 
-const configuracion_puerto = parseArgs(process.argv.slice(2))
+      //SOCKET
+      setTimeout(() =>{
+        io.on('connection', async (sockets) => {
+          console.log(`Cliente con ID: ${sockets.id} se hace conectado`)
+          try {
+            socketMensaje(sockets,io.sockets)
+            socketProducto(sockets,io.sockets)
+          }catch (e){
+            console.log('Error en el socket es: ' + e)
+          }
+        })
+      },1000)
 
-const {modo, puerto, _ } = configuracion_puerto
-    .alias({
-        m: 'modo',
-        p: 'puerto',
-    })
-    .default({
-        modo: process.argv[3] || 'FORK',
-        puerto: 8080,
-    })
-    .argv
+      //SERVER
 
-httpServer.listen({puerto, modo}, () => console.log('Servidor escuchando en el puerto ' + puerto + ' en modo: ' + modo))
+      const configuracion_puerto = parseArgs(process.argv[2])
+
+      const {modo, puerto, _ } = configuracion_puerto
+          .alias({
+              m: 'modo',
+              p: 'puerto',
+          })
+          .default({
+              modo: process.argv[3] || 'FORK',
+              puerto: 8080,
+          })
+          .argv
+
+      httpServer.listen(puerto, () => console.log('Servidor escuchando en el puerto ' + puerto ))
+}
 
 // -------------- MODO FORK -------------------
 //pm2 start server.js --name="Server1" --watch -- 8081 FORK
