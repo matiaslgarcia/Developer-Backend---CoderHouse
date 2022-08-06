@@ -94,16 +94,16 @@ if(modoCluster && cluster.isPrimary) {
 
       //SERVER
 
-      const configuracion_puerto = parseArgs(process.argv[2])
+      const configuracion_puerto = parseArgs(process.argv.slice(3))
 
-      const {modo, puerto, _ } = configuracion_puerto
+      const {puerto, modo, _ } = configuracion_puerto
           .alias({
-              m: 'modo',
               p: 'puerto',
+              m: 'modo',
           })
           .default({
+              puerto: process.argv[2] || 8080,
               modo: process.argv[3] || 'FORK',
-              puerto: 8080,
           })
           .argv
 
