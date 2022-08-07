@@ -114,7 +114,7 @@ if(modoCluster && cluster.isPrimary) {
 //pm2 start server.js --name="Server1" --watch -- 8081 FORK
 
 // -------------- MODO CLUSTER -------------------
-//pm2 start server.js --name="Server2" --watch -- 8082 CLUSTER
+//pm2 start server.js --name="Server2" --watch -i max -- 8082 CLUSTER
 
 //Si hay problemas de ejecucion por bloqueo del sistema, ejecutar PowerShell en modo admin
 // y ejecutar: Set-ExecutionPolicy Unrestricted
