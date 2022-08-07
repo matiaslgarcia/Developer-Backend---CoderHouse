@@ -29,7 +29,7 @@ if(modoCluster && cluster.isPrimary) {
   const numCpus = os.cpus().length
 
   console.log('Numero de procesadores: ' + numCpus)
-  console.log('PID:' + process.pid)
+  console.log('ID DE PROCESO:' + process.pid)
 
   for(let i=0; i<numCpus; i++) {
       cluster.fork()
@@ -71,8 +71,8 @@ if(modoCluster && cluster.isPrimary) {
       app.set('view engine', 'ejs')
 
       //EndPoint
-      app.use(loginUser)
       app.use(registerUser)
+      app.use(loginUser)
       app.use(generarInfo)
       app.use(generarDireccionBarra)
       app.use(generarLanding)
@@ -92,8 +92,7 @@ if(modoCluster && cluster.isPrimary) {
         })
       },1000)
 
-      //SERVER
-
+      //SERVER CONFIG
       const configuracion_puerto = parseArgs(process.argv.slice(3))
 
       const {puerto, modo, _ } = configuracion_puerto
