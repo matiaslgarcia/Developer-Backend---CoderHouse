@@ -20,12 +20,26 @@ import generarLanding from './src/routers/endpoints/routerLanding.js'
 
 dotenv.config()
 
-const modoCluster = process.argv[3] == 'CLUSTER'
+const modoCluster = process.argv
+console.log(modoCluster)
+const configuracion_puerto = parseArgs(process.argv.slice(3))
 
+const {puerto, modo, _ } = configuracion_puerto
+  .alias({
+    p: 'puerto',
+    m: 'modo',
+  })
+  .default({
+    puerto: process.argv[2] || 8080,
+    modo: process.argv[3] || 'FORK',
+  })
+  .argv
+
+console.log({puerto, modo})
 //Instancias
 await contenedor.crearTablaProductos()
 
-if(modoCluster && cluster.isPrimary) {
+if(modo === 'CLUSTER' && cluster.isMaster) {
   const numCpus = os.cpus().length
 
   console.log('Numero de procesadores: ' + numCpus)
@@ -92,22 +106,10 @@ if(modoCluster && cluster.isPrimary) {
         })
       },1000)
 
-      //SERVER CONFIG
-      const configuracion_puerto = parseArgs(process.argv.slice(3))
-
-      const {puerto, modo, _ } = configuracion_puerto
-          .alias({
-              p: 'puerto',
-              m: 'modo',
-          })
-          .default({
-              puerto: process.argv[2] || 8080,
-              modo: process.argv[3] || 'FORK',
-          })
-          .argv
-
-      httpServer.listen(puerto, () => console.log('Servidor escuchando en el puerto ' + puerto ))
+      httpServer.listen(() => console.log('Servidor escuchando en el puerto ' + puerto ))
 }
+
+//SERVER CONFIG
 
 // -------------- MODO FORK -------------------
 //pm2 start server.js --name="Server1" --watch -- 8081 FORK
