@@ -2,7 +2,7 @@
   "name": "desafio13",
   "version": "1.0.0",
   "description": "",
-  "main": "desafio11.js",
+  "main": "desafio13.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -39,21 +39,21 @@ console.log({puerto, modo})
 //Instancias
 await contenedor.crearTablaProductos()
 
-if(modo === 'CLUSTER' && cluster.isMaster) {
-  const numCpus = os.cpus().length
+// if(modo === 'CLUSTER' && cluster.isMaster) {
+  // const numCpus = os.cpus().length
 
-  console.log('Numero de procesadores: ' + numCpus)
-  console.log('ID DE PROCESO:' + process.pid)
+  // console.log('Numero de procesadores: ' + numCpus)
+  // console.log('ID DE PROCESO:' + process.pid)
 
-  for(let i=0; i<numCpus; i++) {
-      cluster.fork()
-  }
+  // for(let i=0; i<numCpus; i++) {
+  //     cluster.fork()
+  // }
 
-  cluster.on('exit', worker => {
-      console.log('Worker ' + process.pid + ' murio')
-      cluster.fork()
-  })
-}else {
+  // cluster.on('exit', worker => {
+  //     console.log('Worker ' + process.pid + ' murio')
+  //     cluster.fork()
+  // })
+// }else {
 
     //MIDDLEWARE
     const app = express()
@@ -107,7 +107,7 @@ if(modo === 'CLUSTER' && cluster.isMaster) {
       },1000)
 
       httpServer.listen(() => console.log('Servidor escuchando en el puerto ' + puerto ))
-}
+// }
 
 //SERVER CONFIG
 
