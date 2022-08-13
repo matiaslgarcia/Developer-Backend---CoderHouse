@@ -1,43 +1,7 @@
-import express from 'express'
-import session from 'express-session';
-import MongoStore from 'connect-mongo';
-import { createServer } from "http";
-import { Server } from "socket.io";
-import passport from 'passport'
-import dotenv from 'dotenv'
-import parseArgs from 'yargs'
 import cluster from 'cluster'
 import * as os from 'os'
-import socketMensaje from "./src/routers/web-sockets/socketMensajes.js"
-import socketProducto from "./src/routers/web-sockets/socketProductos.js"
-import contenedor from './src/api/instanciasProducto.js'
-import {loginUser , registerUser } from './src/routers/passport/auth.js'
-import productoTest from './src/routers/endpoints/routerProductosTest.js'
-import generarRandom from './src/routers/endpoints/routerRandom.js'
-import generarInfo from './src/routers/endpoints/routerInfo.js'
-import generarDireccionBarra from './src/routers/endpoints/routerBarra.js'
-import generarLanding from './src/routers/endpoints/routerLanding.js'
-
-dotenv.config()
-
-const modoCluster = process.argv
-console.log(modoCluster)
-const configuracion_puerto = parseArgs(process.argv.slice(3))
-
-const {puerto, modo, _ } = configuracion_puerto
-  .alias({
-    p: 'puerto',
-    m: 'modo',
-  })
-  .default({
-    puerto: process.argv[2] || 8080,
-    modo: process.argv[3] || 'FORK',
-  })
-  .argv
-
-console.log({puerto, modo})
-//Instancias
-await contenedor.crearTablaProductos()
+import {puerto, modo} from './config.js'
+import {createServer} from "./createServer.js";
 
 if(modo === 'CLUSTER' && cluster.isMaster) {
   const numCpus = os.cpus().length
@@ -50,63 +14,23 @@ if(modo === 'CLUSTER' && cluster.isMaster) {
   }
 
   cluster.on('exit', worker => {
-      console.log('Worker ' + process.pid + ' murio')
+      console.log('Worker ' + process.pid + ' murio', new Date().toLocaleString())
       cluster.fork()
   })
 }else {
-
     //MIDDLEWARE
-    const app = express()
+    console.log(process.argv)
+    process.on('exit', code => {
+      console.log('Salida con código de error: ' + code)
+    })
 
-    app.use(
-      session({
-        store: MongoStore.create({
-          mongoUrl: process.env.MONGO_URI_SESSION,
-          mongoOptions: {useNewUrlParser: true, useUnifiedTopology: true},
-        }),
-        secret: process.env.SESSION_SECRET,
-        resave: false,
-        saveUninitialized: false,
-        rolling: true,
-        cookie: {
-          maxAge: 100000
-        }
-      })  
-    )
-
-      const httpServer = createServer(app)
-      const io = new Server(httpServer)
-
-      app.use(passport.initialize())
-      app.use(passport.session())
-      app.use(express.static('./public'))
-      app.use(express.json())
-      app.use(express.urlencoded({ extended: true }))
-      app.set('view engine', 'ejs')
-
-      //EndPoint
-      app.use(registerUser)
-      app.use(loginUser)
-      app.use(generarInfo)
-      app.use(generarDireccionBarra)
-      app.use(generarLanding)
-      app.use('/api', generarRandom)
-      app.use('/api', productoTest)
-
-      //SOCKET
-      setTimeout(() =>{
-        io.on('connection', async (sockets) => {
-          console.log(`Cliente con ID: ${sockets.id} se hace conectado`)
-          try {
-            socketMensaje(sockets,io.sockets)
-            socketProducto(sockets,io.sockets)
-          }catch (e){
-            console.log('Error en el socket es: ' + e)
-          }
-        })
-      },1000)
-
-      httpServer.listen(() => console.log('Servidor escuchando en el puerto ' + puerto ))
+    const app = await createServer()
+    try {
+        const connectedServer = await app.handler(puerto)
+        console.log(`proceso #${process.pid} escuchando en el puerto ${connectedServer.address().port} en modo ${modo}`)
+    } catch (error) {
+        console.log(`Error en servidor ${error}`)
+    }
 }
 
 //SERVER CONFIG
