@@ -6,26 +6,22 @@ export default class Contenedor {
     }
 
     async crearTablaProductos() {
-        this.knex.schema.dropTableIfExists(this.tableName)
-          .finally(() => {
-              try {
-                return this.knex.schema.createTable(this.tableName, table => {
-                    table.increments('id').primary()
-                    table.string('title', 50).notNullable()
-                    table.float('price', 10).notNullable()
-                    table.string('thumbnail', 255).notNullable()
-                })
-              }catch (e) {
-                  console.log('Error' + e)
-              }
-          })
+        const isExist = await this.knex.schema.hasTable(this.tableName)
+        if(!isExist){
+            await this.knex.schema.createTable(this.tableName, table => {
+                table.increments('id').primary()
+                table.string('title', 50).notNullable()
+                table.float('price', 10).notNullable()
+                table.string('thumbnail', 255).notNullable()
+            })
+        }
     }
 
     async insertProduct(producto) {
         try {
             const newProduct = {
                     title: producto.title,
-                    price: producto.price, 
+                    price: producto.price,
                     thumbnail: producto.thumbnail
                 }
             this.knex(this.tableName).insert(newProduct)
