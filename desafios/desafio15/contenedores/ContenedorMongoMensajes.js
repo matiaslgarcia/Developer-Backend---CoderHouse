@@ -1,7 +1,8 @@
 import * as mensajes from "../models/mensaje.js"
+import logger from '../utils/logger.js'
 
 export default class ContenedorMongoMensajes{
-    
+
   constructor(connection) {
     this.connection = connection
   }
@@ -21,7 +22,7 @@ export default class ContenedorMongoMensajes{
         }
         await mensajes.mensajes.create(newMensaje)
     }catch(error){
-      console.log(error)
+      logger.error(error)
     }
   }
 
@@ -29,7 +30,7 @@ export default class ContenedorMongoMensajes{
     try{
       return await mensajes.mensajes.find()
     }catch (e) {
-      console.log(error)
+      logger.error(error)
     }
   }
 }

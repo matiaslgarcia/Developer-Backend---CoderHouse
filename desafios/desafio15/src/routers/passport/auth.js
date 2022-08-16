@@ -50,7 +50,12 @@ passport.deserializeUser( async function (email, done){
 const registerUser = new Router()
 const loginUser = new Router()
 
-loginUser.post('/login',passport.authenticate('login', {failureRedirect: '/faillogin', successRedirect: '/landing'}))
+loginUser.post('/login',passport.authenticate('local-login',
+{
+successRedirect: '/landing',
+failureRedirect: '/faillogin'
+}
+))
 
 loginUser.get('/login', (req, res) => {
   if(req.isAuthenticated()){
@@ -82,7 +87,11 @@ registerUser.get('/failregister',(req,res) => {
   res.render('principalErrorSignup.ejs')
 })
 
-registerUser.post('/register', passport.authenticate('register', {failureRedirect: '/failregister', successRedirect:'/'}))
+registerUser.post('/register', passport.authenticate('local-register',
+{
+  successRedirect:'/',
+  failureRedirect: '/failregister'
+}))
 
 registerUser.get('/register', async (req, res) => {
   res.render('principalRegistrarUsuario.ejs')

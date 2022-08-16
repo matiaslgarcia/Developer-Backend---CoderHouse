@@ -1,3 +1,5 @@
+import logger from "../utils/logger.js";
+
 const sockets = io.connect()
 
 function addProduct() {
@@ -47,7 +49,7 @@ function addMessage() {
       edad: document.getElementById("edad").value,
       alias: document.getElementById("alias").value,
       avatar: document.getElementById("avatar").value,
-      text: document.getElementById("text").value 
+      text: document.getElementById("text").value
     }
   sockets.emit("new-message", newMessage);
   return false
@@ -91,10 +93,10 @@ function normalizador(data){
     })
 
     function print(objeto) {
-      console.log(util.inspect(objeto,false,12,true))
+      logger.info(util.inspect(objeto,false,12,true))
     }
 
-    console.log('Objeto normalizado')
+    logger.info('Objeto normalizado')
     const normalizedHolding = normalize(autoresTodos, grupo)
     print(normalizedHolding)
 }
