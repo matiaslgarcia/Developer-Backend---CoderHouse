@@ -1,7 +1,8 @@
 import * as usuarios from "../models/usuario.js"
+import logger from "../utils/logger.js";
 
 export default class ContenedorMongoUsuarios{
-    
+
   constructor(connection) {
     this.connection = connection
   }
@@ -14,7 +15,7 @@ export default class ContenedorMongoUsuarios{
         }
         await usuarios.usuarios.create(newUsuario)
     }catch(error){
-      console.log(error)
+      logger.error(error)
     }
   }
 
@@ -22,7 +23,7 @@ export default class ContenedorMongoUsuarios{
     try {
       return await usuarios.usuarios.findOne({email: email})
     }catch (e) {
-      console.log('Error al Buscar un Producto: ' + e)
+      logger.error('Error al Buscar un Producto: ' + e)
     }
   }
 }

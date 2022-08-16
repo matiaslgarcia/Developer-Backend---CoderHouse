@@ -1,3 +1,4 @@
+import logger from "./logger.js";
 
 function generarNumerosRandom(cantidad){
     const numeros = {}
@@ -12,14 +13,14 @@ function generarNumerosRandom(cantidad){
 }
 
 process.on('exit', () => {
-    console.log(`Proceso #${process.pid}: Terminado`)
+   logger.info(`Proceso #${process.pid}: Terminado`)
   })
 
 process.on('message', numeros => {
-    console.log(`Proceso #${process.pid}: Se está iniciando`)
+    logger.info(`Proceso #${process.pid}: Se está iniciando`)
     const sum = generarNumerosRandom(numeros)
     process.send(sum)
-    console.log(`Proceso #${process.pid}: Finalizó`)
+    logger.info(`Proceso #${process.pid}: Finalizó`)
     process.exit()
 })
 

@@ -1,3 +1,4 @@
+import logger from '../utils/logger.js'
 export default class Contenedor {
 
     constructor(configuracion, tableName) {
@@ -25,10 +26,10 @@ export default class Contenedor {
                     thumbnail: producto.thumbnail
                 }
             this.knex(this.tableName).insert(newProduct)
-                .then(() => console.log('Se inserto el nuevo productos'))
+                .then(() => logger.info('Se inserto el nuevo productos'))
                 .catch((err) => { throw err})
         } catch(error) {
-            console.log('Error: ' + error)
+            logger.error('Error: ' + error)
         }
     }
 
@@ -51,7 +52,7 @@ export default class Contenedor {
             this.knex.from(this.tableName)
                 .where('condicion',cond)
                 .update(newProduct)
-                .then(() => console.log('Se actualizo el nuevo productos'))
+                .then(() => logger.info('Se actualizo el nuevo productos'))
                 .catch((err) => { console.log(err); throw err})
         }catch (e){
             throw e
