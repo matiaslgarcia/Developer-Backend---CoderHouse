@@ -1,0 +1,47 @@
+<section>
+    <div class="container py-5 px-4">
+        <div class="row rounded-lg overflow-hidden shadow">
+            <div class=" px-4 py-2"  id="chat-header">
+                <p class="h5 mb-0 py-1 align-middle text-center text-white">Sala</p>
+            </div>
+            <div class="col-12 px-0">
+                <div class="px-4 py-5 chat-box bg-white" id="messages">
+                </div>
+                <form onsubmit="return addMessage(this)" class="bg-light mt-1">
+                    <div class="input-group">
+                        <div class="col-4 d-flex">
+                            <input type="email" placeholder="Ingrese su Email"  id="id" class="form-control rounded-0 border-1 py-2 bg-light">
+                        </div>
+                        <div class="col-4 d-flex">
+                            <input type="text" placeholder="Ingrese su nombre"  id="nombre" class="form-control rounded-0 border-1 py-2 bg-light">
+                        </div>
+                        <div class="col-4 d-flex">
+                            <input type="text" placeholder="Ingrese su apellido"  id="apellido" class="form-control rounded-0 border-1 py-2 bg-light">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="col-2 d-flex">
+                            <input type="number" placeholder="Edad"  id="edad" class="form-control rounded-0 border-1 py-2 bg-light">
+                        </div>
+                        <div class="col-4 d-flex">
+                            <input type="text" placeholder="Ingrese su alias"  id="alias" class="form-control rounded-0 border-1 py-2 bg-light">
+                        </div>
+                        <div class="col-6 d-flex">
+                            <input type="text" placeholder="Ingrese su avatar"  id="avatar" class="form-control rounded-0 border-1 py-2 bg-light">
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <div class="col-12 d-flex ">
+                            <input type="text" placeholder="Escribe su mensaje" aria-describedby="button-addon2" id="text" class="form-control rounded-0 border-1 py-2 bg-light">
+                            <button id="button-addon2" type="submit" class="btn rounded-2 border-2 ">
+                                <i class="icon-location-arrow" id="chat-header-arrow"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
