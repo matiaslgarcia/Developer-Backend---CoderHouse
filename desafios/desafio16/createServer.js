@@ -7,7 +7,13 @@ import socketMensaje from "./src/routers/web-sockets/socketMensajes.js";
 import socketProducto from "./src/routers/web-sockets/socketProductos.js";
 import contenedor from "./src/instances/instanciasProducto.js";
 import logger from  './src/utils/logger.js';
-import routes from './src/routers/routes.js';
+import {loginUser, registerUser} from "./src/routers/passport/auth.js";
+import productoTest from "./src/routers/endpoints/routerProductosTest.js";
+import generarInfo from "./src/routers/endpoints/routerInfo.js";
+import generarDireccionBarra from "./src/routers/endpoints/routerBarra.js";
+import generarTodasLasRutas from "./src/routers/endpoints/routerAllRoutes.js";
+import generarRandom from "./src/routers/endpoints/routerRandom.js";
+import generarLanding from "./src/routers/endpoints/routerLanding.js";
 
 export const createServer = async () =>{
 
@@ -29,8 +35,18 @@ export const createServer = async () =>{
   app.use(passport.session())
 
   //EndPoint
-  app.use(routes)
-  app.use('/', routes.generarDireccionBarra)
+  app.use('/api', generarRandom)
+  app.use('/api', productoTest)
+  app.use(generarInfo)
+  app.use(generarDireccionBarra)
+  app.use(generarLanding)
+  app.use(loginUser)
+  app.use(registerUser)
+  app.use(generarTodasLasRutas)
+
+
+
+
 
   //SOCKET
   setTimeout(() =>{

@@ -1,3 +1,3 @@
-export default function cantRandom(req, res) {
-  return req.params.cantidad || 100000000
+export default function cantRandom(cant) {
+  return cant || 100000000
 }

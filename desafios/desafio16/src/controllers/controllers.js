@@ -1,6 +1,5 @@
-import logger from  '../utils/logger.js'
+import logger from '../utils/logger.js'
 import services from "../services/services.js";
-import passport from "passport";
 
 const allRoutes = async (req) =>{
   const{ url} = req
@@ -11,24 +10,17 @@ const dirBarra = async (req, res) => {
   res.redirect('/landing')
 }
 
-const info = async (req, res) => {
+const information = async (req, res) => {
   try{
-    res.render('principalInfo.ejs',await services.getInformation())
+    res.render('principalInfo.ejs', {informacion: await services.getInformation()})
   }catch (e) {
     res.send(e)
   }
 }
 
-const infoCompression = async (req, res) => {
-  try{
-    res.render('principalInfo.ejs',await services.getInformation())
-  }catch (e) {
-    res.send(e)
-  }
-}
 
 const landing = async (req, res) => {
-  res.render('principal.ejs', await services.getEmail())
+  res.render('principal.ejs', await services.getEmail(req))
 }
 
 const productTest = async (req, res) => {
@@ -39,8 +31,8 @@ const productTest = async (req, res) => {
   }
 }
 
-const randomElements = async () => {
-  await services.getRandomsElements()
+const randomElements = async (req, res) => {
+  return await services.getRandomsElements(req, res)
 }
 
 const failRegister = async (req,res) => {
@@ -76,8 +68,7 @@ export default {
   landing,
   randomElements,
   productTest,
-  info,
-  infoCompression,
+  information,
   dirBarra,
   loginUser,
   logoutUser,

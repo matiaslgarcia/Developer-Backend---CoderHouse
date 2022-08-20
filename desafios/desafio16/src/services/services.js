@@ -1,11 +1,12 @@
-import info from '../utils/informacion.js'
+import info from '../../src/instances/instanciaInformacion.js'
 import cantRandom from '../utils/cantRandom.js'
+import { fork } from 'child_process'
 import producto from "../instances/instanciaProductoTest.js";
 import path from "path";
 import passports from '../utils/passports.js';
 
-const getInformation = async () =>{
-  return await info.solicitarInformacion()
+const getInformation = () =>{
+  return info.solicitarInformacion()
 }
 
 const getEmail = async (req) =>{
@@ -19,10 +20,9 @@ const getProducts = async () =>{
   }
 }
 
-const getRandomsElements = async (res) =>{
-  // const computo = fork(path.resolve(process.cwd(),'../../../utils/random.js'))
-  const computo = path.resolve(process.cwd(),'../utils/random.js')
-  let cantidad = cantRandom()
+const getRandomsElements = async (req,res) =>{
+  const computo = fork(path.resolve(process.cwd(),'./src/utils/random.js'))
+  let cantidad = cantRandom(req.params.cantidad)
   computo.on('message', resultado => {
     if (resultado === 'preparado') {
       computo.send(cantidad)

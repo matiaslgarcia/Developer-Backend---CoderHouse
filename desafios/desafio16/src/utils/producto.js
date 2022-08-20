@@ -1,5 +1,5 @@
-// import faker from 'faker';
-// faker.locale = 'es'
+import {faker} from '@faker-js/faker';
+faker.locale = 'es'
 
 export default class Producto{
     async createProduct(prod){
