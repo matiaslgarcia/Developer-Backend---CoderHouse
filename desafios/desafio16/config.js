@@ -2,10 +2,11 @@ import parseArgs from "yargs";
 import dotenv from 'dotenv'
 import session from "express-session";
 import MongoStore from "connect-mongo";
+import mongoose from 'mongoose'
 
 dotenv.config()
 
-export const {puerto, modo, _ } = parseArgs(process.argv.slice(2))
+export const {puerto, modo } = parseArgs(process.argv.slice(2))
   .alias({
     p: 'puerto',
     m: 'modo',
@@ -31,3 +32,18 @@ export const sessionCfg = session({
     maxAge: 100000
   }
 })
+
+export const conexion = mongoose.connect(process.env.MONGO_URI);
+
+export const optionsMariaDB = {
+  client: process.env.CLIENT_SQL,
+  connection: {
+    host: process.env.HOST_SQL,
+    user: process.env.USER_SQL,
+    password: process.env.PASSWORD_SQL,
+    database: process.env.DATABASE_SQL,
+    ssl: {
+      rejectUnauthorized:false
+    }
+  }
+}
