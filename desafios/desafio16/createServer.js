@@ -44,10 +44,6 @@ export const createServer = async () =>{
   app.use(registerUser)
   app.use(generarTodasLasRutas)
 
-
-
-
-
   //SOCKET
   setTimeout(() =>{
     io.on('connection', async (sockets) => {

@@ -3,7 +3,6 @@ import cantRandom from '../utils/cantRandom.js'
 import { fork } from 'child_process'
 import producto from "../instances/instanciaProductoTest.js";
 import path from "path";
-import passports from '../utils/passports.js';
 
 const getInformation = () =>{
   return info.solicitarInformacion()
@@ -32,10 +31,6 @@ const getRandomsElements = async (req,res) =>{
   })
 }
 
-const getPassportRegister = async () =>{
-  return passports.returnRegister()
-}
-
 const getLogoutUser = async (req, res) => {
   const email = req.session?.email
   if (email) {
@@ -58,16 +53,11 @@ const getLoginUser = async (req, res) => {
   res.render('principalLogueoUsuario.ejs')
 }
 
-const getPassportLogin = async () =>{
-  return passports.returnLogin()
-}
 export default {
   getInformation,
   getEmail,
   getProducts,
   getRandomsElements,
-  getPassportRegister,
   getLogoutUser,
   getLoginUser,
-  getPassportLogin
 }
