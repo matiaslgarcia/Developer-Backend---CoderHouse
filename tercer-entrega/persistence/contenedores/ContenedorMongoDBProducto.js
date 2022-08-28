@@ -1,4 +1,4 @@
-import * as producto from '../models/producto.js'
+import * as producto from '../modelos/producto.js'
 
 export default class ContenedorMongoDBProducto {
   constructor( connection) {

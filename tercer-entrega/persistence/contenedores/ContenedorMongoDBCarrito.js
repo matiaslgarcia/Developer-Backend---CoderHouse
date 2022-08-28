@@ -1,4 +1,4 @@
-import * as carrito from "../models/carrito.js";
+import * as carrito from "../modelos/carrito.js";
 import mongoose from "mongoose"
 
 export default class ContenedorMongoDBCarrito {
