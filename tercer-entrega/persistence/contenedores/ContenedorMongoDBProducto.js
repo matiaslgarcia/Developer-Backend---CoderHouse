@@ -1,10 +1,10 @@
-import * as producto from '../modelos/producto.js'
+import {productos} from '../../models/producto.js'
 
 export default class ContenedorMongoDBProducto {
   constructor( connection) {
     this.connection = connection
   }
-  
+
   async createProduct(prod){
     try {
       const product = {
@@ -16,7 +16,7 @@ export default class ContenedorMongoDBProducto {
         price: prod.price,
         stock: prod.stock,
       }
-      await producto.productos.create(product)
+      await productos.create(product)
     }catch (e) {
       console.log('Error al Crear un Producto: ' + e)
     }
@@ -24,7 +24,7 @@ export default class ContenedorMongoDBProducto {
 
   async findProductById(id){
     try {
-      return await producto.productos.findOne({_id: id})
+      return await productos.findOne({_id: id})
     }catch (e) {
       console.log('Error al Buscar un Producto: ' + e)
     }
@@ -32,7 +32,7 @@ export default class ContenedorMongoDBProducto {
 
   async findProducts(){
     try {
-      return await producto.productos.find()
+      return await productos.find()
     }catch (e) {
       console.log('Error al Buscar un Producto: ' + e)
     }
@@ -40,7 +40,7 @@ export default class ContenedorMongoDBProducto {
 
   async updateProductById(id, prod){
     try {
-      await producto.productos.findByIdAndUpdate({_id: id},{
+      await productos.findByIdAndUpdate({_id: id},{
         timestamp: prod.timestamp,
         name: prod.name,
         description: prod.description,
@@ -56,7 +56,7 @@ export default class ContenedorMongoDBProducto {
 
   async deleteProductById(id){
     try {
-      await producto.productos.findByIdAndDelete({_id: id})
+      await productos.findByIdAndDelete({_id: id})
     }catch (e){
       console.log('Error al Eliminar un Producto: ' + e)
     }

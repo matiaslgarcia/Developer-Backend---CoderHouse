@@ -1,5 +1,4 @@
-import * as carrito from "../modelos/carrito.js";
-import mongoose from "mongoose"
+import {carritos} from "../../models/carrito.js";
 
 export default class ContenedorMongoDBCarrito {
   constructor(connection) {
@@ -12,7 +11,7 @@ export default class ContenedorMongoDBCarrito {
         timestamp: Date.now(),
         product: []
       }
-      await carrito.carritos.create(cart)
+      return await carritos.create(cart)
     }catch (e){
       console.log('Error al crear un Carrito: ' ,e)
     }
@@ -20,7 +19,7 @@ export default class ContenedorMongoDBCarrito {
 
   async deleteCartById(id){
     try {
-      await carrito.carritos.findByIdAndDelete({_id: id})
+      return await carritos.findByIdAndDelete({_id: id})
     }catch (e){
       console.log('Error al Eliminar un Carrito: ' + e)
     }
@@ -28,7 +27,7 @@ export default class ContenedorMongoDBCarrito {
 
   async findCartById(id){
     try {
-      return await carrito.carritos.findOne({_id: id})
+      return await carritos.findOne({_id: id})
     }catch (e) {
       console.log('Error al Buscar un Carrito: ' + e)
     }
@@ -36,7 +35,7 @@ export default class ContenedorMongoDBCarrito {
 
   async insertProductToCart(idCart, prod) {
     try {
-      let cart = await carrito.carritos.findOne({ _id: idCart });
+      let cart = await carritos.findOne({ _id: idCart });
       if (cart) {
         const createProd = {
           productId: prod.productId,
@@ -68,7 +67,7 @@ export default class ContenedorMongoDBCarrito {
     try{
       let posicion
       let mensaje
-      let getProducts = await carrito.carritos.find(
+      let getProducts = await carritos.find(
         {_id: idCart},
         {_id: 0, product:1})
       let cart = getProducts[0].product
@@ -83,10 +82,10 @@ export default class ContenedorMongoDBCarrito {
         cart.splice(posicion,1)
         mensaje = "Producto eliminado del carrito"
       }
-      await carrito.carritos.findByIdAndUpdate(
+      await carritos.findByIdAndUpdate(
         {_id: idCart},
         {product: cart}
-      )      
+      )
       return mensaje
     }catch(e){
       console.log('Error al eliminar un producto del carrito: ', e)

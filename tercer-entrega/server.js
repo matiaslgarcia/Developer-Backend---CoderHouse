@@ -2,7 +2,7 @@ import cluster from 'cluster'
 import * as os from 'os'
 import {puerto, modo} from './config.js'
 import {createServer} from "./createServer.js";
-import logger from  './src/utils/logger.js'
+import logger from  './utils/logger.js'
 
 if(modo === 'CLUSTER' && cluster.isMaster) {
   const numCpus = os.cpus().length

@@ -16,7 +16,12 @@ passport.use('local-register', new LocalStrategy({
     }
     const userNuevo = {
       email: email,
-      passwordHash: bcrypt.hashSync(password,10)
+      passwordHash: bcrypt.hashSync(password,10),
+      nombre: req.body.nombre,
+      direccion: req.body.direccion,
+      edad: req.body.edad,
+      telefono: req.body.telefono,
+      foto: req.body.foto,
     }
     await user.saveUsuario(userNuevo)
     return done(null, userNuevo)
