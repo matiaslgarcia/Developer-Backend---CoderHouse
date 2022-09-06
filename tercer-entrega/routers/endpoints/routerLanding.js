@@ -1,6 +1,6 @@
 import autorizacionWeb from "../../utils/autenticacion.js"
 import { Router } from "express"
-import controller from "../../controllers/controllers.js";
+import controller from "../../controllers/controllerGeneral.js";
 
 const generarLanding = new Router()
 

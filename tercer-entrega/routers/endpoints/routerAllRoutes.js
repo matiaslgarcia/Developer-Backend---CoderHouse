@@ -1,8 +1,8 @@
 import { Router } from "express"
-import controller from "../../controllers/controllers.js";
+import controller from "../../controllers/controllerGeneral.js";
 
 const generarTodasLasRutas = new Router()
 
-generarTodasLasRutas.get('*', controller.allRoutes)
+generarTodasLasRutas.all('*', controller.allRoutes)
 
 export default generarTodasLasRutas

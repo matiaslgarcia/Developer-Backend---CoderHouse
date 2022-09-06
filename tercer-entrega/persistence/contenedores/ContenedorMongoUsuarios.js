@@ -1,4 +1,4 @@
-import * as usuarios from "../../models/usuario.js"
+import {usuarios} from "../../models/usuario.js"
 import logger from '../../utils/logger.js'
 
 export default class ContenedorMongoUsuarios{
@@ -10,10 +10,15 @@ export default class ContenedorMongoUsuarios{
   async saveUsuario(nuevoUsuario) {
     try {
         const newUsuario = {
-            "email": nuevoUsuario.email,
-            "password": nuevoUsuario.password,
+          "email": nuevoUsuario.email,
+          "passwordHash": nuevoUsuario.password,
+          "nombre": nuevoUsuario.nombre,
+          "direccion": nuevoUsuario.direccion,
+          "edad": nuevoUsuario.edad,
+          "telefono": nuevoUsuario.telefono,
+          "foto": nuevoUsuario.foto
         }
-        await usuarios.usuarios.create(newUsuario)
+        await usuarios.create(newUsuario)
     }catch(error){
       logger.error(error)
     }
@@ -21,9 +26,9 @@ export default class ContenedorMongoUsuarios{
 
   async findUser(email){
     try {
-      return await usuarios.usuarios.findOne({email: email})
+      return await usuarios.findOne({email: email})
     }catch (e) {
-      logger.error('Error al Buscar un Producto: ' + e)
+      logger.error('Error al Buscar un Usuario: ' + e)
     }
   }
 }
