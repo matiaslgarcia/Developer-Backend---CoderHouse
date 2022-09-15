@@ -1,9 +1,11 @@
 import passport from 'passport'
+import logger from '../../utils/logger.js'
 import { Router } from 'express'
 import bcrypt from 'bcrypt'
 import { Strategy as LocalStrategy} from 'passport-local'
 import user from '../../instances/instanciaUsuario.js'
 import path from 'path'
+import transporter from '../../utils/transporter.js'
 import upload from "../../utils/multer.js";
 
 passport.use('local-register', new LocalStrategy({
@@ -29,9 +31,15 @@ passport.use('local-register', new LocalStrategy({
       }
     }
     await user.saveUsuario(userNuevo)
-    return done(null, true,{
-      usuarioNuevo: userNuevo
+
+    await transporter.sendMail({
+      from: userNuevo.email,
+      to: 'matiasgarcia444@gmail.com',
+      subject: "Nuevo Registro",
+      text: userNuevo,
     })
+
+    return done(null, userNuevo)
   }
 ))
 
@@ -42,14 +50,13 @@ passport.use('local-login', new LocalStrategy({
 }, async (req, email, password,done) => {
   const usuario = await user.findUser(email)
   const passwordValidate = usuario && bcrypt.compareSync(password, usuario.passwordHash)
+  //Ver lógica para retorno de pantallas
   if(passwordValidate){
-    return done(null,true, {
-      user: usuario
-    })
+    return done(null, usuario)
   }
-  return done(null,false,{
-    message: 'Email y/o password invalido'
-  })
+  return done(null,false,
+    logger.warn('Email y/o password invalido'),
+  )
 }))
 
 passport.serializeUser(function (usuario,done){
@@ -100,17 +107,17 @@ loginUser.get('/logout', (req, res) => {
 })
 
 registerUser.get('/failregister',(req,res) => {
-  res.send({error: 'Error al realizar el registro'})
+  res.render('principalErrorSignup.ejs')
 })
 
-registerUser.post('/register' ,passport.authenticate('local-register',
+registerUser.post('/register', passport.authenticate('local-register',
 {
   successRedirect:'/',
   failureRedirect: '/failregister'
 }))
 
-// registerUser.get('/register', async (req, res) => {
-//   res.send({usuarioActual: })
-// })
+registerUser.get('/register', async (req, res) => {
+  res.render('principalRegistrarUsuario.ejs')
+})
 
 export {loginUser,registerUser}
