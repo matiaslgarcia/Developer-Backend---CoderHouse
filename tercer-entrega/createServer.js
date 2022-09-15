@@ -26,13 +26,14 @@ export const createServer = async () =>{
   app.use(passport.session())
 
   //EndPoint
-  app.use('/api/productos', generarProductos)
-  app.use('/api/carrito', generarCarritos)
-  app.use(generarDireccionBarra)
-  app.use(generarLanding)
-  app.use(loginUser)
-  app.use(registerUser)
-  app.use(generarTodasLasRutas)
+    app.use(loginUser)
+    app.use(registerUser)
+    app.use(generarDireccionBarra)
+    app.use(generarLanding)
+    app.use(generarTodasLasRutas)
+    app.use('/api/productos', generarProductos)
+    app.use('/api/carrito', generarCarritos)
+
 
   return {
       handler: port => new Promise((resolve, reject) => {

@@ -8,7 +8,7 @@ const UsuarioShema = new mongoose.Schema({
     nombre: { type: String, max: 40 },
     direccion: { type: String, max: 50 },
     edad: { type: Number },
-    telefono: { type: Number },
+    telefono: { type: String },
     foto: {
         data: Buffer,
         contentType: String

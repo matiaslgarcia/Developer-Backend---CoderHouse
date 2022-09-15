@@ -1,4 +1,5 @@
 import nodemailer from 'nodemailer'
+import {htmlToText} from 'nodemailer-html-to-text'
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
@@ -11,5 +12,5 @@ const transporter = nodemailer.createTransport({
     rejectUnauthorized: false
   }
 });
-
+transporter.use('compile', htmlToText());
 export default transporter

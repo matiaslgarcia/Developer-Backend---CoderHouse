@@ -13,7 +13,7 @@ const dirBarra = async (req, res) => {
 }
 
 const landing = async (req, res) => {
-  res.send({email: await services.getEmail(req)})
+  res.render('principal.ejs', await services.getEmail(req))
 }
 
 export default {

@@ -4,8 +4,10 @@ import { Router } from 'express'
 import bcrypt from 'bcrypt'
 import { Strategy as LocalStrategy} from 'passport-local'
 import user from '../../instances/instanciaUsuario.js'
+import sendEMail from "../../utils/sendMail.js";
 import path from 'path'
-import transporter from '../../utils/transporter.js'
+
+import * as fs from "fs";
 import upload from "../../utils/multer.js";
 
 passport.use('local-register', new LocalStrategy({
@@ -25,20 +27,13 @@ passport.use('local-register', new LocalStrategy({
       direccion: req.body.direccion,
       edad: req.body.edad,
       telefono: req.body.telefono,
-      foto: {
+  /*    foto: {
         data: fs.readFileSync(path.join(__dirname + '/imagenes/' + req.file.filename)),
         contentType: 'image/png'
-      }
+      }*/
     }
     await user.saveUsuario(userNuevo)
-
-    await transporter.sendMail({
-      from: userNuevo.email,
-      to: 'matiasgarcia444@gmail.com',
-      subject: "Nuevo Registro",
-      text: userNuevo,
-    })
-
+    await sendEMail(userNuevo)
     return done(null, userNuevo)
   }
 ))
@@ -82,24 +77,22 @@ loginUser.get('/login', async (req, res) => {
   if(req.isAuthenticated()){
     res.redirect('/landing')
   }
- const getUser = await user.findUser(req.params.email)
-  res.send({usuario: getUser})
+  res.render('principalLogueoUsuario.ejs')
 })
 
 loginUser.get('/faillogin',(req,res) => {
-  res.send({error: 'Error al realizar el Login'})
-  // res.render('principalErrorLogin.ejs')
+  res.render('principalErrorLogin.ejs')
 })
 
 loginUser.get('/logout', (req, res) => {
   const email = req.session?.email
   if (email) {
       req.session.destroy(err => {
-          if (!err) {
-              res.send({desloguearse: `Se deslogueo el usuario: ${email}`})
-          } else {
-              res.redirect('/')
-          }
+        if (!err) {
+            res.render('principalDeslogueo.ejs', { email })
+        } else {
+            res.redirect('/')
+        }
       })
   } else {
       res.redirect('/')
