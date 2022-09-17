@@ -29,7 +29,7 @@ export const sessionCfg = session({
   saveUninitialized: false,
   rolling: true,
   cookie: {
-    maxAge: 100000
+    maxAge: 1000000
   }
 })
 

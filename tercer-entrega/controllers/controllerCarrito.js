@@ -1,4 +1,5 @@
 import services from "../services/servicesCarrito.js";
+import logger from "../utils/logger.js";
 
 const getCarritoConProductos = async (req,res) =>{
   const id = req.params.id
@@ -48,7 +49,9 @@ const postProductoEnCarrito = async (req,res) =>{
 }
 
 const postCarrito = async (req,res) =>{
-  res.send({mensaje: `Carrito ${await services.postCart()} creado correctamente`})
+  logger.info('entra ?')
+  await services.postCart()
+  res.redirect('/api/productos/')
 }
 
 export default {

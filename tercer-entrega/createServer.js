@@ -30,9 +30,10 @@ export const createServer = async () =>{
     app.use(registerUser)
     app.use(generarDireccionBarra)
     app.use(generarLanding)
-    app.use(generarTodasLasRutas)
     app.use('/api/productos', generarProductos)
     app.use('/api/carrito', generarCarritos)
+    app.use(generarTodasLasRutas)
+
 
 
   return {

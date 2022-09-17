@@ -1,8 +1,8 @@
 import { Router } from "express"
 import controller from "../../controllers/controllerCarrito.js";
+import logger from "../../utils/logger.js";
 
 const generarCarritos = new Router()
-
 generarCarritos.get('/:id/productos', controller.getCarritoConProductos)
 generarCarritos.post('/', controller.postCarrito)
 generarCarritos.delete('/:id', controller.deleteCarrito)

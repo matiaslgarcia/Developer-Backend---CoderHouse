@@ -5,6 +5,7 @@ let admin = false
 const getProductos = async (req,res) =>{
   const id = req.params.id
   if(!id){
+    res.render('principalContainerProducts.ejs')
     res.send({productos: await services.getProducts()})
   } else {
     res.send({producto: await services.getProductsById(id)})

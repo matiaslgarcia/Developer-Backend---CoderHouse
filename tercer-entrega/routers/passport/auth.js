@@ -84,7 +84,8 @@ loginUser.get('/faillogin',(req,res) => {
 })
 
 loginUser.get('/logout', (req, res) => {
-  const email = req.session?.email
+  logger.info(req.session)
+  const email = req.session?.passport.user
   if (email) {
       req.session.destroy(err => {
         if (!err) {
