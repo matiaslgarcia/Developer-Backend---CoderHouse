@@ -3,7 +3,7 @@ import transporter from '../utils/transporter.js'
 const sendEMail = async(userNuevo) =>{
     await transporter.sendMail({
         from: userNuevo.email,
-        to: 'matiasgarcia444@gmail.com',
+        to: 'AlexisMasin86@gmail.com',
         subject: "Nuevo Registro",
         html: `
             <h1>Nuevo Usuario Registrado</h1>

@@ -6,7 +6,6 @@ import { Strategy as LocalStrategy} from 'passport-local'
 import user from '../../instances/instanciaUsuario.js'
 import sendEMail from "../../utils/sendMail.js";
 import path from 'path'
-
 import * as fs from "fs";
 import upload from "../../utils/multer.js";
 
@@ -44,7 +43,7 @@ passport.use('local-login', new LocalStrategy({
   passReqToCallback: true
 }, async (req, email, password,done) => {
   const usuario = await user.findUser(email)
-  const passwordValidate = usuario && bcrypt.compareSync(password, usuario.passwordHash)
+  const passwordValidate = usuario && bcrypt.compareSync(password, usuario.password)
   //Ver lógica para retorno de pantallas
   if(passwordValidate){
     return done(null, usuario)

@@ -11,7 +11,7 @@ export default class ContenedorMongoUsuarios{
     try {
         const newUsuario = {
           "email": nuevoUsuario.email,
-          "passwordHash": nuevoUsuario.password,
+          "password": nuevoUsuario.passwordHash,
           "nombre": nuevoUsuario.nombre,
           "direccion": nuevoUsuario.direccion,
           "edad": nuevoUsuario.edad,
