@@ -4,8 +4,20 @@
     <%- include('./head') -%>
 </head>
 <body>
-<main>
-    <%- include('./productsContainer') -%>
-</main>
+    <main>
+        <%- include('./productsContainer') -%>
+    </main>
+    <script>
+        const deleteProduct = async (id) => {
+            await fetch(`/api/productos/${id}`, {
+                method: 'DELETE'
+            })
+        }
+        const editProduct = async (id) => {
+            await fetch(`/api/productos/${id}`, {
+                method: 'PUT'
+            })
+        }
+    </script>
 </body>
 </html>
