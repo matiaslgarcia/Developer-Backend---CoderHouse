@@ -6,11 +6,16 @@
 <body>
     <main>
         <%- include('./productsContainer') -%>
+        <% if (!admin) { %>
+            <%- include('./productForm') -%>
+        <% } %>
     </main>
     <script>
         const deleteProduct = async (id) => {
-            await fetch(`/api/productos/${id}`, {
-                method: 'DELETE'
+            fetch(`/api/productos/${id}`, {
+                method: 'DELETE',
+            }).then(() => {
+               location.reload(true)
             })
         }
         const editProduct = async (id) => {

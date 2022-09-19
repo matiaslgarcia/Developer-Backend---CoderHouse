@@ -7,7 +7,6 @@ const getProductos = async (req,res) =>{
   if(!id){
     const productos = await services.getProducts()
     res.render('principalContainerProducts.ejs', {productos, admin})
-   /* res.send({productos: await services.getProducts()})*/
   } else {
     const prod = await services.getProductsById(id)
     res.render('principalContainerProductById.ejs', {prod})
@@ -15,12 +14,20 @@ const getProductos = async (req,res) =>{
 }
 
 const postProducto = async (req,res) =>{
-  const producto = req.body
+  const productoNuevo ={
+    name:  req.body.name,
+    description: req.body.description,
+    code: req.body.code,
+    thumbnail: req.body.thumbnail,
+    price: req.body.price,
+    stock: req.body.stock
+  }
   if(!admin){
+    await services.postProduct(productoNuevo)
+    res.redirect('/api/productos/')
     res.send(
       {
         mensaje: 'Producto agregado Correctamente',
-        producto:  await services.postProduct(producto)
       }
     )
   }else{
@@ -61,9 +68,9 @@ const putProducto = async (req,res) =>{
 const deleteProducto = async (req,res) =>{
   const id = req.params.id
   if(!admin){
+     await services.deleteProduct(id)
     res.send({
       result: 'Delete ok',
-      id: await services.deleteProduct(id)
     })
   }else{
     res.send(
