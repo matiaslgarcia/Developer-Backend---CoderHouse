@@ -1,11 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <%- include('./head') -%>
 </head>
+    <%- include('./head') -%>
 <body>
-<main>
-    <%- include('./productsContainerById') -%>
-</main>
+    <main>
+        <%- include('./productsContainerById') -%>
+        <% if (admin) { %>
+            <%- include('./productFormUpdate') -%>
+        <% } %>
+    </main>
+    <script>
+
+        const editProduct = async (id) => {
+            await fetch(`/api/productos/${id}`, {
+                method: 'PUT'
+            })
+        }
+    </script>
 </body>
 </html>

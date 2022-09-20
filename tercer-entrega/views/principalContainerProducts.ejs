@@ -6,7 +6,7 @@
 <body>
     <main>
         <%- include('./productsContainer') -%>
-        <% if (!admin) { %>
+        <% if (admin) { %>
             <%- include('./productForm') -%>
         <% } %>
     </main>
@@ -18,11 +18,7 @@
                location.reload(true)
             })
         }
-        const editProduct = async (id) => {
-            await fetch(`/api/productos/${id}`, {
-                method: 'PUT'
-            })
-        }
+
     </script>
 </body>
 </html>

@@ -1,19 +1,21 @@
 <div class="album py-5">
         <div class="container">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                    <div class="col">
-                        <div class="card shadow-sm">
-
-                            <img src="<%= prod.thumbnail %>" class="card-img-top" width="100%" height="225"  aria-label="<%= prod.code %>"/>
-                            <div class="card-body">
-                                <h4 class="card-title"><%= prod.name %></h4>
-                                <p class="card-text"><%= prod.description %></p>
-                                <div class="d-flex flex-direction-row justify-content-between">
-                                    <span class="text-muted ">$<%= prod.price %></span>
-                                </div>
+                <div class="col-offset-4"></div>
+                <div class="col">
+                    <p><%= prodAct %></p>
+                    <div class="card shadow-sm">
+                        <img src="<%= prod.thumbnail %>" class="card-img-top" width="100%" height="225"  aria-label="<%= prod.code %>"/>
+                        <div class="card-body">
+                            <h4 class="card-title"><%= prod.name %></h4>
+                            <p class="card-text"><%= prod.description %></p>
+                            <div class="d-flex flex-direction-row justify-content-between">
+                                <span class="text-muted ">$<%= prod.price %></span>
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="col-offset-4"></div>
             </div>
         </div>
     </div>

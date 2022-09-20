@@ -11,7 +11,7 @@
                                 <div class="d-flex flex-direction-row justify-content-between">
                                     <% if (!admin) { %>
                                         <div class="btn-group">
-                                            <button type="button" class="btn btn-sm btn-outline-warning" onclick='editProduct("<%= prod._id %>")'>Editar</button>
+                                            <button type="button" class="btn btn-sm btn-outline-warning" onclick="location.href='/api/productos/<%= prod._id %>'">Editar</button>
                                             <button type="button" class="btn btn-sm btn-outline-danger" onclick='deleteProduct("<%= prod._id %>")'>Eliminar</button>
                                         </div>
                                     <% } %>

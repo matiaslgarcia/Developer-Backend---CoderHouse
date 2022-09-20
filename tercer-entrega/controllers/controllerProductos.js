@@ -1,4 +1,5 @@
 import services from "../services/servicesProductos.js";
+import logger from "../utils/logger.js";
 
 let admin = false
 
@@ -9,7 +10,7 @@ const getProductos = async (req,res) =>{
     res.render('principalContainerProducts.ejs', {productos, admin})
   } else {
     const prod = await services.getProductsById(id)
-    res.render('principalContainerProductById.ejs', {prod})
+    res.render('principalContainerProductById.ejs', {prod, prodAct: prod.id, admin})
   }
 }
 
@@ -42,7 +43,7 @@ const postProducto = async (req,res) =>{
 const putProducto = async (req,res) =>{
   const id = req.params.id
   const {name, description,code, thumbnail, price, stock} = req.body
-  const producto = {
+  const productoActualizado = {
     "timestamp": Date.now(),
     "name": name,
     "description": description,
@@ -52,9 +53,10 @@ const putProducto = async (req,res) =>{
     "stock": stock
   }
   if(!admin){
+    await services.updateProduct(id, productoActualizado)
+    res.redirect('/api/productos/')
     res.send({
       result: 'Producto Actualizado',
-      productoActualizado: await services.updateProduct(id, producto)
     })
   }else{
     res.send(
