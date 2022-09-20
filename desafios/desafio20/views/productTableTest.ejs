@@ -1,0 +1,38 @@
+<section>
+    <% if (prodExists) { %>
+        <table class="table align-middle mb-0 bg-white">
+            <thead class="bg-light" id="navbarr">
+            <tr>
+                <th class="left-navbar">Imagen</th>
+                <th>Nombre</th>
+                <th class="right-navbar">Precio</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% productos.forEach((order) => { %>
+            <tr>
+                <td>
+                    <div class="d-flex align-items-center">
+                        <img
+                            src="<%= order.thumbnail %>"
+                            alt="image"
+                            style="width: 45px; height: 45px"
+                        />
+                    </div>
+                </td>
+                <td>
+                    <p class=" mb-1 control-label"><%= order.title %></p>
+                </td>
+                <td><%= order.price %></td>
+            </tr>
+            <% }); %>
+            </tbody>
+        </table>
+            <% } else { %>>
+        <div class="align-middle mb-0 bg-warning h1-style">
+            <h1 class="text-center">
+                No se encontraron productos
+            </h1>
+        </div>
+            <% } %>>
+</section>
