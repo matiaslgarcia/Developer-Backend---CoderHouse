@@ -13,7 +13,7 @@ const CarritosSChema = new mongoose.Schema({
       code: { type: String, max: 20 },
       thumbnail: { type: String, max: 255 },
       price: { type: Number, max: 99999 },
-      quantity: Number
+      stock: Number
     },
   ],
 });

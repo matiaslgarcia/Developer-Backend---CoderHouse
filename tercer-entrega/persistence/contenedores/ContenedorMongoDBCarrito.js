@@ -50,13 +50,13 @@ export default class ContenedorMongoDBCarrito {
           code: prod.code,
           thumbnail: prod.thumbnail,
           price: prod.price,
-          quantity:prod.quantity
+          stock:prod.stock
         }
         let itemIndex = cart.product.findIndex(
           (item) => item.productId === prod.productId
         );
         if (itemIndex > -1) {
-          cart.product[itemIndex].quantity = cart.product[itemIndex].quantity + prod.quantity;
+          cart.product[itemIndex].stock = cart.product[itemIndex].stock + prod.stock;
         } else {
           cart.product.push(createProd);
         }
