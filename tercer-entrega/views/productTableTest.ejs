@@ -5,6 +5,8 @@
             <tr>
                 <th class="left-navbar">Imagen</th>
                 <th>Nombre</th>
+                <th>Descripcion</th>
+                <th>Codigo</th>
                 <th class="right-navbar">Precio</th>
             </tr>
             </thead>
@@ -21,8 +23,10 @@
                     </div>
                 </td>
                 <td>
-                    <p class=" mb-1 control-label"><%= order.title %></p>
+                    <p class=" mb-1 control-label"><%= order.name %></p>
                 </td>
+                <td><%= order.description %></td>
+                <td><%= order.code %></td>
                 <td><%= order.price %></td>
             </tr>
             <% }); %>

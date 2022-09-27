@@ -13,9 +13,29 @@
     <script>
 
         const editProduct = async (id) => {
-            await fetch(`/api/productos/${id}`, {
-                method: 'PUT'
-            })
+            const name = document.getElementById('name').value
+            const description = document.getElementById('description').value
+            const code = document.getElementById('code').value
+            const stock = document.getElementById('stock').value
+            const price = document.getElementById('price').value
+            const thumbnail = document.getElementById('thumbnail').value
+
+            const prodAct = {
+                name,
+                description,
+                code,
+                stock,
+                price,
+                thumbnail
+            }
+            const options = {
+                method: 'PUT',
+                body: JSON.stringify(prodAct)
+            }
+            fetch('/prueba', options)
+                .then(response => response.json())
+                .then(response => console.log(response))
+                .catch(err => console.error(err));
         }
     </script>
 </body>

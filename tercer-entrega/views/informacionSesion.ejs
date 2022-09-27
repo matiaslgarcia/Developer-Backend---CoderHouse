@@ -10,11 +10,15 @@
                     <h6> <strong>Email: </strong><%= email %></h6>
                 </div>
             </div>
+            <div>
+                <button class="btn btn-default" onclick="location.href='/logout'">Desloguear</button>
+            </div>
+
         </div>
         <div class="col-md-9">
             <div class="contact-form">
                 <div style="display:flex; align-items: flex-end; height: 30vh; justify-content: space-between; flex-direction: column-reverse">
-                    <button class="btn btn-default" onclick="location.href='/logout'">Desloguear</button>
+                    <button class="btn btn-warning" onclick='createCartAndRenderView()'>Ver Carrito</button>
                     <button class="btn btn-warning" onclick="location.href='/api/productos'">Ver Productos</button>
                 </div>
             </div>

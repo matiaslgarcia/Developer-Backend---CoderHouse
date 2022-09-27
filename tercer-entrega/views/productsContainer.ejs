@@ -4,22 +4,24 @@
                 <% productos.forEach((prod) => { %>
                     <div class="col">
                         <div class="card shadow-sm">
-                            <img src="<%= prod.thumbnail %>" class="card-img-top" width="100%" height="225"  aria-label="<%= prod.code %>"/>
+                            <img src="<%= prod.thumbnail %>" class="card-img-top" width="100%" height="225" aria-label="<%= prod.code %>"/>
                             <div class="card-body">
                                 <h4 class="card-title"><%= prod.name %></h4>
                                 <p class="card-text"><%= prod.description %></p>
                                 <div class="d-flex flex-direction-row justify-content-between">
-                                    <% if (!admin) { %>
+                                    <% if (admin) { %>
                                         <div class="btn-group">
                                             <button type="button" class="btn btn-sm btn-outline-warning" onclick="location.href='/api/productos/<%= prod._id %>'">Editar</button>
                                             <button type="button" class="btn btn-sm btn-outline-danger" onclick='deleteProduct("<%= prod._id %>")'>Eliminar</button>
                                         </div>
                                     <% } %>
                                         <div>
+                                            <% if (!admin) { %>
                                             <div>
                                                 <button type="button" class="btn btn-sm btn-outline-primary" onclick="location.href='/api/productos/<%= prod._id %>'">
                                                  Ver </button>
                                             </div>
+                                                <% } %>
                                             <div class="d-flex justify-content-end">
                                                 <span class="text-muted ">$<%= prod.price %></span>
                                             </div >
