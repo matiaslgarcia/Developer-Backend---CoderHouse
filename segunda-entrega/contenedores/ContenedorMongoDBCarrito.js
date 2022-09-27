@@ -8,11 +8,16 @@ export default class ContenedorMongoDBCarrito {
 
   async createCart(){
     try {
-      const cart = {
-        timestamp: Date.now(),
-        product: []
-      }
-      await carrito.carritos.create(cart)
+      const idCar = await carrito.carritos.find({})
+      if (idCar.length == 0) {
+        const cart = {
+          timestamp: Date.now(),
+          product: []
+        }
+        const carritoId = await carrito.carritos.create(cart)
+        return carritoId._id  
+      } 
+      return idCar[0]._id      
     }catch (e){
       console.log('Error al crear un Carrito: ' ,e)
     }

@@ -49,7 +49,8 @@ const postProductoEnCarrito = async (req,res) =>{
 }
 
 const postCarrito = async (req,res) =>{
-  await services.postCart()
+  const carritoNew = await services.postCart()
+  logger.info(carritoNew)
   res.redirect('/api/productos/')
 }
 
