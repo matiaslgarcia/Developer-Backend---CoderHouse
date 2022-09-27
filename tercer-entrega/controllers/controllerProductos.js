@@ -10,7 +10,8 @@ const getProductos = async (req,res) =>{
     res.render('principalContainerProducts.ejs', {productos, admin})
   } else {
     const prod = await services.getProductsById(id)
-    res.render('principalContainerProductById.ejs', {prod, prodAct: prod.id, admin})
+    const prodAct = prod.id
+    res.render('principalContainerProductById.ejs', {prod, prodAct, admin})
   }
 }
 
@@ -26,11 +27,6 @@ const postProducto = async (req,res) =>{
   if(!admin){
     await services.postProduct(productoNuevo)
     res.redirect('/api/productos/')
-    res.send(
-      {
-        mensaje: 'Producto agregado Correctamente',
-      }
-    )
   }else{
     res.send(
       { error : -1,
@@ -55,9 +51,6 @@ const putProducto = async (req,res) =>{
   if(!admin){
     await services.updateProduct(id, productoActualizado)
     res.redirect('/api/productos/')
-    res.send({
-      result: 'Producto Actualizado',
-    })
   }else{
     res.send(
       {

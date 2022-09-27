@@ -2,7 +2,11 @@ import services from "../services/servicesCarrito.js";
 import logger from "../utils/logger.js";
 
 const getCarritoConProductos = async (req,res) =>{
-  const id = req.params.id
+  const carritoWithProducts = await services.findCart(id)
+  const prodExists = await services.findCart(id).length === 0;
+  const productos = carritoWithProducts.product
+  res.render('productosTest.ejs', {productos, prodExists})
+  /*const id = req.params.id
   const carrito = await services.findCart(id)
   services.findCart.then(p => {
     if(!carrito){
@@ -11,7 +15,7 @@ const getCarritoConProductos = async (req,res) =>{
       console.log(p)
       res.send(carrito)
     }
-  })
+  })*/
 }
 
 const deleteProductoDeCarrito = async (req,res) => {
