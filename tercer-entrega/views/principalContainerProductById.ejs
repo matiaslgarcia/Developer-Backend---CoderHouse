@@ -12,6 +12,35 @@
     </main>
     <script>
 
+        const agregarProdAlCarrito = async (prod) =>{
+            console.log(prod)
+            const idCart = await fetch(`/api/carrito/`, {
+                method: 'POST',
+            })
+            const idC = await idCart.json()
+            console.log(idC)
+            const prodAct = {
+                productId: prod.id,
+                timestamp: Date.now(),
+                name: prod.name,
+                description: prod.description,
+                code: prod.code,
+                stock: prod.stock,
+                price: prod.price,
+                thumbnail: prod.thumbnail
+            }
+            console.log(JSON.stringify(prodAct))
+            const options = {
+                method: 'POST',
+                body: JSON.stringify(prodAct)
+            }
+            fetch(`/${idC}/productos`, options)
+                .then(response => response.json())
+                .then(response => console.log(response))
+                .catch(err => console.error(err));
+        }
+
+
         const editProduct = async (id) => {
             const name = document.getElementById('name').value
             const description = document.getElementById('description').value

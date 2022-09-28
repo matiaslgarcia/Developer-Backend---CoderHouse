@@ -3,7 +3,6 @@
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                 <div class="col-offset-4"></div>
                 <div class="col">
-                    <p><%= prodAct %></p>
                     <div class="card shadow-sm">
                         <img src="<%= prod.thumbnail %>" class="card-img-top" width="100%" height="225"  aria-label="<%= prod.code %>"/>
                         <div class="card-body">
@@ -13,6 +12,9 @@
                                 <span class="text-muted ">$<%= prod.price %></span>
                             </div>
                         </div>
+                    </div>
+                    <div class="d-flex justify-content-end m-2">
+                        <button class="btn btn-danger" onclick='agregarProdAlCarrito("<%= prod %>")'> Agregar al carrito </button>
                     </div>
                 </div>
                 <div class="col-offset-4"></div>
