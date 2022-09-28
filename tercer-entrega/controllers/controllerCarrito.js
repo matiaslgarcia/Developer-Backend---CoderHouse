@@ -39,7 +39,7 @@ const postProductoEnCarrito = async (req,res) =>{
   const id = req.params.id
   const producto = req.body
   await services.postProductToCart(id, producto)
-  res.render('productoAgregado.ejs', {id})
+  res.render('principalProductoAgregado.ejs', {id})
 }
 
 const postCarrito = async (req,res) =>{
