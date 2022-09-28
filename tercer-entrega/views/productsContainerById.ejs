@@ -13,7 +13,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="d-flex justify-content-end m-2">
+                    <div class="d-flex justify-content-between m-2">
+                        <button class="btn btn-primary" onclick="location.href = '/api/productos'">Volver</button>
                         <button class="btn btn-danger" onclick='agregarProdAlCarrito("<%= prod.id%>", "<%= prod.name%>", "<%= prod.description%>" ,"<%= prod.code%>", "<%= prod.stock%>", "<%= prod.price%>", "<%= prod.thumbnail%>")'> Agregar al carrito </button>
                     </div>
                 </div>

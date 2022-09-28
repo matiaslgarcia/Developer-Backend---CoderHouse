@@ -1,16 +1,13 @@
 import services from "../services/servicesCarrito.js";
-import logger from "../utils/logger.js";
-import fetch from "node-fetch";
-import {puerto} from "../config.js";
-
 
 const getCarritoConProductos = async (req,res) =>{
   const id = req.params.id
   const carritoWithProducts = await services.findCart(id)
   res.render('productosTest.ejs',
       {
+        idC: id,
         productos: carritoWithProducts.product,
-        prodExists: await services.findCart(id).length !==0
+        prodExists: await services.findCart(id).length !==0,
       })
 }
 

@@ -8,4 +8,13 @@
             <%- include('./productTableTest') -%>
         </main>
     </body>
+<script>
+    const deleteProductInCart = async (idC, idP) => {
+        fetch(`/api/carrito/${idC}/productos/${idP}`, {
+            method: 'DELETE',
+        }).then(() => {
+            location.reload(true)
+        })
+    }
+</script>
 </html>

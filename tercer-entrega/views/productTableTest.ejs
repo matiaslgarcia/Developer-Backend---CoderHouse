@@ -7,7 +7,8 @@
                 <th>Nombre</th>
                 <th>Descripcion</th>
                 <th>Codigo</th>
-                <th class="right-navbar">Precio</th>
+                <th>Precio</th>
+                <th class="right-navbar">Acciones</th>
             </tr>
             </thead>
             <tbody>
@@ -28,6 +29,9 @@
                 <td><%= order.description %></td>
                 <td><%= order.code %></td>
                 <td><%= order.price %></td>
+                <td>
+                    <button class="btn btn-danger" onclick='deleteProductInCart("<%= idC %>", "<%= order.id %>")'>X</button>
+                </td>
             </tr>
             <% }); %>
             </tbody>
@@ -38,5 +42,8 @@
                 No se encontraron productos
             </h1>
         </div>
-            <% } %>>
+            <% } %>
+        <div class="d-flex justify-content-end mt-5">
+            <button class="btn btn-primary" onclick="location.href = '/landing'">Volver</button>
+        </div>
 </section>
