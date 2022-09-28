@@ -1,5 +1,7 @@
 import services from "../services/servicesCarrito.js";
 import logger from "../utils/logger.js";
+import fetch from "node-fetch";
+import {puerto} from "../config.js";
 
 
 const getCarritoConProductos = async (req,res) =>{
@@ -37,13 +39,7 @@ const postProductoEnCarrito = async (req,res) =>{
   const id = req.params.id
   const producto = req.body
   await services.postProductToCart(id, producto)
-  res.send(
-    {
-      mensaje: 'Producto agregado Correctamente al carrito',
-      producto: producto,
-      idCarrito: id
-    }
-  )
+  res.render('productoAgregado.ejs', {id})
 }
 
 const postCarrito = async (req,res) =>{

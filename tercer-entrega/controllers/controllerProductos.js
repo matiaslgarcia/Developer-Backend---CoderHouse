@@ -10,8 +10,9 @@ const getProductos = async (req,res) =>{
     res.render('principalContainerProducts.ejs', {productos, admin})
   } else {
     const prod = await services.getProductsById(id)
-    const prodAct = prod.id
-    res.render('principalContainerProductById.ejs', {prod, prodAct, admin})
+
+    logger.info(prod)
+    res.render('principalContainerProductById.ejs', {prod, admin})
   }
 }
 

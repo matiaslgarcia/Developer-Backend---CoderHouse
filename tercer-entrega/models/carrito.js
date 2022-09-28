@@ -6,7 +6,7 @@ const CarritosSChema = new mongoose.Schema({
   timestamp: Date,
   product: [
     {
-      productId: Number,
+      productId: Object,
       timestamp: Date,
       name: { type: String, max: 100 },
       description: { type: String, max: 255 },

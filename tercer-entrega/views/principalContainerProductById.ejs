@@ -12,29 +12,26 @@
     </main>
     <script>
 
-        const agregarProdAlCarrito = async (prod) =>{
-            console.log(prod)
+        const agregarProdAlCarrito = async (productId, name, description, code, stock, price,thumbnail) =>{
             const idCart = await fetch(`/api/carrito/`, {
                 method: 'POST',
             })
             const idC = await idCart.json()
-            console.log(idC)
-            const prodAct = {
-                productId: prod.id,
-                timestamp: Date.now(),
-                name: prod.name,
-                description: prod.description,
-                code: prod.code,
-                stock: prod.stock,
-                price: prod.price,
-                thumbnail: prod.thumbnail
-            }
-            console.log(JSON.stringify(prodAct))
+            const urlencoded = new URLSearchParams({
+                "productId": productId,
+                "timestamp": Date.now(),
+                "name": name,
+                "description": description,
+                "code": code,
+                "stock": stock,
+                "price": price,
+                "thumbnail": thumbnail,
+            });
             const options = {
                 method: 'POST',
-                body: JSON.stringify(prodAct)
+                body: urlencoded,
             }
-            fetch(`/${idC}/productos`, options)
+            fetch(`/api/carrito/${idC}/productos`, options)
                 .then(response => response.json())
                 .then(response => console.log(response))
                 .catch(err => console.error(err));
