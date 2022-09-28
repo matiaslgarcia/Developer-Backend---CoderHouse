@@ -1,6 +1,7 @@
 import logger from '../utils/logger.js'
-import services from "../services/servicesGeneral.js";
 import user from "../instances/instanciaUsuario.js";
+import fetch from 'node-fetch';
+import {puerto} from '../config.js/'
 
 const allRoutes = async (req) =>{
   const{method, url} = req
@@ -14,13 +15,18 @@ const dirBarra = async (req, res) => {
 }
 
 const landing = async (req, res) => {
-  const usuario =  await user.findUser(req.session.passport.user)
-  res.render('principal.ejs', {
+    const idCart = await fetch(`http:/localhost:${puerto}/api/carrito/`, {
+        method: 'POST',
+    })
+    const idC = await idCart.json()
+    const usuario =  await user.findUser(req.session.passport.user)
+    res.render('principal.ejs', {
                                 nombre: usuario.nombre,
                                 direccion: usuario.direccion,
                                 edad: usuario.edad,
                                 email: usuario.email,
-    })
+                                id: idC,
+        })
 }
 
 export default {

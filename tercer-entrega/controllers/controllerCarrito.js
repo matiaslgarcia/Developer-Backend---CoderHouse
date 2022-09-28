@@ -1,21 +1,15 @@
 import services from "../services/servicesCarrito.js";
 import logger from "../utils/logger.js";
 
+
 const getCarritoConProductos = async (req,res) =>{
+  const id = req.params.id
   const carritoWithProducts = await services.findCart(id)
-  const prodExists = await services.findCart(id).length === 0;
-  const productos = carritoWithProducts.product
-  res.render('productosTest.ejs', {productos, prodExists})
-  /*const id = req.params.id
-  const carrito = await services.findCart(id)
-  services.findCart.then(p => {
-    if(!carrito){
-      res.send({error: `Carrito con ID: ${id} No Encontrado`})
-    } else {
-      console.log(p)
-      res.send(carrito)
-    }
-  })*/
+  res.render('productosTest.ejs',
+      {
+        productos: carritoWithProducts.product,
+        prodExists: await services.findCart(id).length !==0
+      })
 }
 
 const deleteProductoDeCarrito = async (req,res) => {
@@ -54,8 +48,7 @@ const postProductoEnCarrito = async (req,res) =>{
 
 const postCarrito = async (req,res) =>{
   const carritoNew = await services.postCart()
-  logger.info(carritoNew)
-  res.redirect('/api/productos/')
+  res.json(carritoNew)
 }
 
 export default {
