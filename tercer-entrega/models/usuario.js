@@ -9,6 +9,7 @@ const UsuarioShema = new mongoose.Schema({
     direccion: { type: String, max: 50 },
     edad: { type: Number },
     telefono: { type: String },
+    admin: { type: Boolean },
     // foto: {
     //     data: Buffer,
     //     contentType: String

@@ -16,6 +16,7 @@ export default class ContenedorMongoUsuarios{
           "direccion": nuevoUsuario.direccion,
           "edad": nuevoUsuario.edad,
           "telefono": nuevoUsuario.telefono,
+          "admin": nuevoUsuario.admin,
           "foto": nuevoUsuario.foto
         }
         await usuarios.create(newUsuario)

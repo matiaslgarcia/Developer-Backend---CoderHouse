@@ -1,10 +1,11 @@
 import services from "../services/servicesProductos.js";
 import logger from "../utils/logger.js";
-
-let admin = false
+import usuario from "../utils/getAdmin.js";
 
 const getProductos = async (req,res) =>{
   const id = req.params.id
+  let admin = await usuario(req)
+  logger.info(admin)
   if(!id){
     const productos = await services.getProducts()
     res.render('principalContainerProducts.ejs', {productos, admin})
@@ -17,6 +18,8 @@ const getProductos = async (req,res) =>{
 }
 
 const postProducto = async (req,res) =>{
+  let admin = await usuario(req)
+
   const productoNuevo ={
     name:  req.body.name,
     description: req.body.description,
@@ -38,6 +41,8 @@ const postProducto = async (req,res) =>{
 }
 
 const putProducto = async (req,res) =>{
+  let admin = await usuario(req)
+
   const id = req.params.id
   const {name, description,code, thumbnail, price, stock} = req.body
   const productoActualizado = {
@@ -62,6 +67,8 @@ const putProducto = async (req,res) =>{
   }
 }
 const deleteProducto = async (req,res) =>{
+  let admin = await usuario(req)
+
   const id = req.params.id
   if(!admin){
      await services.deleteProduct(id)

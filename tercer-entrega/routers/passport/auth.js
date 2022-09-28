@@ -26,6 +26,7 @@ passport.use('local-register', new LocalStrategy({
       direccion: req.body.direccion,
       edad: req.body.edad,
       telefono: req.body.telefono,
+      admin: false,
   /*    foto: {
         data: fs.readFileSync(path.join(__dirname + '/imagenes/' + req.file.filename)),
         contentType: 'image/png'
